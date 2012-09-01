@@ -1,5 +1,5 @@
 application: storybookwebapp
-version: alphalobby
+version: alphareddit
 runtime: python
 api_version: 1
 
@@ -18,6 +18,10 @@ handlers:
 
 - url: /data
   static_dir: data
+
+- url: /cleanup
+  script: cleanup.py
+  login: admin
 
 - url: /.*
   script: storybook.py

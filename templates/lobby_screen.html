@@ -27,9 +27,14 @@
 		xmlHttp.send(JSON.stringify(info));
 		while(response == null) {}
 		if(response == "v")
-			window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
+			window.location.replace("/waiting_to_start?game_id=" + encodeURIComponent(game_id));
 		else
 			document.getElementById("error_area").innerHTML = "Couldn't join that game";		
+	}
+
+	function returnToMenu()
+	{
+		window.location.replace('/');
 	}
 	</script>
 	<select id="select_game" size="10">
@@ -38,6 +43,7 @@
 		{% endfor %}
 	</select>
 	<button type="button" onclick="buttonClicked()"> Join Game </button>
+	<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
 	<div id="error_area">
 	</div>
 </h1>

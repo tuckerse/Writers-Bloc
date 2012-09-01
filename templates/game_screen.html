@@ -28,8 +28,8 @@ overflow-x: hidden;border-style: solid; border-width: 1px;">
 	<div id="userbar">
 		<div id="userbartext">
 			Users:<br>
-			{% for name in name_list %}
-				{{ name }}<br>
+			{% for x in zipList %}
+				<img src="{{x.1}}" width="25" height="25"/>{{x.0}}<br>
 			{% endfor %}
 		</div>
 	</div>

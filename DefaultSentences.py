@@ -33,7 +33,8 @@ class defaults:
 					'She knew it to be true, for it was written.',
 					'It was flawless.',
 					'After all, what\'s the worst that could happen?',
-					'But alas, just wanting something doesn\'t make it true.'
+					'But alas, just wanting something doesn\'t make it true.',
+					'And that\'s why you always leave a note.'
 					]
 
 	@staticmethod

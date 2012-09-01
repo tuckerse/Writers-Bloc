@@ -17,12 +17,32 @@
 			xmlHttp.send(JSON.stringify(info));
 			var response = JSON.parse(xmlHttp.responseText);
 			var num_players = response.num_players;
+			var deleted = response.deleted;
+			if(deleted)
+				window.location.replace("/game_deleted_error");
 			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players";
+			var players = response.players;
+			for(player in players)
+			{
+				document.getElementById("current_players").innerHTML += player + "\n";
+			}
 			var started = response.started;
 			if(started == "y")
 			{
 				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
 			}
+		}
+
+		function returnToMenu()
+		{
+			var user_id = "{{ user_id }}" ;
+			var xmlHttp = new XMLHttpRequest();
+			var url = "/leave_before_start";
+			var info = {"game_id" : game_id, "user_id" : user_id};
+			xmlHttp.open("POST", url, false);
+			xmlHttp.setRequestHeader("Content-type", "application/json");
+			xmlHttp.send(JSON.stringify(info));
+			window.location.replace('/');
 		}
 	</script>
 </h1>
@@ -30,5 +50,7 @@
 <div id="current_players">
 	Fetching Game Data...
 </div>
+
+<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
 {% endblock %}
 

@@ -1,0 +1,7 @@
+indexes:
+
+- kind: Game
+  properties:
+  - name: started
+  - name: current_players
+    direction: desc 

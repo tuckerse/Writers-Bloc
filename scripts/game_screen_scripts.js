@@ -62,6 +62,8 @@ function statusCheck()
 		if(xmlHttp.readyState == 4)
 		{
 			response = JSON.parse(xmlHttp.responseText);
+			if(response.deleted)
+				window.location.replace("/game_deleted_error");
 			phase = response.phase;
 			seconds = response.seconds_left + 1;
 			num_phases = response.num_phases;
@@ -263,7 +265,7 @@ function endGame()
 	document.getElementById("next_part").value = "Chat will remain open for five minutes.";
 	document.getElementById("next_part").disabled = true;
 	document.getElementById("chatbox").innerHTML = storedChat;
-	document.getElementById("timer").innerHTML = "Game Ended";
+	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
 }
 
 function acknowledgeFinishEndVote()

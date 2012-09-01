@@ -13,6 +13,7 @@ import os
 import sys
 import time
 import random
+import RedditLib
 
 from FacebookHandler import Facebook
 from UserHandler import User
@@ -197,6 +198,7 @@ class DisplayCompleteVerification(BaseHandler):
 			self.response.headers['Content-type'] = 'application/json'
 			response['updated_story'] = getStoryString(game)
 			response['scores'] = getScoreInfo(game)
+			response['profiles'] = getProfiles(reponse['scores'])
 			self.response.out.write(json.dumps(response))
 			if game.num_phases < 10 or game.went_to_submission:		
 				if not game.display_phase and game.can_submit:
@@ -218,6 +220,16 @@ class DisplayCompleteVerification(BaseHandler):
 					return
 				self.response.headers.add_header('response', "i")
 		return	
+
+def getProfiles(scoreList):
+	profiles = {}
+	for entry in scoreList:
+		user_id = entry['user_id']
+		user = User.get_by_key_name(user_id)
+		profiles.append(user.picture)
+
+	return profiles
+		
 
 class EndVote(BaseHandler):
 	def post(self):
@@ -250,9 +262,7 @@ class EndVoteCompleteVerification(BaseHandler):
 				elif datetime.datetime.now() > game.end_end_vote_time:
 					outcome = finishGameTally(game)
 					if outcome:
-						game.finished = True
-						game.game_ended = datetime.datetime.now()
-						game.put()
+						finishGame(game)
 						self.response.headers.add_header('response', "e")
 						return
 					else:
@@ -277,6 +287,17 @@ class FindGame(BaseHandler):
 			
 		return
 
+class WaitingToStart(BaseHandler):
+	def get(self):
+		if not self.user:
+			self.render(u'login_screen')
+		else:
+			game_id = self.request.get('game_id')
+			self.render(u'waiting_to_start', game_id=game_id, MAX_PLAYERS=MAX_PLAYERS, user_id=self.user.user_id)
+
+		return
+			
+
 class GameScreen(BaseHandler):
 	def get(self):
 		game_id = self.request.get('game_id')
@@ -285,8 +306,8 @@ class GameScreen(BaseHandler):
 		if not self.user:
 			self.render(u'login_screen')
 		else:
-			names = getUserInfo(game_id)
-			self.render(u'game_screen', game_id=game_id, name_list=names, user_id=self.user.user_id, end_sentence=game.end_sentence)
+			names, pictures = getUserInfo(game_id)
+			self.render(u'game_screen', game_id=game_id, user_id=self.user.user_id, end_sentence=game.end_sentence, zipList=zip(names,pictures))
 		return
 
 	def post(self):
@@ -315,29 +336,44 @@ class GameStatus(webapp.RequestHandler):
 		info = json.loads(self.request.body)
 		game_id = info['game_id']
 		response_info = {}
-		game = Game.get_by_key_name(str(game_id))
-		response_info['started'] = "y" if game.started else "n"
-		response_info['num_players'] = game.current_players
-		response_info['num_phases'] = game.num_phases
-		self.response.headers['Content-type'] = 'application/json'
-		if game.can_vote:
-			response_info['phase'] = "v"
-			response_info['seconds_left'] = (game.end_vote_time - datetime.datetime.now()).seconds
-		elif game.can_submit:
-			response_info['phase'] = "s"
-			response_info['seconds_left'] = (game.end_submission_time - datetime.datetime.now()).seconds
-		elif game.display_phase:
-			response_info['phase'] = "d"
-			response_info['seconds_left'] = (game.end_display_time - datetime.datetime.now()).seconds
-		elif game.end_voting:
-			response_info['phase'] = "f"
-			response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds		
-
+		try:
+			game = Game.get_by_key_name(str(game_id))
+			if game is None:
+				response_info['deleted'] = True
+				self.response.out.write(response)
+			response_info['deleted'] = False
+			response_info['started'] = "y" if game.started else "n"
+			response_info['num_players'] = game.current_players
+			response_info['players'] = getPlayerNames(game)
+			response_info['num_phases'] = game.num_phases
+			self.response.headers['Content-type'] = 'application/json'
+			if game.can_vote:
+				response_info['phase'] = "v"
+				response_info['seconds_left'] = (game.end_vote_time - datetime.datetime.now()).seconds
+			elif game.can_submit:
+				response_info['phase'] = "s"
+				response_info['seconds_left'] = (game.end_submission_time - datetime.datetime.now()).seconds
+			elif game.display_phase:
+				response_info['phase'] = "d"
+				response_info['seconds_left'] = (game.end_display_time - datetime.datetime.now()).seconds
+			elif game.end_voting:
+				response_info['phase'] = "f"
+				response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds		
+		except:
+			response_info['deleted'] = True
+			
 		response = json.dumps(response_info)
-		logging.debug(json.dumps(response_info))
+		logging.debug(response)
+
 		self.response.out.write(response)
 
 		return
+
+def getPlayerNames(game):
+	nameList = {}
+	for user in game.users:
+		nameList.append(trimName(User.get_by_key_name(user).name))
+	return nameList
 
 class GetChoices(BaseHandler):
 	def post(self):
@@ -489,7 +525,7 @@ def initializeGame(game_id, max_players, end_sentence):
 
 def joinGame(user, game_id):
 	result = Game.get_by_key_name(str(game_id))
-	if result.current_players == MAX_PLAYERS or result.started:
+	if result.current_players == MAX_PLAYERS or result.started or (str(user.user_id) in result.users):
 		return False
 	result.users.append(user.user_id)
 	result.current_players += 1
@@ -513,7 +549,7 @@ def startGame(game_id):
 	for user in game.users:
 		game.scores.append(0)
 	game.put()
-	return True	
+	return True
 
 def findGame(user):
 	query = Game.gql("WHERE current_players <:1 ORDER BY current_players ASC", MAX_PLAYERS)
@@ -522,13 +558,11 @@ def findGame(user):
 		return None
 
 	for result in results:
-		if not result.started:
-			result.users.append(user.user_id)
-			result.current_players += 1
-			if result.current_players == MAX_PLAYERS:
-				result.started = True
-			result.put()
-			return result.game_id	
+		game_id = joinGame(user, result.game_id)
+		if game_id is False:
+			continue
+		else:
+			return result.game_id
 	
 	return None
 
@@ -553,8 +587,9 @@ def getUserInfo(game_id):
 	for user_id in game.users:
 		user = User.get_by_key_name(user_id)
 		name_list.append(trimName(user.name))
+		pic_list.append(user.picture)
 	
-	return name_list	
+	return name_list, pic_list	
 
 def determineWinner(game):
 	logging.debug('Votes list: ' + str(game.votes))
@@ -609,13 +644,11 @@ def determineWinner(game):
 	game.story.append(game.next_parts[winning_index])
 
 	for i in range(0, len(game.users)):
-		game.recent_score_data[i] = scores[game.users[i]]
-		game.scores[i] += scores[game.users[i]]
+		user_score = scores[game.users[i]] if (int(game.users[i]) in game.users_voted) else 0 
+		game.recent_score_data[i] = user_score
+		game.scores[i] += user_score
 		logging.debug('User: ' + game.users[i] + ' | Recent Score: ' + str(game.recent_score_data[i]))
 		logging.debug('User: ' + game.users[i] + ' | Total Score: ' + str(game.scores[i]))
-
-	for key in scores.keys():
-		logging.debug('User: ' + key + ' | Score: ' + str(scores[key]))
 
 def getStoryString(game):
 	string = "" if (len(game.story) == 0) else "    "
@@ -647,6 +680,7 @@ def getScoreInfo(game):
 		user = User.get_by_key_name(user_id)
 		temp = {}
 		temp['user_name'] = trimName(user.name)
+		temp['user_id'] = user_id
 		temp['score'] = game.scores[i]
 		scores.append(temp)
 
@@ -665,7 +699,11 @@ def getRecentScoreInfo(game):
 		temp = {}
 		temp['user_name'] = trimName(user.name)
 		temp['score'] = game.recent_score_data[i]
-		temp['sentence'] = game.next_parts[game.users_next_parts.index(int(user_id))]
+		submitted = game.users_next_parts.count(int(user_id)) > 0
+		if submitted:
+			temp['sentence'] = game.next_parts[game.users_next_parts.index(int(user_id))]
+		else:
+			temp['sentence'] = 'User did not submit'
 		scores.append(temp)
 
 	scores = sortByScore(scores)
@@ -749,7 +787,81 @@ def allUsersVoted(game):
 
 def allUsersSubmitted(game):
 	return (len(game.users) == len(game.users_next_parts))
-	
+
+def finishGame(game):
+	game.finished = True
+	game.game_ended = datetime.datetime.now()
+	game.put()
+
+def postRedditStory(game):
+	RedditLib.postStory(game)
+	return
+
+class CreateSampleGame(BaseHandler):
+	def get(self):
+		game = Game(key_name="69")
+		game.game_id = 69
+		game.can_vote = False
+		game.current_players = 3
+		game.story = ['The first sentence.', 'The second sentence.', 'The third sentence.', 'The fourth sentence.', 'The fifth sentence.']
+		game.users = [u'100000041224382', u'100000945793839', u'100004050465254']
+		game.next_parts = []
+		game.users_next_parts = []
+		game.started = False
+		game.end_submission_time = None
+		game.end_display_time = None
+		game.can_submit = False
+		game.end_vote_time = None
+		game.end_sentence = 'And such was the final sentence.'
+		game.votes = []
+		game.users_voted = []
+		game.display_phase = False
+		game.end_display_time = None
+		game.winning_sentences = []
+		game.winning_users = []
+		game.winning_users_names = []
+		game.num_phases = 11
+		game.finished = True
+		game.end_voting = False
+		game.end_users_voted = []
+		game.end_votes = []
+		game.end_end_vote_time = None
+		game.game_ended = None
+		game.scores = [15L, 35L, 4L]
+		game.recent_score_data = []
+		game.went_to_submission = False
+		game.put()
+		return
+
+class CancelGame(BaseHandler):
+	def post(self):
+		info = json.loads(self.request.body)
+		game_id = info['game_id']
+		try:
+			game = Game.get_by_key_name(game_id)
+			db.delete(game)
+		except Exception, ex:
+			logging.critical(ex)
+
+class GameDeleted(BaseHandler):
+	def get(self):
+		self.render(u'game_deleted')
+
+class LeaveBeforeStart(BaseHandler):
+	def post(self):
+		info = json.loads(self.request.body)
+		game_id = info['game_id']
+		user_id = info['user_id']
+		removeUser(game_id, user_id)
+
+def removeUser(game_id, user_id):
+	game = Game.get_by_key_name(game_id)
+	try:
+		game.users.remove(user_id)
+		game.current_players = game.current_players - 1
+		game.put()
+	except Exception, ex:
+		logging.critical(ex)
 
 routes = [
 		('/', MenuPage),
@@ -766,7 +878,12 @@ routes = [
 		('/display_complete_verification', DisplayCompleteVerification),
 		('/end_vote_complete_verification', EndVoteCompleteVerification),
 		('/cast_end_vote', EndVote),
-		('/join_game', JoinGame)
+		('/join_game', JoinGame),
+		('/waiting_to_start', WaitingToStart),
+		('/create_sample_game', CreateSampleGame),
+		('/cancel_game', CancelGame),
+		('/game_deleted_error', GameDeleted),
+		('/leave_before_start', LeaveBeforeStart)
 		]
 app = webapp.WSGIApplication(routes)
 
