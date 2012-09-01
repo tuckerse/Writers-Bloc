@@ -3,7 +3,7 @@
 <h1 id="textstuff">
 	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game. Note: No one may join once the game has started.
 	<script>
-		var intervalID = window.setInterval(statusCheck, 2000);
+		var intervalID = window.setInterval(statusCheck, 5000);
 		var game_id = "{{ game_id }}" ;
 
 		function statusCheck()
@@ -15,13 +15,15 @@
 			xmlHttp.setRequestHeader("Content-type", "application/json");
 			xmlHttp.send(JSON.stringify(info));
 			var response = JSON.parse(xmlHttp.responseText);
+			var deleted = response.deleted;
+			if(deleted)
+				window.location.replace("/game_deleted_error");
 			var num_players = response.num_players;
-			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players\nCurrent Players:<br>";
+			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players<br>Current Players:<br>";
 			var players = response.players;
-			alert(players);
-			for(player in players)
+			for(i in players)
 			{
-				document.getElementById("current_players").innerHTML += player + "<br>";
+				document.getElementById("current_players").innerHTML += players[i] + "<br>";
 			}
 			var started = response.started;
 			if(started == "y")

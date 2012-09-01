@@ -5,6 +5,7 @@ class LastUsedGameID(db.Model):
 
 class Game(db.Model):
 	game_id = db.IntegerProperty()
+	created = db.DateTimeProperty()
 	can_vote = db.BooleanProperty()
 	current_players = db.IntegerProperty()
 	story = db.ListProperty(str)
@@ -20,7 +21,6 @@ class Game(db.Model):
 	votes = db.ListProperty(int)
 	users_voted = db.ListProperty(int)
 	display_phase = db.BooleanProperty()
-	end_display_time = db.DateTimeProperty()
 	winning_sentences = db.ListProperty(str)
 	winning_users = db.ListProperty(int)
 	winning_users_names = db.ListProperty(str)

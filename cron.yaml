@@ -1,4 +1,4 @@
 cron:
 - description: Clean old games and post data to reddit.
   url: /cleanup
-  schedule: every 5 minutes
+  schedule: every 5 hours
