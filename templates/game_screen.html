@@ -7,9 +7,11 @@
 			<div id = "story_title">
 			The Story So Far...
 			</div>
+			<div id = "turns_left"></div>
+            <div id = "waiting_on"></div>
 		</h1>
-		<div id="story" style="height:350px;width:500px;font:12px/22px Comic Sans, cursive;overflow-y: scroll;
-overflow-x: hidden;border-style: solid; border-width: 1px;">
+<!-- style="height:350px;width:500px;font:12px/22px Comic Sans, cursive;overflow-y: scroll;overflow-x: hidden;border-style: solid; border-width: 1px;"-->
+		<div id="story">
 			...{{ end_sentence }}
 		</div>
 		
@@ -35,6 +37,9 @@ overflow-x: hidden;border-style: solid; border-width: 1px;">
 	</div>
 	<div id="timer">
 		Fetching game data.
+	</div>
+	<div id="end_early_button_area">
+		<input id="end_early_button" type="button" value="Vote End Early" onclick="voteEndEarly()" onkeypress="return false" disabled="true"/>
 	</div>
 	<script type="text/javascript" src="/scripts/game_screen_scripts.js"></script>
 </div>

@@ -1,5 +1,5 @@
 application: storybookwebapp
-version: beta
+version: betamemcache
 runtime: python
 api_version: 1
 
@@ -20,6 +20,10 @@ handlers:
   static_dir: data
 
 - url: /cleanup
+  script: cleanup.py
+  login: admin
+
+- url: /clean_games
   script: cleanup.py
   login: admin
 

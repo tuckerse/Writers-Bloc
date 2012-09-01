@@ -1,56 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
+<script type="text/javascript"> var game_id  = "{{ game_id }}" ; var MAX_PLAYERS = "{{ MAX_PLAYERS }}" ;</script>
 <h1 id="textstuff">
 	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game. Note: No one may join once the game has started.
-	<script>
-		var intervalID = window.setInterval(statusCheck, 5000);
-		var game_id = "{{ game_id }}" ;
-
-		function statusCheck()
-		{
-			var url = "/game_status";
-			var info = {"game_id" : game_id};
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("POST", url, false);
-			xmlHttp.setRequestHeader("Content-type", "application/json");
-			xmlHttp.send(JSON.stringify(info));
-			var response = JSON.parse(xmlHttp.responseText);
-			var deleted = response.deleted;
-			if(deleted)
-				window.location.replace("/game_deleted_error");
-			var num_players = response.num_players;
-			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players<br>Current Players:<br>";
-			var players = response.players;
-			for(i in players)
-			{
-				document.getElementById("current_players").innerHTML += players[i] + "<br>";
-			}
-			var started = response.started;
-			if(started == "y")
-			{
-				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
-			}
-		}
-
-		function startEarly()
-		{
-			if(game_id == null)
-				return;
-			window.location.replace("/start_early?game_id=" + encodeURIComponent(game_id));
-			return;
-		}
-
-		function returnToMenu()
-		{
-			var xmlHttp = new XMLHttpRequest();
-			var url = "/cancel_game";
-			var info = {"game_id" : game_id};
-			xmlHttp.open("POST", url, false);
-			xmlHttp.setRequestHeader("Content-type", "application/json");
-			xmlHttp.send(JSON.stringify(info));
-			window.location.replace('/');
-		}
-	</script>
 </h1>
 
 <div id="current_players">
@@ -59,6 +11,7 @@
 
 <input type="button" name="early_start" Value="Start Early?" onClick="startEarly()">
 <form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+<script type="text/javascript" src="/scripts/game_created_screen_scripts.js"></script>
 
 {% endblock %}
 

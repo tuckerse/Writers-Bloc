@@ -12,6 +12,7 @@ var scoreInfo;
 var oldPhase;
 var refreshDelay = 5;
 var recentlySubmitted = "";
+var profiles;
 document.onkeypress = processKey;
 
 function processKey(e)
@@ -36,21 +37,35 @@ function submitNextPart()
 			var response = xmlHttp.getResponseHeader("success");
 			if(response == "s")
 			{
-				document.getElementById("submit_button").disabled = "true";
-				document.getElementById("next_part").value = "The Moving Finger writes; and, having writ, Moves on.";
+				//document.getElementById("next_part").value = "The Moving Finger writes; and, having writ, Moves on.";
 				document.getElementById("next_part").disabled = "true";
 			}
 		}
 	}
 	var next_part = document.getElementById("next_part").value;
-	recentlySubmitted = next_part;
-	var url = "/game_screen";
-	var info = {"game_id": game_id, "next_part": next_part};
-	xmlHttp = new XMLHttpRequest();
-	xmlHttp.onreadystatechange = onResponseNextPart;
-	xmlHttp.open("POST", url, true);
-	xmlHttp.setRequestHeader("Content-type", "application/json");
-	xmlHttp.send(JSON.stringify(info));	
+    if(next_part != "")
+    {
+        document.getElementById("submit_button").disabled = "true";
+	    recentlySubmitted = next_part;
+	    var url = "/game_screen";
+	    var info = {"game_id": game_id, "next_part": next_part};
+	    xmlHttp = new XMLHttpRequest();
+	    xmlHttp.onreadystatechange = onResponseNextPart;
+	    xmlHttp.open("POST", url, true);
+	    xmlHttp.setRequestHeader("Content-type", "application/json");
+	    xmlHttp.send(JSON.stringify(info));	
+    }
+}
+
+function updateTurnsLeft(voteThisTurn)
+{
+	var string = "Next End Vote: ";
+	if(voteThisTurn || (num_phases >=10))
+		string += "This Turn";
+	else
+		string += (11 - num_phases).toString() + " Turn(s)";
+
+	document.getElementById("turns_left").innerHTML = string;
 }
 
 function statusCheck()
@@ -67,6 +82,15 @@ function statusCheck()
 			phase = response.phase;
 			seconds = response.seconds_left + 1;
 			num_phases = response.num_phases;
+			updateTurnsLeft(response.vote_this_turn);
+            if(phase == "s" || phase == "v")
+            {
+                try
+                {
+                    document.getElementById("waiting_on").innerHTML = "Still waiting on " + response.waiting_on + " player(s).";
+                }
+                catch(err){}
+            }
 		}
 	}
 	
@@ -105,10 +129,14 @@ function tick()
 	if(phase == "s")
 	{
 		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " second(s).";
+        if(seconds == 5)
+            submitNextPart();
 	}
 	else if(phase == "v")
 	{
 		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
+        if(seconds == 5)
+            submitVote();
 	}
 	else if(phase == "d")
 	{
@@ -265,6 +293,7 @@ function endGame()
 	document.getElementById("next_part").value = "Chat will remain open for five minutes.";
 	document.getElementById("next_part").disabled = true;
 	document.getElementById("chatbox").innerHTML = storedChat;
+    document.getElementById("end_early_button").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
 }
 
@@ -276,6 +305,7 @@ function acknowledgeFinishEndVote()
 		if(xmlHttp.readyState == 4)
 		{
 			response = xmlHttp.getResponseHeader("response");
+			document.getElementById("end_early_button").disabled = false;
 		}
 	}
 	var url = "/end_vote_complete_verification?game_id=" + encodeURIComponent(game_id);
@@ -294,7 +324,7 @@ function setToEndVotingPhase()
 	document.getElementById("story").innerHTML = updatedStory;
 	document.getElementById("chatbox").innerHTML = "<form>";
 	document.getElementById("chatbox").innerHTML += "Would you like to continue the story?<br>";
-	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"0\" onclick=\"clickedSelection(this.value)\" /> Yes<br>";
+	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"0\" onclick=\"clickedSelection(this.value)\" selected=\"selected\" /> Yes<br>";
 	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"1\" onclick=\"clickedSelection(this.value)\" /> No<br>";
 	document.getElementById("chatbox").innerHTML += "<form/>";
 	document.getElementById("chatbox").innerHTML += "<input id=\"end_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitEndVote()\"/>";
@@ -397,17 +427,26 @@ function setToVotingPhase()
 	storedChat = document.getElementById("chatbox").innerHTML;
 	document.getElementById("next_part").value = "Chat Disabled During Voting Phase.";
 	var choices = getChoices();
+    var hasSelected = false;
 	document.getElementById("chatbox").innerHTML = "<form>";
 	for(i = 0; i < choices.length; i++)
 	{
 		if(choices[i] == recentlySubmitted)
 			document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" disabled=\"true\"/>" + choices[i]  + "<br>";
 		else
-			document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" />" + choices[i]  + "<br>";
+        {
+            if(!hasSelected)
+            {
+			    document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" selected=\"selected\"/>" + choices[i]  + "<br>";
+                hasSelected = true;
+            }
+            else
+                document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\"/>" + choices[i]  + "<br>";
+        }
 	}
 	document.getElementById("chatbox").innerHTML += "<form/>";
 	if(choices.length > 0)
-		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\"/>";
+		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" style=\"background-color:#c00; color:#fff;\"/>";
 	else
 		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" disabled=\"true\"/>";
 }
@@ -477,6 +516,7 @@ function acknowledgeFinishDisplay()
 				parsed = JSON.parse(xmlHttp.responseText);
 				updatedStory = parsed.updated_story;
 				scoreInfo = parsed.scores;
+				profiles = parsed.profiles;
 				updateUserInfo();
 			}
 		}
@@ -495,13 +535,36 @@ function updateUserInfo()
 	var list = new Array();
 	for(entry in scoreInfo)
 	{
-		list[scoreInfo[entry].position - 1] = "<b>" + scoreInfo[entry].position + ".</b> (" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
+        if(afks[entry])
+		    list[scoreInfo[entry].position - 1] = "<img src=\"" + profiles[entry] + "\" width=\"25\" height=\"25\"/><b>" + scoreInfo[entry].position + ".</b> (AFK)(" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
+        else
+            list[scoreInfo[entry].position - 1] = "<img src=\"" + profiles[entry] + "\" width=\"25\" height=\"25\"/><b>" + scoreInfo[entry].position + ".</b> (" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
 	}
 	document.getElementById("userbartext").innerHTML = "Scoreboard:<br>";
 	for(user_entry in list)
 	{
 		document.getElementById("userbartext").innerHTML += list[user_entry] + "<br>";
 	}	
+}
+
+function voteEndEarly()
+{
+	var parsed = null;
+	function recievedResponseVoteEndEarly()
+	{
+		parsed = JSON.parse(xmlHttp.responseText);
+		if(parsed.success)
+		{
+			document.getElementById("end_early_button").disabled = true;
+		}
+	}
+	var xmlHttp = new XMLHttpRequest();
+	var url = "/vote_end_early";
+	var info = {"game_id": game_id};
+	xmlHttp.open("POST", url, false);
+	xmlHttp.onreadystatechange = recievedResponseVoteEndEarly;
+	xmlHttp.send(JSON.stringify(info));
+	while(parsed == null){}
 }
 
 var timerID = window.setInterval(tick, 1000);

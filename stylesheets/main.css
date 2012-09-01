@@ -1,6 +1,6 @@
 body {
   color: #000;
-  font-family: Comic Sans, cursive;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   background: #ffffff;
   font-size: 14px;
   margin: 0;
@@ -30,6 +30,18 @@ h1 {
   width: 700px;
 }
 
+#story
+{
+ height: 350px;
+ width: 500px;
+ font-family: "Trebuchet MS", Helvetica, sans-serif
+ font-size: 14px;
+ overflow-y: scroll;
+ overflow-x: hidden;
+ border-style: solid;
+ border-width: 1px;
+}
+
 #wrapper {
   float: left;
   background: #ffffff;
@@ -46,6 +58,13 @@ h1 {
 }
 
 #timer {
+  float: right;
+  position: relative;
+  background: #ffffff;
+  width: 180lpx;
+}
+
+#end_early_button_area {
   float: right;
   position: relative;
   background: #ffffff;

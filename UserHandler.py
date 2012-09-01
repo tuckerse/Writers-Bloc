@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+from cacheLib import storeCache, retrieveCache
 
 _USER_FIELDS = u'name,email,picture,friends'
 class User(db.Model):
@@ -9,6 +10,9 @@ class User(db.Model):
     email = db.StringProperty()
     friends = db.StringListProperty()
     dirty = db.BooleanProperty()
+    last_hosted = db.DateTimeProperty()
+    rounds_afk = db.IntegerProperty()
+    display_type = db.IntegerProperty()
 
     def refresh_data(self):
         """Refresh this user's data using the Facebook Graph API"""
@@ -19,5 +23,4 @@ class User(db.Model):
         self.email = me.get(u'email')
         self.picture = me[u'picture']
         self.friends = [user[u'id'] for user in me[u'friends'][u'data']]
-        return self.put()
-
+        return storeCache(self, self.user_id)

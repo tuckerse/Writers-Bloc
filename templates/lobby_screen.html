@@ -1,49 +1,17 @@
 {% extends "base.html" %}
 {% block body %}
 <h1 id="textstuff">
-	<script type="text/javascript">
-	function buttonClicked()
-	{
-		joined = joinGame(document.getElementById("select_game").value);
-	}
-	
-	function joinGame(game_id)
-	{
-		var response = null;
-
-		function onResponse()
-		{
-			if(xmlHttp.readyState == 4)
-			{
-				response = JSON.parse(xmlHttp.responseText);
-				response = response.valid;
-			}
-		}
-		var xmlHttp = new XMLHttpRequest();
-		var info = {"game_id" : game_id};
-		var url = "/join_game";
-		xmlHttp.open("POST", url, false);
-		xmlHttp.onreadystatechange = onResponse;
-		xmlHttp.send(JSON.stringify(info));
-		while(response == null) {}
-		if(response == "v")
-			window.location.replace("/waiting_to_start?game_id=" + encodeURIComponent(game_id));
-		else
-			document.getElementById("error_area").innerHTML = "Couldn't join that game";		
-	}
-
-	function returnToMenu()
-	{
-		window.location.replace('/');
-	}
-	</script>
-	<select id="select_game" size="10">
-		{% for game in games %}
-			<option value="{{ game.game_id }}"> <b>Game ID: {{ game.game_id }} | Current Players: {{ game.current_players }}/8 | End Sentence: {{ game.end_sentence }} </b>
-		{% endfor %}
-	</select>
+	<script type="text/javascript" src="/scripts/lobby_screen_scripts.js"></script>
+	<div id="select_game">
+		<select id="selection" size="10" style="height:350px;width:500px;overflow-y: scroll;overflow-x: scroll;border-style: solid; border-width: 1px;">
+			{% for game in games %}
+				<option value="{{ game.game_id }}"> <b>Game ID: {{ game.game_id }} | Current Players: {{ game.current_players }}/8 | End Sentence: {{ game.end_sentence }} </b></option>
+			{% endfor %}
+		</select>
+	</div>
 	<button type="button" onclick="buttonClicked()"> Join Game </button>
 	<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+	<form><INPUT TYPE="button" VALUE="Refresh Lobby" onClick="refreshLobby()"></form>
 	<div id="error_area">
 	</div>
 </h1>

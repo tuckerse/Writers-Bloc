@@ -1,0 +1,3 @@
+queue:
+- name: redditqueue
+  rate: 1/m

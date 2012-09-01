@@ -1,50 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
+<script type="text/javascript"> var game_id  = "{{ game_id }}" ; var MAX_PLAYERS = "{{ MAX_PLAYERS }}" ; var user_id = "{{ user_id }}" ;</script>
 <h1 id="textstuff">
 	You have joined a game. Now you are just waiting for enough people to join, or for the host to start it early.
-	<script>
-		var intervalID = window.setInterval(statusCheck, 5000);
-		var game_id  = "{{ game_id }}" ;
-
-		function statusCheck()
-		{
-			var url = "/game_status";
-			var info = {"game_id" : game_id};
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("POST", url, false);
-			xmlHttp.setRequestHeader("Content-type", "application/json");
-			xmlHttp.send(JSON.stringify(info));
-			var response = JSON.parse(xmlHttp.responseText);
-			var num_players = response.num_players;
-			var deleted = response.deleted;
-			if(deleted)
-				window.location.replace("/game_deleted_error");
-			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players<br>Current Players:<br>";;
-			var players = response.players;
-			for(i in players)
-			{
-				document.getElementById("current_players").innerHTML += players[i] + "<br>";
-			}
-			var started = response.started;
-			if(started == "y")
-			{
-				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
-			}
-		}
-
-		function returnToMenu()
-		{
-			var user_id = "{{ user_id }}" ;
-			alert(user_id);
-			var xmlHttp = new XMLHttpRequest();
-			var url = "/leave_before_start";
-			var info = {"game_id" : game_id, "user_id" : user_id};
-			xmlHttp.open("POST", url, false);
-			xmlHttp.setRequestHeader("Content-type", "application/json");
-			xmlHttp.send(JSON.stringify(info));
-			window.location.replace('/');
-		}
-	</script>
 </h1>
 
 <div id="current_players">
@@ -52,5 +10,6 @@
 </div>
 
 <form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+<script type="text/javascript" src="/scripts/waiting_to_start.js"></script>
 {% endblock %}
 

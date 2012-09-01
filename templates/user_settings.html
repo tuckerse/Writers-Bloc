@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+<script type="text/javascript" src="/scripts/settings_screen_scripts.js"></script>
+Player Visiblity:
+<form name="player_visibility">
+    <input type="radio" name="visibility_selection" id="0" value="anon" onclick="clickedSelection(this.value)"> Anonymous <br>
+    <input type="radio" name="visibility_selection" id="1" value="initials" onclick="clickedSelection(this.value)"> Initials Only <br>
+    <input type="radio" name="visibility_selection" id="2" value="first_initials" onclick="clickedSelection(this.value)"> First Name and Last Initial <br>
+    <input type="radio" name="visibility_selection" id="3" value="full_name" onclick="clickedSelection(this.value)"> Full Name <br>
+</form>
+<form><INPUT TYPE="button" VALUE="Submit Changes" onClick="submitChanges()"></form>
+<div id="change_ack"></div>
+<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+
+{% endblock %}
+
