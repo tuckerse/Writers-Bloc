@@ -9,6 +9,9 @@ var xmlHttp = null;
 var num_phases = 0;
 var winningData;
 var scoreInfo;
+var oldPhase;
+var refreshDelay = 5;
+var recentlySubmitted = "";
 document.onkeypress = processKey;
 
 function processKey(e)
@@ -40,6 +43,7 @@ function submitNextPart()
 		}
 	}
 	var next_part = document.getElementById("next_part").value;
+	recentlySubmitted = next_part;
 	var url = "/game_screen";
 	var info = {"game_id": game_id, "next_part": next_part};
 	xmlHttp = new XMLHttpRequest();
@@ -80,102 +84,186 @@ function statusCheck()
 
 function tick()
 {
+	if(phase == "e")
+		window.clearInterval(timerID);
 	seconds = seconds - 1;
 	if(seconds == 0)
 	{
-		if(phase == "s")
-		{	
-			var response = acknowledgeFinishSubmission();
-			if(response == "v")
-			{
-				statusCheck();
-				setToVotingPhase();
-			}	
-			else
-			{
-				document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
-				seconds = 1;
-			}								
-		}	
-		else if(phase == "v")
+		phaseChangeLogic();
+	}
+	else if(seconds%refreshDelay == 0)
+	{
+		oldPhase = phase;
+		statusCheck();
+		if(phase != oldPhase)
 		{
-			var response = acknowledgeFinishVote();
-			if(response == "v")
-			{
-				statusCheck();
-				setToDisplayPhase();
-			}
-			else
-			{
-				document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
-				seconds = 1;
-			}
-		}	
-		else if(phase == "d")
-		{
-			var response = acknowledgeFinishDisplay();
-			if(response == "v")
-			{
-				updateUserInfo();
-				statusCheck();
-				if(num_phases > 10)
-				{
-					setToEndVotingPhase();
-				}
-				else
-					setToSubmissionPhase();		
-			}
-
-			else
-			{
-				document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
-				seconds = 1;
-			}
-		}	
-		else if(phase == "f")
-		{
-			var response = acknowledgeFinishEndVote();
-			if(response == "e")
-				endGame();
-			else if(response == "c")
-			{
-				statusCheck();
-				setToSubmissionPhase();
-			}
-			else
-			{
-				document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
-				seconds = 1;
-			}
+			oldPhaseChangeLogic();	
 		}
 	}	
 	if(phase == "s")
 	{
-		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " seconds.";
+		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " second(s).";
 	}
 	else if(phase == "v")
 	{
-		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " seconds.";
+		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
 	}
 	else if(phase == "d")
 	{
-		document.getElementById("timer").innerHTML = "Displaying Winning Segment: " + seconds + " seconds.";
+		document.getElementById("timer").innerHTML = "Displaying Winning Segment: " + seconds + " second(s).";
 	}
 	else if(phase == "f")
 	{
-		document.getElementById("timer").innerHTML = "End Voting Time Remaining: " + seconds + " seconds.";
+		document.getElementById("timer").innerHTML = "End Voting Time Remaining: " + seconds + " second(s).";
+	}
+}
+
+function oldPhaseChangeLogic()
+{
+	if(oldPhase == "s")
+	{	
+		var response = acknowledgeFinishSubmission();
+		if(response == "v")
+		{
+			statusCheck();
+			setToVotingPhase();
+		}	
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}								
+	}	
+	else if(oldPhase == "v")
+	{
+		var response = acknowledgeFinishVote();
+		if(response == "v")
+		{
+			statusCheck();
+			setToDisplayPhase();
+		}
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}
+	}	
+	else if(oldPhase == "d")
+	{
+		var response = acknowledgeFinishDisplay();
+		if(response == "v")
+		{
+			updateUserInfo();
+			statusCheck();
+			if(phase == "f")
+			{
+				setToEndVotingPhase();
+			}
+			else if(phase == "s")
+				setToSubmissionPhase();		
+		}
+
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}
+	}	
+	else if(oldPhase == "f")
+	{
+		var response = acknowledgeFinishEndVote();
+		if(response == "e")
+			endGame();
+		else if(response == "c")
+		{
+			statusCheck();
+			setToSubmissionPhase();
+		}
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}
+	}
+}
+
+function phaseChangeLogic()
+{
+	if(phase == "s")
+	{	
+		var response = acknowledgeFinishSubmission();
+		if(response == "v")
+		{
+			statusCheck();
+			setToVotingPhase();
+		}	
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}								
+	}	
+	else if(phase == "v")
+	{
+		var response = acknowledgeFinishVote();
+		if(response == "v")
+		{
+			statusCheck();
+			setToDisplayPhase();
+		}
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}
+	}	
+	else if(phase == "d")
+	{
+		var response = acknowledgeFinishDisplay();
+		if(response == "v")
+		{
+			updateUserInfo();
+			statusCheck();
+			if(phase == "f")
+			{
+				setToEndVotingPhase();
+			}
+			else if(phase == "s")
+				setToSubmissionPhase();		
+		}
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}
+	}	
+	else if(phase == "f")
+	{
+		var response = acknowledgeFinishEndVote();
+		if(response == "e")
+			endGame();
+		else if(response == "c")
+		{
+			statusCheck();
+			setToSubmissionPhase();
+		}
+		else
+		{
+			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
+			seconds = 1;
+		}
 	}
 }
 
 function endGame()
 {
+	phase = "e";
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
 	document.getElementById("next_part").value = "Chat will remain open for five minutes.";
 	document.getElementById("next_part").disabled = true;
 	document.getElementById("chatbox").innerHTML = storedChat;
-	document.getElementById("timer").innerHTML = "";
-	window.clearInterval(timerID);
+	document.getElementById("timer").innerHTML = "Game Ended";
 }
 
 function acknowledgeFinishEndVote()
@@ -205,7 +293,7 @@ function setToEndVotingPhase()
 	document.getElementById("chatbox").innerHTML = "<form>";
 	document.getElementById("chatbox").innerHTML += "Would you like to continue the story?<br>";
 	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"0\" onclick=\"clickedSelection(this.value)\" /> Yes<br>";
-	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"1\" onclick=\"clickedSelection(this.value)\" /> No<br>";
+	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"1\" onclick=\"clickedSelection(this.value)\" /> No<br>";
 	document.getElementById("chatbox").innerHTML += "<form/>";
 	document.getElementById("chatbox").innerHTML += "<input id=\"end_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitEndVote()\"/>";
 }
@@ -310,10 +398,16 @@ function setToVotingPhase()
 	document.getElementById("chatbox").innerHTML = "<form>";
 	for(i = 0; i < choices.length; i++)
 	{
-		document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" />" + choices[i]  + "<br>";
+		if(choices[i] == recentlySubmitted)
+			document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" disabled=\"true\"/>" + choices[i]  + "<br>";
+		else
+			document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" />" + choices[i]  + "<br>";
 	}
 	document.getElementById("chatbox").innerHTML += "<form/>";
-	document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\"/>";
+	if(choices.length > 0)
+		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\"/>";
+	else
+		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" disabled=\"true\"/>";
 }
 
 function acknowledgeFinishVote()
@@ -349,7 +443,7 @@ function setToDisplayPhase()
 	var list = new Array();
 	for(entry in winningData)
 	{
-		list[winningData[entry].position] = "<b>" + winningData[entry].position + "</b>. " + winningData[entry].sentence + " | Score: " + winningData[entry].score + " | Author: " + winningData[entry].user_name;
+		list[winningData[entry].position - 1] = "<b>" + winningData[entry].position + "</b>. " + winningData[entry].sentence + " | Score: " + winningData[entry].score + " | Author: " + winningData[entry].user_name;
 	}
 	for(user_entry in list)
 	{
@@ -399,7 +493,7 @@ function updateUserInfo()
 	var list = new Array();
 	for(entry in scoreInfo)
 	{
-		list[scoreInfo[entry].position - 1] = "<b>" + (scoreInfo[entry].position - 1) + ".</b> (" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
+		list[scoreInfo[entry].position - 1] = "<b>" + scoreInfo[entry].position + ".</b> (" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
 	}
 	document.getElementById("userbartext").innerHTML = "Scoreboard:<br>";
 	for(user_entry in list)

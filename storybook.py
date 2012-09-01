@@ -12,6 +12,7 @@ import urllib
 import os
 import sys
 import time
+import random
 
 from FacebookHandler import Facebook
 from UserHandler import User
@@ -33,11 +34,9 @@ from google.appengine.dist import use_library
 use_library('django', '0.96')
 
 MAX_PLAYERS = 8
-#SUBMISSION_TIME = 90
-#VOTE_TIME = 45
-SUBMISSION_TIME = 10
-VOTE_TIME = 10
-DISPLAY_TIME = 10
+SUBMISSION_TIME = 90
+VOTE_TIME = 45
+DISPLAY_TIME = 20
 _USER_FIELDS = u'name,email,picture,friends'
 LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
 DEFAULT_SENTENCES_KEY = "AUIRETI562345345TYI"
@@ -199,18 +198,14 @@ class DisplayCompleteVerification(BaseHandler):
 			response['updated_story'] = getStoryString(game)
 			response['scores'] = getScoreInfo(game)
 			self.response.out.write(json.dumps(response))
-			if game.num_phases < 10:		
+			if game.num_phases < 10 or game.went_to_submission:		
 				if not game.display_phase and game.can_submit:
 					self.response.headers.add_header('response', "v")
 					return
 				elif datetime.datetime.now() > game.end_display_time:
-					game.can_submit = True
-					game.can_vote = False
-					game.end_submission_time = datetime.datetime.now() + datetime.timedelta(seconds=SUBMISSION_TIME)
-					game.display_phase = False
-					clearPhaseInformation(game)
+					changeToSubmissionPhase(game, self)
+					game.went_to_submission = True
 					game.put()
-					self.response.headers.add_header('response', "v")
 					return
 				self.response.headers.add_header('response', "i")
 				self.response.headers.add_header('updated_story', "")
@@ -219,16 +214,11 @@ class DisplayCompleteVerification(BaseHandler):
 					self.response.headers.add_header('response', "v")
 					return
 				elif datetime.datetime.now() > game.end_display_time:
-					game.end_voting = True
-					game.can_vote = False
-					game.end_end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=END_VOTING_TIME)
-					game.display_phase = False
-					clearPhaseInformation(game)
-					game.put()
-					self.response.headers.add_header('response', "v")
+					changeToEndVotingPhase(game, self)
 					return
 				self.response.headers.add_header('response', "i")
-		return
+		return	
+
 class EndVote(BaseHandler):
 	def post(self):
 		if not self.user:
@@ -266,15 +256,7 @@ class EndVoteCompleteVerification(BaseHandler):
 						self.response.headers.add_header('response', "e")
 						return
 					else:
-						game.can_submit = True
-						game.end_voting = False
-						game.can_vote = False
-						game.end_voting = False
-						game.end_submission_time = datetime.datetime.now() + datetime.timedelta(seconds=SUBMISSION_TIME)
-						game.display_phase = False
-						game.end_users_voted = []
-						end_votes = []
-						game.put()
+						changeToSubmissionPhase(game, self)
 						self.response.headers.add_header('response', "c")
 						return
 				self.response.headers.add_header('response', "q")		
@@ -319,7 +301,10 @@ class GameScreen(BaseHandler):
 				game = Game.get_by_key_name(str(game_id))
 				game.next_parts.append(next_part)
 				game.users_next_parts.append(int(self.user.user_id))
-				game.put()
+				if allUsersSubmitted(game):
+					changeToVotingPhase(game)
+				else:
+					game.put()
 				self.response.headers.add_header('success', 's')
 			else:
 				self.response.headers.add_header('success', 'f')
@@ -349,6 +334,7 @@ class GameStatus(webapp.RequestHandler):
 			response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds		
 
 		response = json.dumps(response_info)
+		logging.debug(json.dumps(response_info))
 		self.response.out.write(response)
 
 		return
@@ -364,6 +350,19 @@ class GetChoices(BaseHandler):
 			json_string = json.dumps({"choices": game.next_parts})
 			self.response.out.write(json_string);
 			
+		return
+
+class JoinGame(BaseHandler):
+	def post(self):
+		if not self.user:
+			logging.critical('Invalid game join attempt')
+		else:
+			info = json.loads(self.request.body)
+			game_id = info['game_id']
+			joined = joinGame(self.user, game_id)
+			response = {}
+			response['valid'] = "v" if joined else "i"
+			self.response.out.write(json.dumps(response))	
 		return
 
 class MenuPage(BaseHandler):
@@ -413,16 +412,9 @@ class SubmissionCompleteVerification(BaseHandler):
 				self.response.headers.add_header('completed', "v")
 				return
 			elif datetime.datetime.now() > game.end_submission_time:
-				game.can_submit = False
-				game.can_vote = True
-				game.end_submission_time = None
-				resetRecentScoreData(game)
-				game.end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=VOTE_TIME)
-				game.put()
-				self.response.headers.add_header('completed', "v")
+				changeToVotingPhase(game, self)
 				return
 			self.response.headers.add_header('completed', "i")
-		
 		return
 
 class ViewLobby(BaseHandler):
@@ -430,7 +422,7 @@ class ViewLobby(BaseHandler):
 		if not self.user:
 			self.render(u'login_screen')
 		else:
-			query = Game.gql("WHERE current_players <:1 ORDER BY current_players DESC", MAX_PLAYERS)
+			query = Game.gql("WHERE current_players <:1 AND started =:2 ORDER BY current_players DESC", MAX_PLAYERS, False)
 			games = query.fetch(1000000)
 			self.render(u'lobby_screen', games=games)
 		return
@@ -446,7 +438,10 @@ class Vote(BaseHandler):
 				choice = int(self.request.get('part_voted'))
 				game.users_voted.append(int(self.user.user_id))
 				game.votes.append(choice)
-				game.put()
+				if allUsersVoted(game):
+					changeToDisplayPhase(game)
+				else:
+					game.put()
 				self.response.headers.add_header('response', "s")
 				return
 
@@ -466,16 +461,7 @@ class VoteCompleteVerification(BaseHandler):
 				recent_winner_string = "\"" + game.winning_sentences[len(game.winning_sentences)-1] + "\" By: " + game.winning_users_names[len(game.winning_users_names) - 1]
 				self.response.headers.add_header('recent_winner', recent_winner_string)
 			elif datetime.datetime.now() > game.end_vote_time:
-				game.can_submit = False
-				game.can_vote = False
-				game.end_submission_time = None
-				game.display_phase = True
-				game.end_display_time = datetime.datetime.now() + datetime.timedelta(seconds=DISPLAY_TIME)
-				determineWinner(game)
-				recent_winner_string = "\"" + game.winning_sentences[len(game.winning_sentences)-1] + "\" By: " + game.winning_users_names[len(game.winning_users_names) - 1]
-				self.response.headers.add_header('recent_winner', recent_winner_string)
-				game.put()
-				self.response.headers.add_header('completed', "v")
+				changeToDisplayPhase(game, self)				
 			else:
 				self.response.headers.add_header('completed', "i")
 			response = {}
@@ -497,22 +483,22 @@ def initializeGame(game_id, max_players, end_sentence):
 	newGame.can_submit = False
 	newGame.display_phase = False
 	newGame.finished = False
+	newGame.started = False
 	newGame.put()
 	return game_id
 
 def joinGame(user, game_id):
 	result = Game.get_by_key_name(str(game_id))
-
-	if result == None:
+	if result.current_players == MAX_PLAYERS or result.started:
 		return False
-	
-	if result.current_players == MAX_PLAYERS:
-		return False
-
 	result.users.append(user.user_id)
 	result.current_players += 1
-	result.put()
-	return True
+	if result.current_players == MAX_PLAYERS:
+		result.started = True
+		result.put()
+		return result.game_id	
+	result.put();
+	return result.game_id
 
 def startGame(game_id):
 	game = Game.get_by_key_name(str(game_id))
@@ -571,7 +557,9 @@ def getUserInfo(game_id):
 	return name_list	
 
 def determineWinner(game):
+	logging.debug('Votes list: ' + str(game.votes))
 	scores = {}
+	all_voted_one = False
 
 	for user in game.users:
 		scores[user] = 0
@@ -588,18 +576,32 @@ def determineWinner(game):
 			max_votes = vote_count
 			winning_index = i
 
+	if max_votes == len(game.votes):
+		all_voted_one = True
+
+	logging.debug('First place index' + str(winning_index) + ' with ' + str(max_votes) + ' votes')
+
 	for i in range(0, len(game.next_parts)):
-		if game.votes.count(i) > max_votes and not (i == winning_index):
-			second_votes = game.votes.count(i)
+		vote_count = game.votes.count(i)
+		if (vote_count > second_votes and not (i == winning_index)) or ((vote_count == max_votes) and not (i == winning_index)):
+			second_votes = vote_count
 			second_place = i
 
-	tie = (max_votes == second_votes)
-	if tie:
+	logging.debug('Second place index' + str(second_place) + ' with ' + str(second_votes) + ' votes')
+
+	tie = (max_votes == second_votes) and (len(game.next_parts) > 1)
+	logging.debug('Tie: ' + str(tie))
+	if all_voted_one:
+		scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
+	elif tie:
 		scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_TIE_BONUS
 		scores[str(game.users_next_parts[second_place])] += FIRST_PLACE_TIE_BONUS
-	else:
+	elif len(game.next_parts) > 1:
+		logging.debug('at least got into the normal game portion')
 		scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
 		scores[str(game.users_next_parts[second_place])] += SECOND_PLACE_BONUS
+	else:
+		scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
 
 	game.winning_sentences.append(game.next_parts[winning_index])
 	game.winning_users.append(game.users_next_parts[winning_index])
@@ -609,6 +611,11 @@ def determineWinner(game):
 	for i in range(0, len(game.users)):
 		game.recent_score_data[i] = scores[game.users[i]]
 		game.scores[i] += scores[game.users[i]]
+		logging.debug('User: ' + game.users[i] + ' | Recent Score: ' + str(game.recent_score_data[i]))
+		logging.debug('User: ' + game.users[i] + ' | Total Score: ' + str(game.scores[i]))
+
+	for key in scores.keys():
+		logging.debug('User: ' + key + ' | Score: ' + str(scores[key]))
 
 def getStoryString(game):
 	string = "" if (len(game.story) == 0) else "    "
@@ -634,19 +641,18 @@ def finishGameTally(game):
 
 def getScoreInfo(game):
 	scores = []
-
+	haveUsed = []
 	for i in range(0, len(game.users)):
 		user_id = game.users[i]
 		user = User.get_by_key_name(user_id)
 		temp = {}
-		logging.debug('user id is ' + str(user_id))
 		temp['user_name'] = trimName(user.name)
-		logging.debug('user_name: ' + trimName(user.name))
 		temp['score'] = game.scores[i]
-		logging.debug('score: ' + str(game.scores[i]))
-		temp['position'] = sorted(game.scores,reverse=True).index(game.scores[i]) + 1
-		logging.debug('position: ' + str(sorted(game.scores,reverse=True).index(game.scores[i]) + 1))
 		scores.append(temp)
+
+	scores = sortByScore(scores)
+	for i in range(0, len(scores)):
+		(scores[i])['position'] = i+1
 
 	return scores
 
@@ -659,16 +665,90 @@ def getRecentScoreInfo(game):
 		temp = {}
 		temp['user_name'] = trimName(user.name)
 		temp['score'] = game.recent_score_data[i]
-		temp['position'] = sorted(game.recent_score_data,reverse=True).index(game.recent_score_data[i]) + 1
 		temp['sentence'] = game.next_parts[game.users_next_parts.index(int(user_id))]
 		scores.append(temp)
 
+	scores = sortByScore(scores)
+	logging.debug(str(scores))
+	for i in range(0, len(scores)):
+		(scores[i])['position'] = i+1 
+
 	return scores
+
+def sortByScore(scores):
+	return quicksort(scores)
+
+def quicksort(L):
+	pivot = 0
+	if len(L) > 1:
+		pivot = random.randrange(len(L))
+	 	elements = L[:pivot]+L[pivot+1:]
+	 	left  = [element for element in elements if element > L[pivot]] 
+	 	right =[element for element in elements if element <= L[pivot]]
+	 	return quicksort(left)+[L[pivot]]+quicksort(right)
+   	return L
+	
 
 def resetRecentScoreData(game):
 	game.recent_score_data = []
 	for user in game.users:
 		game.recent_score_data.append(0)
+
+def changeToDisplayPhase(game, request_handler = None):
+	game.can_submit = False
+	game.can_vote = False
+	game.end_submission_time = None
+	game.display_phase = True
+	game.went_to_submission = False
+	game.end_display_time = datetime.datetime.now() + datetime.timedelta(seconds=DISPLAY_TIME)
+	determineWinner(game)
+	recent_winner_string = "\"" + game.winning_sentences[len(game.winning_sentences)-1] + "\" By: " + game.winning_users_names[len(game.winning_users_names) - 1]
+	if not request_handler == None:
+		request_handler.response.headers.add_header('recent_winner', recent_winner_string)
+		request_handler.response.headers.add_header('completed', "v")
+	game.put()	
+
+def changeToSubmissionPhase(game, request_handler = None):
+	logging.debug('moving to submission phase')
+	game.can_submit = True
+	game.can_vote = False
+	game.end_voting = False
+	game.can_vote = False
+	game.end_submission_time = datetime.datetime.now() + datetime.timedelta(seconds=SUBMISSION_TIME)
+	game.display_phase = False
+	game.end_users_voted = []
+	game.end_votes = []
+	clearPhaseInformation(game)
+	if not request_handler == None:
+		request_handler.response.headers.add_header('response', "v")
+	game.put()
+
+def changeToEndVotingPhase(game, request_handler = None):
+	logging.debug('moving to end vote phase')
+	game.end_voting = True
+	game.can_vote = False
+	game.end_end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=END_VOTING_TIME)
+	game.display_phase = False
+	if not request_handler == None:
+		request_handler.response.headers.add_header('response', "v")
+	game.put()
+
+def changeToVotingPhase(game, request_handler = None):
+	game.can_submit = False
+	game.can_vote = True
+	game.end_submission_time = None
+	game.went_to_submission = False
+	resetRecentScoreData(game)
+	game.end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=VOTE_TIME)
+	game.put()
+	if not request_handler == None:
+		request_handler.response.headers.add_header('completed', "v")
+
+def allUsersVoted(game):
+	return (len(game.users) == len(game.users_voted))
+
+def allUsersSubmitted(game):
+	return (len(game.users) == len(game.users_next_parts))
 	
 
 routes = [
@@ -685,7 +765,8 @@ routes = [
 		('/vote_complete_verification', VoteCompleteVerification),
 		('/display_complete_verification', DisplayCompleteVerification),
 		('/end_vote_complete_verification', EndVoteCompleteVerification),
-		('/cast_end_vote', EndVote)
+		('/cast_end_vote', EndVote),
+		('/join_game', JoinGame)
 		]
 app = webapp.WSGIApplication(routes)
 

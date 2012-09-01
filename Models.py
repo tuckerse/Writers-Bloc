@@ -33,3 +33,4 @@ class Game(db.Model):
 	game_ended = db.DateTimeProperty()
 	scores = db.ListProperty(int)
 	recent_score_data = db.ListProperty(int)
+	went_to_submission = db.BooleanProperty()

@@ -1,11 +1,45 @@
 {% extends "base.html" %}
 {% block body %}
 <h1 id="textstuff">
-	<select name="select_game" size="10">
+	<script type="text/javascript">
+	function buttonClicked()
+	{
+		joined = joinGame(document.getElementById("select_game").value);
+	}
+	
+	function joinGame(game_id)
+	{
+		var response = null;
+
+		function onResponse()
+		{
+			if(xmlHttp.readyState == 4)
+			{
+				response = JSON.parse(xmlHttp.responseText);
+				response = response.valid;
+			}
+		}
+		var xmlHttp = new XMLHttpRequest();
+		var info = {"game_id" : game_id};
+		var url = "/join_game";
+		xmlHttp.open("POST", url, false);
+		xmlHttp.onreadystatechange = onResponse;
+		xmlHttp.send(JSON.stringify(info));
+		while(response == null) {}
+		if(response == "v")
+			window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
+		else
+			document.getElementById("error_area").innerHTML = "Couldn't join that game";		
+	}
+	</script>
+	<select id="select_game" size="10">
 		{% for game in games %}
-			<option value="{{ game.game_id }}"> Game ID: {{ game.game_id }} | Current Players: {{ game.current_players }}/8 | End Sentence: {{ game.end_sentence }}
+			<option value="{{ game.game_id }}"> <b>Game ID: {{ game.game_id }} | Current Players: {{ game.current_players }}/8 | End Sentence: {{ game.end_sentence }} </b>
 		{% endfor %}
 	</select>
+	<button type="button" onclick="buttonClicked()"> Join Game </button>
+	<div id="error_area">
+	</div>
 </h1>
 
 {% endblock %}
