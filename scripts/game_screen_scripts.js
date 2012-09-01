@@ -294,7 +294,6 @@ function endGame()
 	document.getElementById("next_part").value = "Chat will remain open for five minutes.";
 	document.getElementById("next_part").disabled = true;
 	document.getElementById("chatbox").innerHTML = storedChat;
-    document.getElementById("end_early_button").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
 }
 
@@ -306,7 +305,6 @@ function acknowledgeFinishEndVote()
 		if(xmlHttp.readyState == 4)
 		{
 			response = xmlHttp.getResponseHeader("response");
-			//document.getElementById("end_early_button").disabled = false;
 		}
 	}
 	var url = "/end_vote_complete_verification?game_id=" + encodeURIComponent(game_id);
@@ -547,26 +545,6 @@ function updateUserInfo()
 	{
 		document.getElementById("userbartext").innerHTML += list[user_entry] + "<br>";
 	}	
-}
-
-function voteEndEarly()
-{
-	var parsed = null;
-	function recievedResponseVoteEndEarly()
-	{
-		parsed = JSON.parse(xmlHttp.responseText);
-		if(parsed.success)
-		{
-			document.getElementById("end_early_button").disabled = true;
-		}
-	}
-	var xmlHttp = new XMLHttpRequest();
-	var url = "/vote_end_early";
-	var info = {"game_id": game_id};
-	xmlHttp.open("POST", url, false);
-	xmlHttp.onreadystatechange = recievedResponseVoteEndEarly;
-	xmlHttp.send(JSON.stringify(info));
-	while(parsed == null){}
 }
 
 var timerID = window.setInterval(tick, 1000);
