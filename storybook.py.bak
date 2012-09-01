@@ -335,7 +335,7 @@ class GameScreen(BaseHandler):
             self.render(u'login_screen')
         else:
             names, pictures = getUserInfo(game_id)
-            self.render(u'game_screen', game_id=game_id, user_id=self.user.user_id, end_sentence=game.end_sentence, start_sentence=game.start_sentence, zipList=zip(names,pictures))
+            self.render(u'game_screen', game_id=game_id, user_id=self.user.user_id, end_sentence=game.end_sentence, zipList=zip(names,pictures))
         return
 
     def post(self):
@@ -472,11 +472,11 @@ class StartGame(BaseHandler):
         else:
             if canPlayerHost(self.user.user_id):
                 end_sentence = self.request.get('end_sentence')
-                start_sentence = self.request.get('start_sentence')
+				start_sentence = self.request.get('start_sentence')
                 if end_sentence == "":
                     end_sentence = defaultEnd.getRandomDefault()
-                    if start_sentence == "":
-                        start_sentence = defaultStart.getRandomDefault()
+				if start_sentence == "":
+					start_sentence = defaultStart.getRandomDefault()
                 game_id = initializeGame(getNextGameID(), MAX_PLAYERS, start_sentence, end_sentence)
                 markPlayerHostedGame(self.user.user_id)
                 #joinGame(self.user, game_id)
@@ -583,7 +583,7 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence):
     newGame.current_players = 0
     newGame.num_phases = 1
     newGame.end_sentence = end_sentence
-    newGame.start_sentence = start_sentence
+	newGame.start_sentence = start_sentence
     newGame.can_submit = False
     newGame.display_phase = False
     newGame.finished = False
@@ -1052,11 +1052,11 @@ class UserSettings(BaseHandler):
             self.render(u'login_screen')
 
 class CreateGame(BaseHandler):
-    def get(self):
-        if self.user:
-            self.render(u'create_game')
-        else:
-            self.render(u'login_screen')
+	def get(self):
+		if self.user:
+			self.render(u'create_game')
+		else:
+			self.render(u'login_screen')
 
 routes = [
                 ('/', MenuPage),
@@ -1084,7 +1084,7 @@ routes = [
                 ('/get_visibility', GetVisibility),
                 ('/set_visibility', SetVisibility),
                 ('/user_settings', UserSettings),
-                                ('/create_game', CreateGame)
+				('/create_game', CreateGame)
                 ]
 app = webapp.WSGIApplication(routes)
 

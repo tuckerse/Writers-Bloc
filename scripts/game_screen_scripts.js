@@ -306,7 +306,7 @@ function acknowledgeFinishEndVote()
 		if(xmlHttp.readyState == 4)
 		{
 			response = xmlHttp.getResponseHeader("response");
-			document.getElementById("end_early_button").disabled = false;
+			//document.getElementById("end_early_button").disabled = false;
 		}
 	}
 	var url = "/end_vote_complete_verification?game_id=" + encodeURIComponent(game_id);

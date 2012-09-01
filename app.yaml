@@ -1,5 +1,5 @@
 application: storybookwebapp
-version: betahalfmemcache
+version: betabeginsentences
 runtime: python
 api_version: 1
 

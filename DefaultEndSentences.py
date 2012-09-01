@@ -39,4 +39,4 @@ class defaultEnd:
 
     @staticmethod
     def getRandomDefault():
-        return choice(defaults.default_list)
+        return choice(defaultEnd.default_list)
