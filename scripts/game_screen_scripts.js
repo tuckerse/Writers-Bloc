@@ -13,6 +13,7 @@ var oldPhase;
 var refreshDelay = 5;
 var recentlySubmitted = "";
 var profiles;
+var afks;
 document.onkeypress = processKey;
 
 function processKey(e)
@@ -129,13 +130,13 @@ function tick()
 	if(phase == "s")
 	{
 		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " second(s).";
-        if(seconds == 5)
+        if(seconds == 5 && !(document.getElementById("next_part").disabled == "true"))
             submitNextPart();
 	}
 	else if(phase == "v")
 	{
 		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
-        if(seconds == 5)
+        if(seconds == 5  && !(document.getElementById("submit_vote_button").disabled == true))
             submitVote();
 	}
 	else if(phase == "d")
@@ -517,6 +518,7 @@ function acknowledgeFinishDisplay()
 				updatedStory = parsed.updated_story;
 				scoreInfo = parsed.scores;
 				profiles = parsed.profiles;
+                afks = parsed.afks;
 				updateUserInfo();
 			}
 		}

@@ -61,7 +61,7 @@ function refreshLobby()
 function updateLobby(gameList)
 {
 	var tempString = "";
-	tempString= "<select size=\"10\" style=\"height:350px;width:500px;overflow-y: scroll;overflow-x: scroll;border-style: solid; border-width: 1px;\">";
+	tempString= "<select id=\"selection\" size=\"10\" style=\"height:350px;width:500px;overflow-y: scroll;overflow-x: scroll;border-style: solid; border-width: 1px;\">";
 	for(entry in gameList)
 		tempString += "<option value=\"" + gameList[entry].game_id + "\"> <b>Game ID: " + gameList[entry].game_id + " | Current Players: " + gameList[entry].current_players + "/8 | End Sentence: " + gameList[entry].end_sentence + " </b></option>";
 

@@ -26,7 +26,8 @@ from google.appengine.ext.webapp import util, template
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext.webapp.util import run_wsgi_app
 from Models import LastUsedGameID, Game
-from DefaultSentences import defaults
+from DefaultStartSentences import defaultStart
+from DefaultEndSentences import defaultEnd
 from types import *
 from google.appengine.api import memcache
 from cacheLib import retrieveCache, storeCache, deleteData, markPlayerHostedGame, canPlayerHost, resetPlayerHost
@@ -42,7 +43,6 @@ VOTE_TIME = 45
 DISPLAY_TIME = 20
 _USER_FIELDS = u'name,email,picture,friends'
 LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
-DEFAULT_SENTENCES_KEY = "AUIRETI562345345TYI"
 END_VOTING_TIME = 20
 FIRST_PLACE_BONUS = 3
 SECOND_PLACE_BONUS = 1
@@ -209,23 +209,28 @@ class DisplayCompleteVerification(BaseHandler):
             if (game.num_phases < 10 or game.went_to_submission) and (len(game.users_voted_end_early) < len(game.users)/2):
                 if not game.display_phase and game.can_submit:
                     self.response.headers.add_header('response', "v")
+                    logging.debug(self.response.headers)
                     return
                 elif datetime.datetime.now() > game.end_display_time:
                     changeToSubmissionPhase(game, self)
                     game.went_to_submission = True
                     game.put()
                     #storeCache(game, game_id)
+                    logging.debug(self.response.headers)
                     return
                 self.response.headers.add_header('response', "i")
                 self.response.headers.add_header('updated_story', "")
             else:
                 if (not game.display_phase) and game.end_voting:
                     self.response.headers.add_header('response', "v")
+                    logging.debug(self.response.headers)
                     return
                 elif datetime.datetime.now() > game.end_display_time:
                     changeToEndVotingPhase(game, self)
+                    logging.debug(self.response.headers)
                     return
                 self.response.headers.add_header('response', "i")
+        logging.debug(self.response.headers)
         return
 
 def getProfilesAndAFKS(scoreList):
@@ -236,7 +241,10 @@ def getProfilesAndAFKS(scoreList):
         #user = User.get_by_key_name(user_id)
         user = retrieveCache(user_id, User)
         profiles.append(user.picture)
-        afks.append(user.rounds_afk >= 2)
+        if user.rounds_afk >= 2:
+            afks.append(True)
+        else:
+            afks.append(False)
 
     return profiles, afks
 
@@ -389,6 +397,7 @@ class GameStatus(webapp.RequestHandler):
             response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds
 
         response = json.dumps(response_info)
+        logging.debug(response_info)
 
         if ((datetime.datetime.now() - game.created).seconds) > MAX_GAME_CREATION and not game.started:
             db.delete(game)
@@ -464,10 +473,11 @@ class StartGame(BaseHandler):
             if canPlayerHost(self.user.user_id):
                 end_sentence = self.request.get('end_sentence')
                 if end_sentence == "":
-                    end_sentence = defaults.getRandomDefault()
+                    end_sentence = defaultEnd.getRandomDefault()
                 game_id = initializeGame(getNextGameID(), MAX_PLAYERS, end_sentence)
                 markPlayerHostedGame(self.user.user_id)
-                joinGame(self.user, game_id)
+                #joinGame(self.user, game_id)
+                joinGame(retrieveCache(self.user.user_id, User), game_id)
                 self.render(u'game_created_screen', game_id=str(game_id), MAX_PLAYERS=MAX_PLAYERS)
             else:
                 self.render(u'cant_host_yet')
@@ -723,7 +733,8 @@ def determineWinner(game):
     game.winning_sentences.append(game.next_parts[winning_index])
     game.winning_users.append(game.users_next_parts[winning_index])
     #game.winning_users_names.append(trimName((User.get_by_key_name(str(game.users_next_parts[winning_index]))).name))
-    game.winning_users_names.append(trimName(retrieveCache(str(game.users_next_parts[winning_index]), User).name))
+    winning_user = retrieveCache(str(game.users_next_parts[winning_index]), User)
+    game.winning_users_names.append(trimName(winning_user.name, winning_user.display_type))
     game.story.append(game.next_parts[winning_index])
 
     for i in range(0, len(game.users)):
@@ -778,9 +789,10 @@ def getScoreInfo(game):
     haveUsed = []
     for i in range(0, len(game.users)):
         user_id = game.users[i]
-        user = User.get_by_key_name(user_id)
+        #user = User.get_by_key_name(user_id)
+        user = retrieveCache(user_id, User)
         temp = {}
-        temp['user_name'] = trimName(user.name)
+        temp['user_name'] = trimName(user.name, user.display_type)
         temp['user_id'] = user_id
         temp['score'] = game.scores[i]
         scores.append(temp)
@@ -799,7 +811,7 @@ def getRecentScoreInfo(game):
         #user = User.get_by_key_name(user_id)
         user = retrieveCache(user_id, User)
         temp = {}
-        temp['user_name'] = trimName(user.name)
+        temp['user_name'] = trimName(user.name, user.display_type)
         temp['score'] = game.recent_score_data[i]
         submitted = game.users_next_parts.count(user_id) > 0
         if submitted:
