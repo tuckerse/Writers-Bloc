@@ -1,0 +1,61 @@
+body {
+  color: #000;
+  font-family: Comic Sans, cursive;
+  background: #ffffff;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  overflow: hidden;
+}
+h1 {
+  border-bottom: 1px solid #1d4088;
+  color: #6495ED;
+  background: #ffffff;
+  font-size: 25px;
+  margin: 0 0 15px 0;
+  padding-bottom: 5px;
+}
+#loginscreen {
+  float: inherit;
+  background: #ffffff;
+  width: 375px;
+}
+#gamescreen {
+  border-bottom: 1px solid #1d4088;
+  color: #000000;
+  background: #ffffff;
+  font-size: 15px;
+  margin: 0 auto;
+  width: 700px;
+}
+
+#wrapper {
+  float: left;
+  background: #ffffff;
+  width: 510px;
+}
+
+#userbar {
+  float: right;
+  position: relative;
+  top: 40px;
+  background: #ffffff;
+  width: 180px;
+  height: 654px
+}
+
+#timer {
+  float: right;
+  position: relative;
+  background: #ffffff;
+  width: 180lpx;
+}
+
+#userbartext {
+  position: relative;
+  border-style: solid;
+  background: #fffff1;
+  border-width: 1px;
+  vertical-align: center;
+}

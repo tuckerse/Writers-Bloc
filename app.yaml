@@ -1,0 +1,24 @@
+application: storybookwebapp
+version: alphaupdates
+runtime: python
+api_version: 1
+
+default_expiration: "1s"
+
+handlers:
+- url: /favicon\.ico
+  static_files: images/favicon.ico
+  upload: images/favicon\.ico
+
+- url: /stylesheets
+  static_dir: stylesheets
+
+- url: /scripts
+  static_dir: scripts
+
+- url: /data
+  static_dir: data
+
+- url: /.*
+  script: storybook.py
+

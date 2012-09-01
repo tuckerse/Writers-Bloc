@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<h1 id="textstuff">
+	<select name="select_game" size="10">
+		{% for game in games %}
+			<option value="{{ game.game_id }}"> Game ID: {{ game.game_id }} | Current Players: {{ game.current_players }}/8 | End Sentence: {{ game.end_sentence }}
+		{% endfor %}
+	</select>
+</h1>
+
+{% endblock %}
+

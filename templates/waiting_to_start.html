@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block body %}
+<h1 id="textstuff">
+	You have joined a game. Now you are just waiting for enough people to join, or for the host to start it early.
+	<script>
+		var intervalID = window.setInterval(statusCheck, 2000);
+		var game_id;
+
+		function statusCheck()
+		{
+			game_id = "{{ game_id }}" ;
+			var url = "/game_status";
+			var info = {"game_id" : game_id};
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("POST", url, false);
+			xmlHttp.setRequestHeader("Content-type", "application/json");
+			xmlHttp.send(JSON.stringify(info));
+			var response = JSON.parse(xmlHttp.responseText);
+			var num_players = response.num_players;
+			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players";
+			var started = response.started;
+			if(started == "y")
+			{
+				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
+			}
+		}
+	</script>
+</h1>
+
+<div id="current_players">
+	Fetching Game Data...
+</div>
+{% endblock %}
+

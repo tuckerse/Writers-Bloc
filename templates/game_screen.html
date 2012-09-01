@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block body %}
+<div id="gamescreen">
+	<script>var game_id = "{{ game_id }}";</script>
+	<div id="wrapper">
+		<h1>
+			<div id = "story_title">
+			The Story So Far...
+			</div>
+		</h1>
+		<div id="story" style="height:350px;width:500px;font:12px/22px Comic Sans, cursive;overflow-y: scroll;
+overflow-x: hidden;border-style: solid; border-width: 1px;">
+			...{{ end_sentence }}
+		</div>
+		
+		<div id="submission_area" style="padding-bottom: 2px; padding-top: 2px;">
+			<form name = "part_input" action="">
+			Next Part: <input type="text" id="next_part" size="55">
+			<input id="submit_button" type="button" value="Submit" onclick="submitNextPart()" onkeypress="return false"/>
+			</form>
+		</div>
+
+		<div id="chatbox" style="height:200px;width:500px;font:12px/18px Comic Sans,cursive;overflow:scroll;border-style: solid; border-width: 1px;">
+		Future chat box.
+		</div>
+	</div>
+
+	<div id="userbar">
+		<div id="userbartext">
+			Users:<br>
+			{% for name in name_list %}
+				{{ name }} 
+			{% endfor %}
+		</div>
+	</div>
+	<div id="timer">
+		Fetching game data.
+	</div>
+	<script type="text/javascript" src="/scripts/game_screen_scripts.js"></script>
+</div>
+{% endblock %}
+

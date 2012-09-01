@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+Storybook
+<form method="link" action="find_game">
+	<input type="submit" value="Find Game">
+</form>
+
+<form method="link" action="view_lobby">
+	<input type="submit" disabled="true" value="View Lobby">
+</form>
+
+<div style="padding-bottom: 2px; padding-top: 2px;">
+	<form name = "part_input" action = "/start_game" method="post">
+	End Sentence (Leave blank for a default sentence): <input type="text" name="end_sentence" /><input type="submit" value="Submit" />
+	</form>
+</div>
+
+{% endblock %}
+

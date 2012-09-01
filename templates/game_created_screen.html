@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block body %}
+<h1 id="textstuff">
+	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game. Note: No one may join once the game has started.
+	<script>
+		var intervalID = window.setInterval(statusCheck, 2000);
+		var game_id;
+
+		function statusCheck()
+		{
+			game_id = "{{ game_id }}" ;
+			var url = "/game_status";
+			var info = {"game_id" : game_id};
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("POST", url, false);
+			xmlHttp.setRequestHeader("Content-type", "application/json");
+			xmlHttp.send(JSON.stringify(info));
+			var response = JSON.parse(xmlHttp.responseText);
+			var num_players = response.num_players;
+			document.getElementById("current_players").innerHTML = num_players + "/{{ MAX_PLAYERS }} Players";
+			var started = response.started;
+			if(started == "y")
+			{
+				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
+			}
+		}
+
+		function startEarly()
+		{
+			if(game_id == null)
+				return;
+			window.location.replace("/start_early?game_id=" + encodeURIComponent(game_id));
+			return;
+		}
+	</script>
+</h1>
+
+<div id="current_players">
+	Initializing Game...
+</div>
+
+<input type="button" name="early_start" Value="Start Early?" onClick="startEarly()">
+
+{% endblock %}
+

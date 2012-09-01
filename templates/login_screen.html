@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div id="loginscreen">
+  <h1>Welcome to Storybook!</h1>
+
+  <div id="info">
+    <p>
+      To start playing Storybook you must login with your Facebook account.
+    </p>
+  </div>
+
+  <div id="login-flow">
+    <fb:login-button perms="email,offline_access" show-faces="true"></fb:login-button>
+  </div>
+</div>
+{% endblock %}
