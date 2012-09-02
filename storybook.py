@@ -69,13 +69,6 @@ def postRedditStory(game):
     RedditLib.postStory(game)
     return
 
-class CreateGame(BaseHandler):
-    def get(self):
-        if self.user:
-            self.render(u'create_game')
-        else:
-            self.render(u'login_screen')
-
 routes = [
     ('/', MenuPage),
     ('/find_game', FindGame),
