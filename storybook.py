@@ -189,29 +189,6 @@ class MenuPage(BaseHandler):
         else:
             self.render(u'menu_screen')
 
-class Vote(BaseHandler):
-    def post(self):
-        if not self.user:
-            logging.critical('Invalid vote attempt detected!')
-        else:
-            game_id = self.request.get('game_id')
-            game = Game.get_by_key_name(game_id)
-            #game = retrieveCache(game_id, Game)
-            if (self.user.user_id in game.users) and not (self.user.user_id in game.users_voted) and game.can_vote:
-                choice = int(self.request.get('part_voted'))
-                game.users_voted.append(self.user.user_id)
-                game.votes.append(choice)
-                if allUsersVoted(game):
-                    changeToDisplayPhase(game)
-                else:
-                    game.put()
-                    #storeCache(game, game_id)
-                self.response.headers.add_header('response', "s")
-                return
-
-        self.response.headers.add_header('response', "n")
-        return
-
 class VoteCompleteVerification(BaseHandler):
     def post(self):
         if not self.user:
@@ -257,29 +234,6 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence):
     #storeCache(newGame, str(game_id))
     return game_id
 
-def trimName(name, display_type):
-    split_name = name.partition(' ')
-    return_string = ''
-    if display_type == 0:
-        return 'Anonymous'
-    elif display_type == 1:
-        for name in split_name:
-            return_string += name[0] + '. '
-        return return_string
-    elif display_type == 2:
-        for i in range(0, len(split_name)):
-            if i == (len(split_name) - 1):
-                return_string += split_name[i][0] + '.'
-            else:
-                return_string += split_name[i] + ' '
-        return return_string
-    else:
-        for name in split_name:
-            return_string += name + ' '
-        return return_string
-
-    return (split_name[0] + ' ' + (split_name[2])[0] + '.')
-
 def getNextGameID():
     previous_game_id = LastUsedGameID.get_by_key_name(LAST_USED_GAME_ID_KEY)
     if previous_game_id.game_id == sys.maxint:
@@ -289,59 +243,6 @@ def getNextGameID():
     previous_game_id.game_id = game_id
     previous_game_id.put()
     return game_id
-
-def determineWinner(game):
-    scores = {}
-    all_voted_one = False
-
-    for user in game.users:
-        scores[user] = 0
-
-    max_votes = 0
-    second_place = 0
-    second_votes = 0
-    winning_index = 0
-
-    for i in range(0, len(game.next_parts)):
-        vote_count = game.votes.count(i)
-        scores[str(game.users_next_parts[i])] += vote_count
-        if vote_count > max_votes:
-            max_votes = vote_count
-            winning_index = i
-
-    if max_votes == len(game.votes):
-        all_voted_one = True
-
-    for i in range(0, len(game.next_parts)):
-        vote_count = game.votes.count(i)
-        if (vote_count > second_votes and not (i == winning_index)) or ((vote_count == max_votes) and not (i == winning_index)):
-            second_votes = vote_count
-            second_place = i
-
-    tie = (max_votes == second_votes) and (len(game.next_parts) > 1)
-
-    if all_voted_one:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
-    elif tie:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_TIE_BONUS
-        scores[str(game.users_next_parts[second_place])] += FIRST_PLACE_TIE_BONUS
-    elif len(game.next_parts) > 1:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
-        scores[str(game.users_next_parts[second_place])] += SECOND_PLACE_BONUS
-    else:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
-
-    game.winning_sentences.append(game.next_parts[winning_index])
-    game.winning_users.append(game.users_next_parts[winning_index])
-    #game.winning_users_names.append(trimName((User.get_by_key_name(str(game.users_next_parts[winning_index]))).name))
-    winning_user = retrieveCache(str(game.users_next_parts[winning_index]), User)
-    game.winning_users_names.append(trimName(winning_user.name, winning_user.display_type))
-    game.story.append(game.next_parts[winning_index])
-
-    for i in range(0, len(game.users)):
-        user_score = scores[game.users[i]] if (game.users[i] in game.users_voted) else 0
-        game.recent_score_data[i] = user_score
-        game.scores[i] += user_score
 
 def getStoryString(game):
     string = game.start_sentence + " ... "
@@ -445,21 +346,6 @@ def resetRecentScoreData(game):
     game.recent_score_data = []
     for user in game.users:
         game.recent_score_data.append(0)
-
-def changeToDisplayPhase(game, request_handler = None):
-    game.can_submit = False
-    game.can_vote = False
-    game.end_submission_time = None
-    game.display_phase = True
-    game.went_to_submission = False
-    game.end_display_time = datetime.datetime.now() + datetime.timedelta(seconds=DISPLAY_TIME)
-    determineWinner(game)
-    recent_winner_string = "\"" + game.winning_sentences[len(game.winning_sentences)-1] + "\" By: " + game.winning_users_names[len(game.winning_users_names) - 1]
-    if not request_handler == None:
-        request_handler.response.headers.add_header('recent_winner', recent_winner_string)
-        request_handler.response.headers.add_header('completed', "v")
-    game.put()
-    #storeCache(game, str(game.game_id))
 
 def changeToSubmissionPhase(game, request_handler = None):
     game.can_submit = True
