@@ -75,3 +75,20 @@ def changeToVotingPhase(game, request_handler = None):
 def getLobbyGames():
     query = Game.gql("WHERE current_players <:1 AND started =:2 ORDER BY current_players DESC", MAX_PLAYERS, False)
     return query.fetch(1000000)
+
+def startGame(game_id):
+    game = Game.get_by_key_name(str(game_id))
+    #game = retrieveCache(str(game_id), Game)
+    if game.started:
+        return False
+
+    game.started = True
+    current_time = datetime.datetime.now()
+    end_submission = current_time + datetime.timedelta(seconds=SUBMISSION_TIME)
+    game.end_submission_time = end_submission
+    game.can_submit = True
+    for user in game.users:
+        game.scores.append(0)
+    game.put()
+    #storeCache(game, str(game_id))
+    return True
