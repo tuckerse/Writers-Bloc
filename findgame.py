@@ -1,3 +1,5 @@
+from basehandler import BaseHandler
+
 class FindGame(BaseHandler):
     def get(self):
         if not self.user:
