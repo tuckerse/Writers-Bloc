@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHadler
 from Models import Game
-from helperfunctions import changeToDisplayPhase
+from helperfunctions import changeToDisplayPhase, allUsersVoted
 
 class Vote(BaseHandler):
     def post(self):

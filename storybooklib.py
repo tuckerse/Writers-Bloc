@@ -9,6 +9,14 @@ from google.appengine.ext import db
 MAX_PLAYERS = 8
 VOTE_TIME = 45
 LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
+SUBMISSION_TIME = 90
+DISPLAY_TIME = 20
+END_VOTING_TIME = 20
+FIRST_PLACE_BONUS = 3
+SECOND_PLACE_BONUS = 1
+FIRST_PLACE_TIE_BONUS = 2
+SECOND_PLACE_TIE_BONUS = 1
+MAX_GAME_CREATION = 10*60
 
 def findGame(user):
     query = Game.gql("WHERE current_players <:1 ORDER BY current_players ASC", MAX_PLAYERS)
@@ -381,3 +389,15 @@ def getNextGameID():
     previous_game_id.game_id = game_id
     previous_game_id.put()
     return game_id
+
+
+def allUsersVoted(game):
+    return (len(game.users) == len(game.users_voted))
+
+def getPlayerNames(game):
+    nameList = []
+    for user_id in game.users:
+        user = retrieveCache(user_id, User)
+        nameList.append(trimName(user.name, user.display_type))
+        #nameList.append(trimName(retrieveCache(user, User).name))
+    return nameList

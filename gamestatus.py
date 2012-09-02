@@ -3,6 +3,7 @@ import logging
 from google.appengine.ext import db
 from django.utils import simplejson as json
 from Models import Game
+from storybooklib import getPlayerNames, MAX_GAME_CREATION
 
 class GameStatus(webapp.RequestHandler):
     def post(self):

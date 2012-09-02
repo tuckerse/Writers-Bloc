@@ -4,7 +4,7 @@ import os
 
 from django.utils import simplejson as json
 from FacebookHandler import Facebook
-from UserHandler import User
+from UserHandler import User, _USER_FIELDS
 from cacheLib import retrieveCache, storeCache
 
 class BaseHandler(webapp.RequestHandler):

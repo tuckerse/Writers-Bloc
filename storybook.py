@@ -38,37 +38,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from google.appengine.dist import use_library
 use_library('django', '0.96')
 
-SUBMISSION_TIME = 90
-DISPLAY_TIME = 20
-_USER_FIELDS = u'name,email,picture,friends'
-LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
-END_VOTING_TIME = 20
-FIRST_PLACE_BONUS = 3
-SECOND_PLACE_BONUS = 1
-FIRST_PLACE_TIE_BONUS = 2
-SECOND_PLACE_TIE_BONUS = 1
-MAX_GAME_CREATION = 10*60
-
-def getPlayerNames(game):
-    nameList = []
-    for user_id in game.users:
-        user = retrieveCache(user_id, User)
-        nameList.append(trimName(user.name, user.display_type))
-        #nameList.append(trimName(retrieveCache(user, User).name))
-    return nameList
-
-def resetRecentScoreData(game):
-    game.recent_score_data = []
-    for user in game.users:
-        game.recent_score_data.append(0)
-
-def allUsersVoted(game):
-    return (len(game.users) == len(game.users_voted))
-
-def postRedditStory(game):
-    RedditLib.postStory(game)
-    return
-
 routes = [
     ('/', MenuPage),
     ('/find_game', FindGame),

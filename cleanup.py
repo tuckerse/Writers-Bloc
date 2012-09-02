@@ -5,11 +5,12 @@ from Models import Game
 from google.appengine.api import memcache
 from UserHandler import User
 from cacheLib import deleteData
+from storybooklib import MAX_GAME_CREATION
+
 import RedditLib
 import datetime
 import time
 
-MAX_GAME_CREATION = 10*60
 MAX_TIME_INACTIVE = 5*60
 
 class Cleanup(webapp.RequestHandler):
