@@ -909,7 +909,7 @@ routes = [
                 ('/get_visibility', GetVisibility),
                 ('/set_visibility', SetVisibility),
                 ('/user_settings', UserSettings),
-                                ('/create_game', CreateGame)
+                ('/create_game', CreateGame)
                 ]
 app = webapp.WSGIApplication(routes)
 
