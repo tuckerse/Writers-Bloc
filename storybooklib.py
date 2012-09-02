@@ -1,4 +1,5 @@
 import datetime
+import random
 import sys
 
 from Models import Game, LastUsedGameID
