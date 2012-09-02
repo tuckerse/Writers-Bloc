@@ -1,6 +1,6 @@
 from basehandler import BaseHandler
 from django.utils import simplejson as json
-from helperfunctions import removeUser
+from storybooklib import removeUser
 
 class LeaveBeforeStart(BaseHandler):
     def post(self):
