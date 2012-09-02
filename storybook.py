@@ -1,41 +1,37 @@
-import Cookie
-import base64
-import cgi
-import conf
-import datetime
-import hashlib
-import hmac
-import logging
-import time
-import traceback
-import urllib
 import os
-import time
-import random
-import RedditLib
-import sys
 
-from FacebookHandler import Facebook
-from UserHandler import User
-from uuid import uuid4
 from google.appengine.dist import use_library
-from django.utils import simplejson as json
-from google.appengine.api import urlfetch, taskqueue
-from google.appengine.ext import db, webapp
-from google.appengine.ext.webapp import util, template
-from google.appengine.runtime import DeadlineExceededError
+from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from DefaultStartSentences import defaultStart
-from DefaultEndSentences import defaultEnd
-from types import *
-from google.appengine.api import memcache
-from cacheLib import retrieveCache, storeCache, deleteData, markPlayerHostedGame, canPlayerHost, resetPlayerHost
-from basehandler import BaseHandler
+from Models import LastUsedGameID
+
+from menupage import MenuPage
 from findgame import FindGame
+from gamescreen import GameScreen
+from gamestatus import GameStatus
+from viewlobby import  ViewLobby
+from startgame import StartGame
+from startearly import StartEarly
+from submissioncompleteverification import SubmissionCompleteVerification
+from getchoices import GetChoices
+from vote import Vote
+from votecompleteverification import VoteCompleteVerification
+from displaycompleteverification import DisplayCompleteVerification
+from endvotecompleteverification import EndVoteCompleteVerification
+from endvote import EndVote
+from joingame import JoinGame
+from waitingtostart import WaitingToStart
+from cancelgame import CancelGame
+from gamedeleted import GameDeleted
+from leavebeforestart import LeaveBeforeStart
+from voteendearly import VoteEndEarly
+from getlobby import GetLobby
+from getvisibility import GetVisibility
+from setvisibility import SetVisibility
+from usersettings import UserSettings
+from CreateGame import CreateGame
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-
-from google.appengine.dist import use_library
 use_library('django', '0.96')
 
 routes = [
