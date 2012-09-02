@@ -38,9 +38,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from google.appengine.dist import use_library
 use_library('django', '0.96')
 
-MAX_PLAYERS = 8
 SUBMISSION_TIME = 90
-VOTE_TIME = 45
 DISPLAY_TIME = 20
 _USER_FIELDS = u'name,email,picture,friends'
 LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
@@ -161,45 +159,6 @@ class WaitingToStart(BaseHandler):
             user_id = self.user.user_id
             self.render(u'waiting_to_start', game_id=game_id, MAX_PLAYERS=MAX_PLAYERS, user_id=user_id)
 
-        return
-
-
-class GameScreen(BaseHandler):
-    def get(self):
-        game_id = self.request.get('game_id')
-        game = Game.get_by_key_name(str(game_id))
-        #game = retrieveCache(str(game_id), Game)
-        self.response.headers['Content-type'] = 'text/html'
-        if not self.user:
-            self.render(u'login_screen')
-        else:
-            names, pictures = getUserInfo(game_id)
-            self.render(u'game_screen', game_id=game_id, user_id=self.user.user_id, end_sentence=game.end_sentence, start_sentence=game.start_sentence, zipList=zip(names,pictures))
-        return
-frounds
-    def post(self):
-        if not self.user:
-            logging.critical("Invalid part submission detected!")
-        else:
-            info = json.loads(self.request.body)
-            game_id = info['game_id']
-            game = Game.get_by_key_name(str(game_id))
-            #game = retrieveCache(str(game_id), Game)
-            if self.user.user_id in game.users and not int(self.user.user_id) in game.users_next_parts and game.can_submit:
-                resetAFK(user)
-                next_part = info['next_part']
-                game = Game.get_by_key_name(str(game_id))
-                #game = retrieveCache(str(game_id), Game)
-                game.next_parts.append(next_part)
-                game.users_next_parts.append(self.user.user_id)
-                if allUsersSubmitted(game):
-                    changeToVotingPhase(game)
-                else:
-                    game.put()
-                    #storeCache(game, str(game_id))
-                self.response.headers.add_header('success', 's')
-            else:
-                self.response.headers.add_header('success', 'f')
         return
 
 class GameStatus(webapp.RequestHandler):
@@ -434,27 +393,6 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence):
     #storeCache(newGame, str(game_id))
     return game_id
 
-def joinGame(user, game_id):
-    result = Game.get_by_key_name(str(game_id))
-    #result = retrieveCache(str(game_id), Game)
-    if result.current_players == MAX_PLAYERS or result.started or (str(user.user_id) in result.users):
-        return False
-    result.users.append(user.user_id)
-    result.current_players += 1
-    resetAFK(user)
-    if result.current_players == MAX_PLAYERS:
-        result.started = True
-        result.put()
-        #storeCache(result, str(game_id))
-        return result.game_id
-    result.put()
-    #storeCache(result, str(game_id))
-    return result.game_id
-
-def resetAFK(user):
-    user.rounds_afk = 0
-    storeCache(user, user.user_id)
-
 def startGame(game_id):
     game = Game.get_by_key_name(str(game_id))
     #game = retrieveCache(str(game_id), Game)
@@ -504,19 +442,6 @@ def getNextGameID():
     previous_game_id.game_id = game_id
     previous_game_id.put()
     return game_id
-
-def getUserInfo(game_id):
-    #game = Game.get_by_key_name(str(game_id))
-    game = retrieveCache(str(game_id), Game)
-    name_list = []
-    pic_list = []
-    for user_id in game.users:
-        #user = User.get_by_key_name(user_id)
-        user = retrieveCache(user_id, User)
-        name_list.append(trimName(user.name, user.display_type))
-        pic_list.append(user.picture)
-
-    return name_list, pic_list
 
 def determineWinner(game):
     scores = {}
@@ -714,23 +639,8 @@ def changeToEndVotingPhase(game, request_handler = None):
     game.put()
     #storeCache(game, str(game.game_id))
 
-def changeToVotingPhase(game, request_handler = None):
-    game.can_submit = False
-    game.can_vote = True
-    game.end_submission_time = None
-    game.went_to_submission = False
-    resetRecentScoreData(game)
-    game.end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=VOTE_TIME)
-    game.put()
-    #storeCache(game, str(game.game_id))
-    if not request_handler == None:
-        request_handler.response.headers.add_header('completed', "v")
-
 def allUsersVoted(game):
     return (len(game.users) == len(game.users_voted))
-
-def allUsersSubmitted(game):
-    return (len(game.users) == len(game.users_next_parts))
 
 def finishGame(game):
     game.finished = True
