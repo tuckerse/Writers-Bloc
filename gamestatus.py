@@ -1,6 +1,6 @@
 import logging
 
-from google.appengine.ext import db
+from google.appengine.ext import db, webapp
 from django.utils import simplejson as json
 from Models import Game
 from storybooklib import getPlayerNames, MAX_GAME_CREATION
