@@ -49,17 +49,6 @@ FIRST_PLACE_TIE_BONUS = 2
 SECOND_PLACE_TIE_BONUS = 1
 MAX_GAME_CREATION = 10*60
 
-class WaitingToStart(BaseHandler):
-    def get(self):
-        if not self.user:
-            self.render(u'login_screen')
-        else:
-            game_id = self.request.get('game_id')
-            user_id = self.user.user_id
-            self.render(u'waiting_to_start', game_id=game_id, MAX_PLAYERS=MAX_PLAYERS, user_id=user_id)
-
-        return
-
 def getPlayerNames(game):
     nameList = []
     for user_id in game.users:
