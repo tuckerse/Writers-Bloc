@@ -7,8 +7,8 @@ default_expiration: "1s"
 
 handlers:
 - url: /favicon\.ico
-  static_files: images/favicon.ico
-  upload: images/favicon\.ico
+  static_files: images/StorybookIcon32.ico
+  upload: images/StorybookIcon32\.ico
 
 - url: /storybook_icon\.png
   static_files: images/StorybookIcon75.png
