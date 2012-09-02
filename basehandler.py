@@ -3,6 +3,7 @@ import datetime
 import os
 import traceback
 import Cookie
+import uuid4
 
 from django.utils import simplejson as json
 from FacebookHandler import Facebook
