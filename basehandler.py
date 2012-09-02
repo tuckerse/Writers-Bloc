@@ -8,6 +8,7 @@ from FacebookHandler import Facebook
 from UserHandler import User, _USER_FIELDS
 from cacheLib import retrieveCache, storeCache
 from google.appengine.ext import webapp
+from google.appengine.api import urlfetch
 
 class BaseHandler(webapp.RequestHandler):
     facebook = None
