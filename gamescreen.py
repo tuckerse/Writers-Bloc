@@ -3,6 +3,7 @@ import logging
 from basehandler import BaseHandler
 from Models import Game
 from storybooklib import getUserInfo, resetAFK, allUsersSubmitted, changeToVotingPhase
+from django.utils import simplejson as json
 
 class GameScreen(BaseHandler):
     def get(self):
