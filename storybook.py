@@ -248,12 +248,6 @@ def getProfilesAndAFKS(scoreList):
 
     return profiles, afks
 
-def getAFKS(scoreList):
-    afks = []
-    for entry in scoreList:
-        user_id
-
-
 class EndVote(BaseHandler):
     def post(self):
         if not self.user:
