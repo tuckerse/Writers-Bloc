@@ -101,23 +101,6 @@ def postRedditStory(game):
     RedditLib.postStory(game)
     return
 
-class LeaveBeforeStart(BaseHandler):
-    def post(self):
-        info = json.loads(self.request.body)
-        game_id = info['game_id']
-        user_id = info['user_id']
-        removeUser(game_id, user_id)
-
-def removeUser(game_id, user_id):
-    game = Game.get_by_key_name(game_id)
-    try:
-        game.users.remove(user_id)
-        game.current_players = game.current_players - 1
-        game.put()
-        #storeCache(game, str(game.game_id))
-    except Exception, ex:
-        logging.critical(ex)
-
 class VoteEndEarly(BaseHandler):
     def post(self):
         if self.user:

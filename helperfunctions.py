@@ -330,9 +330,18 @@ def removeAFKVotes(game):
 
     game.put()
 
-
 def finishGame(game):
     game.finished = True
     game.game_ended = datetime.datetime.now()
     game.put()
     #storeCache(game, str(game.game_id))
+
+def removeUser(game_id, user_id):
+    game = Game.get_by_key_name(game_id)
+    try:
+        game.users.remove(user_id)
+        game.current_players = game.current_players - 1
+        game.put()
+        #storeCache(game, str(game.game_id))
+    except Exception, ex:
+        logging.critical(ex)
