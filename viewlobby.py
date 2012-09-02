@@ -1,4 +1,4 @@
-from helperfunctions import getLobbyGames
+from storybooklib import getLobbyGames
 from basehandler import BaseHandler
 
 class ViewLobby(BaseHandler):
