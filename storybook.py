@@ -49,63 +49,6 @@ FIRST_PLACE_TIE_BONUS = 2
 SECOND_PLACE_TIE_BONUS = 1
 MAX_GAME_CREATION = 10*60
 
-class DisplayCompleteVerification(BaseHandler):
-    def post(self):
-        if not self.user:
-            logging.critical("Invalid display completion verification detected!")
-            return
-        else:
-            game_id = self.request.get('game_id')
-            game = Game.get_by_key_name(game_id)
-            #game = retrieveCache(game_id, Game)
-            response = {}
-            self.response.headers['Content-type'] = 'application/json'
-            response['updated_story'] = getStoryStringForGameScreen(game)
-            response['scores'] = getScoreInfo(game)
-            response['profiles'], response['afks'] = getProfilesAndAFKS(response['scores'])
-            self.response.out.write(json.dumps(response))
-            if (game.num_phases < 10 or game.went_to_submission) and (len(game.users_voted_end_early) < len(game.users)/2):
-                if not game.display_phase and game.can_submit:
-                    self.response.headers.add_header('response', "v")
-                    logging.debug(self.response.headers)
-                    return
-                elif datetime.datetime.now() > game.end_display_time:
-                    changeToSubmissionPhase(game, self)
-                    game.went_to_submission = True
-                    game.put()
-                    #storeCache(game, game_id)
-                    logging.debug(self.response.headers)
-                    return
-                self.response.headers.add_header('response', "i")
-                self.response.headers.add_header('updated_story', "")
-            else:
-                if (not game.display_phase) and game.end_voting:
-                    self.response.headers.add_header('response', "v")
-                    logging.debug(self.response.headers)
-                    return
-                elif datetime.datetime.now() > game.end_display_time:
-                    changeToEndVotingPhase(game, self)
-                    logging.debug(self.response.headers)
-                    return
-                self.response.headers.add_header('response', "i")
-        logging.debug(self.response.headers)
-        return
-
-def getProfilesAndAFKS(scoreList):
-    profiles = []
-    afks = []
-    for entry in scoreList:
-        user_id = entry['user_id']
-        #user = User.get_by_key_name(user_id)
-        user = retrieveCache(user_id, User)
-        profiles.append(user.picture)
-        if user.rounds_afk >= 2:
-            afks.append(True)
-        else:
-            afks.append(False)
-
-    return profiles, afks
-
 class EndVote(BaseHandler):
     def post(self):
         if not self.user:
@@ -221,27 +164,6 @@ def getNextGameID():
     previous_game_id.put()
     return game_id
 
-def getStoryString(game):
-    string = game.start_sentence + " ... "
-    for s in game.story:
-        string += s
-    string += " ... " + game.end_sentence
-    return string
-
-def getStoryStringForGameScreen(game):
-    string = game.start_sentence + " ...<br><br><br>"
-    for s in game.story:
-        string += s + ' '
-    string += "<br><br><br>... " + game.end_sentence
-    return string
-
-def clearPhaseInformation(game):
-    game.next_parts = []
-    game.users_next_parts = []
-    game.votes = []
-    game.users_voted = []
-    game.num_phases = game.num_phases + 1
-
 def finishGameTally(game):
     #true is finished
     removeAFKVotes(game)
@@ -262,55 +184,10 @@ def removeAFKVotes(game):
 
     game.put()
 
-
-def getScoreInfo(game):
-    scores = []
-    haveUsed = []
-    for i in range(0, len(game.users)):
-        user_id = game.users[i]
-        #user = User.get_by_key_name(user_id)
-        user = retrieveCache(user_id, User)
-        temp = {}
-        temp['user_name'] = trimName(user.name, user.display_type)
-        temp['user_id'] = user_id
-        temp['score'] = game.scores[i]
-        scores.append(temp)
-
-    scores = sortByScore(scores)
-    for i in range(0, len(scores)):
-        (scores[i])['position'] = i+1
-
-    return scores
-
 def resetRecentScoreData(game):
     game.recent_score_data = []
     for user in game.users:
         game.recent_score_data.append(0)
-
-def changeToSubmissionPhase(game, request_handler = None):
-    game.can_submit = True
-    game.can_vote = False
-    game.end_voting = False
-    game.can_vote = False
-    game.end_submission_time = datetime.datetime.now() + datetime.timedelta(seconds=SUBMISSION_TIME)
-    game.display_phase = False
-    game.end_users_voted = []
-    game.end_votes = []
-    clearPhaseInformation(game)
-    if not request_handler == None:
-        request_handler.response.headers.add_header('response', "v")
-    game.put()
-    #storeCache(game, str(game.game_id))
-
-def changeToEndVotingPhase(game, request_handler = None):
-    game.end_voting = True
-    game.can_vote = False
-    game.end_end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=END_VOTING_TIME)
-    game.display_phase = False
-    if not request_handler == None:
-        request_handler.response.headers.add_header('response', "v")
-    game.put()
-    #storeCache(game, str(game.game_id))
 
 def allUsersVoted(game):
     return (len(game.users) == len(game.users_voted))

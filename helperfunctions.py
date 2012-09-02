@@ -227,3 +227,84 @@ def quicksort(L):
         right =[element for element in elements if element <= L[pivot]]
         return quicksort(left)+[L[pivot]]+quicksort(right)
     return L
+
+
+def getStoryString(game):
+    string = game.start_sentence + " ... "
+    for s in game.story:
+        string += s
+    string += " ... " + game.end_sentence
+    return string
+
+def getStoryStringForGameScreen(game):
+    string = game.start_sentence + " ...<br><br><br>"
+    for s in game.story:
+        string += s + ' '
+    string += "<br><br><br>... " + game.end_sentence
+    return string
+
+def getScoreInfo(game):
+    scores = []
+    haveUsed = []
+    for i in range(0, len(game.users)):
+        user_id = game.users[i]
+        #user = User.get_by_key_name(user_id)
+        user = retrieveCache(user_id, User)
+        temp = {}
+        temp['user_name'] = trimName(user.name, user.display_type)
+        temp['user_id'] = user_id
+        temp['score'] = game.scores[i]
+        scores.append(temp)
+
+    scores = sortByScore(scores)
+    for i in range(0, len(scores)):
+        (scores[i])['position'] = i+1
+
+    return scores
+
+def getProfilesAndAFKS(scoreList):
+    profiles = []
+    afks = []
+    for entry in scoreList:
+        user_id = entry['user_id']
+        #user = User.get_by_key_name(user_id)
+        user = retrieveCache(user_id, User)
+        profiles.append(user.picture)
+        if user.rounds_afk >= 2:
+            afks.append(True)
+        else:
+            afks.append(False)
+
+    return profiles, afks
+
+def changeToSubmissionPhase(game, request_handler = None):
+    game.can_submit = True
+    game.can_vote = False
+    game.end_voting = False
+    game.can_vote = False
+    game.end_submission_time = datetime.datetime.now() + datetime.timedelta(seconds=SUBMISSION_TIME)
+    game.display_phase = False
+    game.end_users_voted = []
+    game.end_votes = []
+    clearPhaseInformation(game)
+    if not request_handler == None:
+        request_handler.response.headers.add_header('response', "v")
+    game.put()
+    #storeCache(game, str(game.game_id))
+
+def clearPhaseInformation(game):
+    game.next_parts = []
+    game.users_next_parts = []
+    game.votes = []
+    game.users_voted = []
+    game.num_phases = game.num_phases + 1
+
+def changeToEndVotingPhase(game, request_handler = None):
+    game.end_voting = True
+    game.can_vote = False
+    game.end_end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=END_VOTING_TIME)
+    game.display_phase = False
+    if not request_handler == None:
+        request_handler.response.headers.add_header('response', "v")
+    game.put()
+    #storeCache(game, str(game.game_id))
