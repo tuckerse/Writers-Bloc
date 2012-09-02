@@ -1,4 +1,6 @@
 from basehandler import BaseHandler
+from helperfunctions import findGame
+import urllib
 
 class FindGame(BaseHandler):
     def get(self):
