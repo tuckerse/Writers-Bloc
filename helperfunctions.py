@@ -71,3 +71,7 @@ def changeToVotingPhase(game, request_handler = None):
     #storeCache(game, str(game.game_id))
     if not request_handler == None:
         request_handler.response.headers.add_header('completed', "v")
+
+def getLobbyGames():
+    query = Game.gql("WHERE current_players <:1 AND started =:2 ORDER BY current_players DESC", MAX_PLAYERS, False)
+    return query.fetch(1000000)

@@ -259,19 +259,6 @@ class SubmissionCompleteVerification(BaseHandler):
             self.response.headers.add_header('completed', "i")
         return
 
-class ViewLobby(BaseHandler):
-    def get(self):
-        if not self.user:
-            self.render(u'login_screen')
-        else:
-            games = getLobbyGames()
-            self.render(u'lobby_screen', games=games)
-        return
-
-def getLobbyGames():
-    query = Game.gql("WHERE current_players <:1 AND started =:2 ORDER BY current_players DESC", MAX_PLAYERS, False)
-    return query.fetch(1000000)
-
 class Vote(BaseHandler):
     def post(self):
         if not self.user:
