@@ -69,20 +69,6 @@ def postRedditStory(game):
     RedditLib.postStory(game)
     return
 
-class SetVisibility(BaseHandler):
-    def post(self):
-        if self.user:
-            info = json.loads(self.request.body)
-            self.user.display_type = int(info['visibility'])
-            storeCache(self.user, self.user.user_id)
-            response_info = {'success': True}
-            self.response.out.write(json.dumps(response_info))
-            logging.debug(json.dumps(response_info))
-        else:
-            logging.critical('Unauthorized visibility set attempt')
-
-        return
-
 class UserSettings(BaseHandler):
     def get(self):
         if self.user:
