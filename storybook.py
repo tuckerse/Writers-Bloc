@@ -57,13 +57,6 @@ def getPlayerNames(game):
         #nameList.append(trimName(retrieveCache(user, User).name))
     return nameList
 
-class MenuPage(BaseHandler):
-    def get(self):
-        if not self.user:
-            self.render(u'login_screen')
-        else:
-            self.render(u'menu_screen')
-
 def initializeGame(game_id, max_players, start_sentence, end_sentence):
     game_id = getNextGameID()
     newGame = Game(key_name=str(game_id))
@@ -107,59 +100,6 @@ def allUsersVoted(game):
 def postRedditStory(game):
     RedditLib.postStory(game)
     return
-
-class CreateSampleGame(BaseHandler):
-    def get(self):
-        game = Game(key_name="69")
-        game.game_id = 69
-        game.can_vote = False
-        game.current_players = 3
-        game.story = ['The first sentence.', 'The second sentence.', 'The third sentence.', 'The fourth sentence.', 'The fifth sentence.']
-        game.users = [u'100000041224382', u'100000945793839', u'100004050465254']
-        game.next_parts = []
-        game.users_next_parts = []
-        game.started = False
-        game.end_submission_time = None
-        game.end_display_time = None
-        game.can_submit = False
-        game.end_vote_time = None
-        game.end_sentence = 'And such was the final sentence.'
-        game.votes = []
-        game.users_voted = []
-        game.display_phase = False
-        game.end_display_time = None
-        game.winning_sentences = []
-        game.winning_users = []
-        game.winning_users_names = []
-        game.num_phases = 11
-        game.finished = True
-        game.end_voting = False
-        game.end_users_voted = []
-        game.end_votes = []
-        game.end_end_vote_time = None
-        game.game_ended = None
-        game.scores = [15L, 35L, 4L]
-        game.recent_score_data = []
-        game.went_to_submission = False
-        game.put()
-        #storeCache(game, str(game.game_id))
-        return
-
-class CancelGame(BaseHandler):
-    def post(self):
-        if self.user:
-            info = json.loads(self.request.body)
-            game_id = info['game_id']
-            try:
-                game = Game.get_by_key_name(game_id)
-                #game = retrieveCache(game_id, Game)
-                db.delete(game)
-                #deleteData(game, game_id)
-                resetPlayerHost(self.user.user_id)
-            except Exception, ex:
-                logging.critical(ex)
-        else:
-            logging.critical('Unauthorized Game Canceling Request Made')
 
 class GameDeleted(BaseHandler):
     def get(self):
@@ -266,7 +206,6 @@ routes = [
                 ('/cast_end_vote', EndVote),
                 ('/join_game', JoinGame),
                 ('/waiting_to_start', WaitingToStart),
-                ('/create_sample_game', CreateSampleGame),
                 ('/cancel_game', CancelGame),
                 ('/game_deleted_error', GameDeleted),
                 ('/leave_before_start', LeaveBeforeStart),
