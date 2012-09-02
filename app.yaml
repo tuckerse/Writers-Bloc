@@ -10,6 +10,10 @@ handlers:
   static_files: images/favicon.ico
   upload: images/favicon\.ico
 
+- url: /storybook_icon\.png
+  static_files: images/StorybookIcon75.png
+  upload: images/StorybookIcon75\.png
+
 - url: /stylesheets
   static_dir: stylesheets
 
