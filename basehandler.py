@@ -9,6 +9,7 @@ from UserHandler import User, _USER_FIELDS
 from cacheLib import retrieveCache, storeCache
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
+from google.appengine.runtime import DeadlineExceededError
 
 class BaseHandler(webapp.RequestHandler):
     facebook = None
