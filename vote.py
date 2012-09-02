@@ -1,6 +1,6 @@
 import logging
 
-from basehandler import BaseHadler
+from basehandler import BaseHandler
 from Models import Game
 from helperfunctions import changeToDisplayPhase, allUsersVoted
 
