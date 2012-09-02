@@ -3,7 +3,7 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from helperfunctions import finishGameTally, finishGame, changeToSubmissionPhase
+from storybooklib import finishGameTally, finishGame, changeToSubmissionPhase
 
 class EndVoteCompleteVerification(BaseHandler):
     def post(self):

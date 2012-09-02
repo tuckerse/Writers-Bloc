@@ -1,5 +1,5 @@
 from basehandler import BaseHandler
-from helperfunctions import findGame
+from storybooklib import findGame
 import urllib
 
 class FindGame(BaseHandler):

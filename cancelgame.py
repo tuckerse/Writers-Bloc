@@ -4,7 +4,7 @@ from django.utils import simplejson as json
 from basehandler import BaseHandler
 from Models import Game
 from google.appengine.ext import db
-from helperfunctions import resetPlayerHost
+from storybooklib import resetPlayerHost
 
 class CancelGame(BaseHandler):
     def post(self):

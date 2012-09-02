@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from helperfunctions import getUserInfo, resetAFK, allUsersSubmitted, changeToVotingPhase
+from storybooklib import getUserInfo, resetAFK, allUsersSubmitted, changeToVotingPhase
 
 class GameScreen(BaseHandler):
     def get(self):

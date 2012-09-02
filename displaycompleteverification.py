@@ -3,7 +3,7 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from helperfunctions import getStoryStringForGameScreen, getScoreInfo, getProfilesAndAFKS, changeToSubmissionPhase, changeToEndVotingPhase
+from storybooklib import getStoryStringForGameScreen, getScoreInfo, getProfilesAndAFKS, changeToSubmissionPhase, changeToEndVotingPhase
 
 class DisplayCompleteVerification(BaseHandler):
     def post(self):
