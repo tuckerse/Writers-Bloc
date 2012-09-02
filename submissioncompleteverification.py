@@ -4,7 +4,7 @@ import datetime
 from basehandler import BaseHandler
 from django.utils import simplejson as json
 from Models import Game
-from helperfunctions import markAFKS, changeToVotingPhase
+from storybooklib import markAFKS, changeToVotingPhase
 
 class SubmissionCompleteVerification(BaseHandler):
     def post(self):
