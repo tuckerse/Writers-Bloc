@@ -308,3 +308,31 @@ def changeToEndVotingPhase(game, request_handler = None):
         request_handler.response.headers.add_header('response', "v")
     game.put()
     #storeCache(game, str(game.game_id))
+
+
+def finishGameTally(game):
+    #true is finished
+    removeAFKVotes(game)
+    count_no = game.end_votes.count(0)
+    count_yes = game.end_votes.count(1)
+    if count_yes > count_no:
+        return True
+    return False
+
+def removeAFKVotes(game):
+    for user_id in game.users:
+        user = retrieveCache(user_id, User)
+        if user.rounds_afk >= 2:
+            if user_id in game.end_users_voted:
+                index = game.end_users_voted.index(user_id)
+                del game.end_users_voted[index]
+                del game.end_votes[index]
+
+    game.put()
+
+
+def finishGame(game):
+    game.finished = True
+    game.game_ended = datetime.datetime.now()
+    game.put()
+    #storeCache(game, str(game.game_id))

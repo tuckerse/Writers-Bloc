@@ -69,30 +69,6 @@ class EndVote(BaseHandler):
         self.response.headers.add_header('response', "n")
         return
 
-class EndVoteCompleteVerification(BaseHandler):
-    def post(self):
-        if not self.user:
-            logging.critical("Invalid end-vote completion verification detected!")
-        else:
-            game_id = self.request.get('game_id')
-            game = Game.get_by_key_name(game_id)
-            #game = retrieveCache(game_id, Game)
-            if (not game.end_voting and game.can_submit) or (not game.end_voting and game.finished):
-                self.response.headers.add_header('response', "e" if game.finished else "c")
-                return
-            elif datetime.datetime.now() > game.end_end_vote_time:
-                outcome = finishGameTally(game)
-                if outcome:
-                    finishGame(game)
-                    self.response.headers.add_header('response', "e")
-                    return
-                else:
-                    changeToSubmissionPhase(game, self)
-                    self.response.headers.add_header('response', "c")
-                    return
-            self.response.headers.add_header('response', "q")
-        return
-
 class WaitingToStart(BaseHandler):
     def get(self):
         if not self.user:
@@ -164,26 +140,6 @@ def getNextGameID():
     previous_game_id.put()
     return game_id
 
-def finishGameTally(game):
-    #true is finished
-    removeAFKVotes(game)
-    count_no = game.end_votes.count(0)
-    count_yes = game.end_votes.count(1)
-    if count_yes > count_no:
-        return True
-    return False
-
-def removeAFKVotes(game):
-    for user_id in game.users:
-        user = retrieveCache(user_id, User)
-        if user.rounds_afk >= 2:
-            if user_id in game.end_users_voted:
-                index = game.end_users_voted.index(user_id)
-                del game.end_users_voted[index]
-                del game.end_votes[index]
-
-    game.put()
-
 def resetRecentScoreData(game):
     game.recent_score_data = []
     for user in game.users:
@@ -191,12 +147,6 @@ def resetRecentScoreData(game):
 
 def allUsersVoted(game):
     return (len(game.users) == len(game.users_voted))
-
-def finishGame(game):
-    game.finished = True
-    game.game_ended = datetime.datetime.now()
-    game.put()
-    #storeCache(game, str(game.game_id))
 
 def postRedditStory(game):
     RedditLib.postStory(game)
