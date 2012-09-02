@@ -27,9 +27,6 @@ handlers:
   script: cleanup.py
   login: admin
 
-- url: /find_game
-  script: findgame.py
-
 - url: /.*
   script: storybook.py
 
