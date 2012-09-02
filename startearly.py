@@ -2,7 +2,7 @@ import urllib
 
 from basehandler import BaseHandler
 from Models import Game
-from helperfunctions import startGame
+from storybooklib import startGame
 
 class StartEarly(BaseHandler):
     def get(self):
