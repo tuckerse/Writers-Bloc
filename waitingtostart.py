@@ -1,6 +1,5 @@
 from basehandler import BaseHandler
-
-MAX_PLAYERS = 8
+from storybooklib import MAX_PLAYERS
 
 class WaitingToStart(BaseHandler):
     def get(self):
