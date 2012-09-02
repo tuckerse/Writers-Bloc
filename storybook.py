@@ -194,32 +194,32 @@ class CreateGame(BaseHandler):
             self.render(u'login_screen')
 
 routes = [
-                ('/', MenuPage),
-                ('/find_game', FindGame),
-                ('/game_screen', GameScreen),
-                ('/game_status', GameStatus),
-                ('/view_lobby', ViewLobby),
-                ('/start_game', StartGame),
-                ('/start_early', StartEarly),
-                ('/submission_complete_verification', SubmissionCompleteVerification),
-                ('/get_choices', GetChoices),
-                ('/vote', Vote),
-                ('/vote_complete_verification', VoteCompleteVerification),
-                ('/display_complete_verification', DisplayCompleteVerification),
-                ('/end_vote_complete_verification', EndVoteCompleteVerification),
-                ('/cast_end_vote', EndVote),
-                ('/join_game', JoinGame),
-                ('/waiting_to_start', WaitingToStart),
-                ('/cancel_game', CancelGame),
-                ('/game_deleted_error', GameDeleted),
-                ('/leave_before_start', LeaveBeforeStart),
-                ('/vote_end_early', VoteEndEarly),
-                ('/get_lobby', GetLobby),
-                ('/get_visibility', GetVisibility),
-                ('/set_visibility', SetVisibility),
-                ('/user_settings', UserSettings),
-                ('/create_game', CreateGame)
-                ]
+    ('/', MenuPage),
+    ('/find_game', FindGame),
+    ('/game_screen', GameScreen),
+    ('/game_status', GameStatus),
+    ('/view_lobby', ViewLobby),
+    ('/start_game', StartGame),
+    ('/start_early', StartEarly),
+    ('/submission_complete_verification', SubmissionCompleteVerification),
+    ('/get_choices', GetChoices),
+    ('/vote', Vote),
+    ('/vote_complete_verification', VoteCompleteVerification),
+    ('/display_complete_verification', DisplayCompleteVerification),
+    ('/end_vote_complete_verification', EndVoteCompleteVerification),
+    ('/cast_end_vote', EndVote),
+    ('/join_game', JoinGame),
+    ('/waiting_to_start', WaitingToStart),
+    ('/cancel_game', CancelGame),
+    ('/game_deleted_error', GameDeleted),
+    ('/leave_before_start', LeaveBeforeStart),
+    ('/vote_end_early', VoteEndEarly),
+    ('/get_lobby', GetLobby),
+    ('/get_visibility', GetVisibility),
+    ('/set_visibility', SetVisibility),
+    ('/user_settings', UserSettings),
+    ('/create_game', CreateGame)
+]
 app = webapp.WSGIApplication(routes)
 
 def main():
