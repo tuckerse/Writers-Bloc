@@ -4,6 +4,7 @@ import datetime
 from basehandler import BaseHandler
 from Models import Game
 from storybooklib import getStoryStringForGameScreen, getScoreInfo, getProfilesAndAFKS, changeToSubmissionPhase, changeToEndVotingPhase
+from django.utils import simplejson as json
 
 class DisplayCompleteVerification(BaseHandler):
     def post(self):
