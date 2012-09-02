@@ -31,6 +31,8 @@ from setvisibility import SetVisibility
 from usersettings import UserSettings
 from creategame import CreateGame
 
+from storybooklib import LAST_USED_GAME_ID_KEY
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '0.96')
 
