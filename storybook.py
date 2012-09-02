@@ -189,29 +189,6 @@ class MenuPage(BaseHandler):
         else:
             self.render(u'menu_screen')
 
-class VoteCompleteVerification(BaseHandler):
-    def post(self):
-        if not self.user:
-            logging.critical("Invalid vote completion verification detected!")
-        else:
-            game_id = self.request.get('game_id')
-            game = Game.get_by_key_name(game_id)
-            #game = retrieveCache(game_id, Game)
-            self.response.headers['Content-type'] = 'application/json'
-            if not game.can_vote and game.display_phase:
-                self.response.headers.add_header('completed', "v")
-                recent_winner_string = "\"" + game.winning_sentences[len(game.winning_sentences)-1] + "\" By: " + game.winning_users_names[len(game.winning_users_names) - 1]
-                self.response.headers.add_header('recent_winner', recent_winner_string)
-            elif datetime.datetime.now() > game.end_vote_time:
-                markAFKS(game, game.users_voted)
-                changeToDisplayPhase(game, self)
-            else:
-                self.response.headers.add_header('completed', "i")
-            response = {}
-            response['winning_data'] = getRecentScoreInfo(game)
-            self.response.out.write(json.dumps(response))
-        return
-
 def initializeGame(game_id, max_players, start_sentence, end_sentence):
     game_id = getNextGameID()
     newGame = Game(key_name=str(game_id))
@@ -304,43 +281,6 @@ def getScoreInfo(game):
         (scores[i])['position'] = i+1
 
     return scores
-
-def getRecentScoreInfo(game):
-    scores = []
-
-    for i in range(0, len(game.users)):
-        user_id = game.users[i]
-        #user = User.get_by_key_name(user_id)
-        user = retrieveCache(user_id, User)
-        temp = {}
-        temp['user_name'] = trimName(user.name, user.display_type)
-        temp['score'] = game.recent_score_data[i]
-        submitted = game.users_next_parts.count(user_id) > 0
-        if submitted:
-            temp['sentence'] = game.next_parts[game.users_next_parts.index(user_id)]
-        else:
-            temp['sentence'] = 'User did not submit'
-        scores.append(temp)
-
-    scores = sortByScore(scores)
-    for i in range(0, len(scores)):
-        (scores[i])['position'] = i+1
-
-    return scores
-
-def sortByScore(scores):
-    return quicksort(scores)
-
-def quicksort(L):
-    pivot = 0
-    if len(L) > 1:
-        pivot = random.randrange(len(L))
-        elements = L[:pivot]+L[pivot+1:]
-        left  = [element for element in elements if element > L[pivot]]
-        right =[element for element in elements if element <= L[pivot]]
-        return quicksort(left)+[L[pivot]]+quicksort(right)
-    return L
-
 
 def resetRecentScoreData(game):
     game.recent_score_data = []

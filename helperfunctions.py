@@ -190,3 +190,40 @@ def trimName(name, display_type):
         return return_string
 
     return (split_name[0] + ' ' + (split_name[2])[0] + '.')
+
+
+def getRecentScoreInfo(game):
+    scores = []
+
+    for i in range(0, len(game.users)):
+        user_id = game.users[i]
+        #user = User.get_by_key_name(user_id)
+        user = retrieveCache(user_id, User)
+        temp = {}
+        temp['user_name'] = trimName(user.name, user.display_type)
+        temp['score'] = game.recent_score_data[i]
+        submitted = game.users_next_parts.count(user_id) > 0
+        if submitted:
+            temp['sentence'] = game.next_parts[game.users_next_parts.index(user_id)]
+        else:
+            temp['sentence'] = 'User did not submit'
+        scores.append(temp)
+
+    scores = sortByScore(scores)
+    for i in range(0, len(scores)):
+        (scores[i])['position'] = i+1
+
+    return scores
+
+def sortByScore(scores):
+    return quicksort(scores)
+
+def quicksort(L):
+    pivot = 0
+    if len(L) > 1:
+        pivot = random.randrange(len(L))
+        elements = L[:pivot]+L[pivot+1:]
+        left  = [element for element in elements if element > L[pivot]]
+        right =[element for element in elements if element <= L[pivot]]
+        return quicksort(left)+[L[pivot]]+quicksort(right)
+    return L
