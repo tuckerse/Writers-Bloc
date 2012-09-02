@@ -29,7 +29,7 @@ from getlobby import GetLobby
 from getvisibility import GetVisibility
 from setvisibility import SetVisibility
 from usersettings import UserSettings
-from CreateGame import CreateGame
+from creategame import CreateGame
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '0.96')
