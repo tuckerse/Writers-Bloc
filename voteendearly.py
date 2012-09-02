@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from django.utils import simplejson as json
-from Models import GAme
+from Models import Game
 
 class VoteEndEarly(BaseHandler):
     def post(self):
