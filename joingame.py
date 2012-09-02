@@ -2,6 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from django.utils import simplejson as json
+from storybooklib import joinGame
 
 class JoinGame(BaseHandler):
     def post(self):
