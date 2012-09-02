@@ -401,3 +401,8 @@ def getPlayerNames(game):
         nameList.append(trimName(user.name, user.display_type))
         #nameList.append(trimName(retrieveCache(user, User).name))
     return nameList
+
+def resetRecentScoreData(game):
+    game.recent_score_data = []
+    for user in game.users:
+        game.recent_score_data.append(0)
