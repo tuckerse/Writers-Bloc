@@ -1,12 +1,14 @@
 import datetime
+import sys
 
-from Models import Game
+from Models import Game, LastUsedGameID
 from UserHandler import User
 from cacheLib import retrieveCache, storeCache
 from google.appengine.ext import db
 
 MAX_PLAYERS = 8
 VOTE_TIME = 45
+LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
 
 def findGame(user):
     query = Game.gql("WHERE current_players <:1 ORDER BY current_players ASC", MAX_PLAYERS)
@@ -345,3 +347,37 @@ def removeUser(game_id, user_id):
         #storeCache(game, str(game.game_id))
     except Exception, ex:
         logging.critical(ex)
+
+
+def initializeGame(game_id, max_players, start_sentence, end_sentence):
+    game_id = getNextGameID()
+    newGame = Game(key_name=str(game_id))
+    newGame.game_id = game_id
+    newGame.created = datetime.datetime.now()
+    newGame.can_vote = False
+    newGame.story = []
+    newGame.users = []
+    newGame.current_players = 0
+    newGame.num_phases = 1
+    newGame.end_sentence = end_sentence
+    newGame.start_sentence = start_sentence
+    newGame.can_submit = False
+    newGame.display_phase = False
+    newGame.finished = False
+    newGame.started = False
+    newGame.users_voted_end_early = []
+    newGame.users
+    newGame.put()
+    #storeCache(newGame, str(game_id))
+    return game_id
+
+
+def getNextGameID():
+    previous_game_id = LastUsedGameID.get_by_key_name(LAST_USED_GAME_ID_KEY)
+    if previous_game_id.game_id == sys.maxint:
+        game_id = 0
+    else:
+        game_id = previous_game_id.game_id + 1
+    previous_game_id.game_id = game_id
+    previous_game_id.put()
+    return game_id

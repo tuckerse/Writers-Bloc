@@ -3,7 +3,7 @@ from UserHandler import User
 from cacheLib import canPlayerHost, markPlayerHostedGame, retrieveCache
 from DefaultStartSentences import defaultStart
 from DefaultEndSentences import defaultEnd
-from helperfunctions import joinGame
+from storybooklib import joinGame, initializeGame
 
 class StartGame(BaseHandler):
     def post(self):
