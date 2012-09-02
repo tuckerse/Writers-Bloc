@@ -69,13 +69,6 @@ def postRedditStory(game):
     RedditLib.postStory(game)
     return
 
-class UserSettings(BaseHandler):
-    def get(self):
-        if self.user:
-            self.render(u'user_settings')
-        else:
-            self.render(u'login_screen')
-
 class CreateGame(BaseHandler):
     def get(self):
         if self.user:
