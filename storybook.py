@@ -203,25 +203,6 @@ class MenuPage(BaseHandler):
         else:
             self.render(u'menu_screen')
 
-class SubmissionCompleteVerification(BaseHandler):
-    def post(self):
-        if not self.user:
-            logging.critical("Invalid submission completion verification detected!")
-        else:
-            info = json.loads(self.request.body)
-            game_id = str(info['game_id'])
-            game = Game.get_by_key_name(game_id)
-            #game = retrieveCache(game_id, Game)
-            if not game.can_submit and game.can_vote:
-                self.response.headers.add_header('completed', "v")
-                return
-            elif datetime.datetime.now() > game.end_submission_time:
-                markAFKS(game, game.users_next_parts)
-                changeToVotingPhase(game, self)
-                return
-            self.response.headers.add_header('completed', "i")
-        return
-
 class Vote(BaseHandler):
     def post(self):
         if not self.user:
@@ -267,14 +248,6 @@ class VoteCompleteVerification(BaseHandler):
             response['winning_data'] = getRecentScoreInfo(game)
             self.response.out.write(json.dumps(response))
         return
-
-def markAFKS(game, acted_list):
-    for user_id in game.users:
-        if not user_id in acted_list:
-            user = retrieveCache(user_id, User)
-            user.rounds_afk += 1
-            storeCache(user, user_id)
-
 
 def initializeGame(game_id, max_players, start_sentence, end_sentence):
     game_id = getNextGameID()

@@ -2,7 +2,7 @@ import datetime
 
 from Models import Game
 from UserHandler import User
-from cacheLib import retrieveCache
+from cacheLib import retrieveCache, storeCache
 from google.appengine.ext import db
 
 MAX_PLAYERS = 8
@@ -92,3 +92,10 @@ def startGame(game_id):
     game.put()
     #storeCache(game, str(game_id))
     return True
+
+def markAFKS(game, acted_list):
+    for user_id in game.users:
+        if not user_id in acted_list:
+            user = retrieveCache(user_id, User)
+            user.rounds_afk += 1
+            storeCache(user, user_id)
