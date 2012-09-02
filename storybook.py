@@ -101,10 +101,6 @@ def postRedditStory(game):
     RedditLib.postStory(game)
     return
 
-class GameDeleted(BaseHandler):
-    def get(self):
-        self.render(u'game_deleted')
-
 class LeaveBeforeStart(BaseHandler):
     def post(self):
         info = json.loads(self.request.body)
