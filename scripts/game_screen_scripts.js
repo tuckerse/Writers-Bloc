@@ -124,6 +124,7 @@ function tick()
 		statusCheck();
 		if(phase != oldPhase)
 		{
+            updateUserInfo();
 			oldPhaseChangeLogic();	
 		}
 	}	
@@ -184,7 +185,6 @@ function oldPhaseChangeLogic()
 		var response = acknowledgeFinishDisplay();
 		if(response == "v")
 		{
-			updateUserInfo();
 			statusCheck();
 			if(phase == "f")
 			{
@@ -253,7 +253,6 @@ function phaseChangeLogic()
 		var response = acknowledgeFinishDisplay();
 		if(response == "v")
 		{
-			updateUserInfo();
 			statusCheck();
 			if(phase == "f")
 			{
