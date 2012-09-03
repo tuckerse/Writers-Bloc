@@ -14,6 +14,8 @@ var refreshDelay = 5;
 var recentlySubmitted = "";
 var profiles;
 var afks;
+var hasSubmitted = false;
+var hasVoted = false;
 document.onkeypress = processKey;
 
 function processKey(e)
@@ -40,6 +42,7 @@ function submitNextPart()
 			{
 				//document.getElementById("next_part").value = "The Moving Finger writes; and, having writ, Moves on.";
 				document.getElementById("next_part").disabled = "true";
+                hasSubmitted = true;
 			}
 		}
 	}
@@ -125,19 +128,21 @@ function tick()
 		if(phase != oldPhase)
 		{
             updateUserInfo();
+            hasSubmitted = false;
+            hasVoted = false;
 			oldPhaseChangeLogic();	
 		}
 	}	
 	if(phase == "s")
 	{
 		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " second(s).";
-        if(seconds == 5 && !(document.getElementById("next_part").disabled == "true"))
+        if(seconds == 5 && !hasSubmitted)
             submitNextPart();
 	}
 	else if(phase == "v")
 	{
 		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
-        if(seconds == 5  && !(document.getElementById("submit_vote_button").disabled == true))
+        if(seconds == 5  && !hasVoted)
             submitVote();
 	}
 	else if(phase == "d")
@@ -410,6 +415,7 @@ function submitVote()
 	{
 		document.getElementById("submit_vote_button").disabled = true;
 		document.getElementById("submit_vote_button").value = "Vote cast";
+        hasVoted = true;
 	}
 	else
 		alert("Vote not recieved properly, try again?");
