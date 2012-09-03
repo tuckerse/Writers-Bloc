@@ -137,13 +137,19 @@ function tick()
 	{
 		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " second(s).";
         if(seconds == 5 && !hasSubmitted)
+        {
+            alert("Should submit");
             submitNextPart();
+        }
 	}
 	else if(phase == "v")
 	{
 		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
         if(seconds == 5  && !hasVoted)
+        {
+            alert("Should vote");
             submitVote();
+        }
 	}
 	else if(phase == "d")
 	{
