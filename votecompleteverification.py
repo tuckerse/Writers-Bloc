@@ -3,7 +3,7 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import getRecentScoreInfo
+from storybooklib import getRecentScoreInfo, markAFKS, changeToDisplayPhase
 from django.utils import simplejson as json
 
 class VoteCompleteVerification(BaseHandler):

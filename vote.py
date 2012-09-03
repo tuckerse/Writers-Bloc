@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import changeToDisplayPhase, allUsersVoted
+from storybooklib import changeToDisplayPhase, allUsersVoted, resetAFK
 
 class Vote(BaseHandler):
     def post(self):
