@@ -12,6 +12,7 @@ class EndVote(BaseHandler):
             game = Game.get_by_key_name(game_id)
             #game = retrieveCache(game_id, Game)
             if (self.user.user_id in game.users) and not (int(self.user.user_id) in game.end_users_voted) and game.end_voting:
+                resetAFK(self.user)
                 choice = int(self.request.get('selection'))
                 game.end_users_voted.append(self.user.user_id)
                 game.end_votes.append(choice)
