@@ -417,8 +417,7 @@ function submitVote()
 	var response = xmlHttp.getResponseHeader("response");
 	if(response == "s")
 	{
-		document.getElementById("submit_vote_button").disabled = true;
-		document.getElementById("submit_vote_button").value = "Vote cast";
+		document.getElementById("submit_vote_button").value = "Vote cast - Change vote?";
         hasVoted = true;
 	}
 	else

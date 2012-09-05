@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import changeToDisplayPhase, allUsersVoted, resetAFK
+from storybooklib import changeToDisplayPhase, allUsersVoted, resetAFK, removeVote
 
 class Vote(BaseHandler):
     def post(self):
@@ -12,7 +12,9 @@ class Vote(BaseHandler):
             game_id = self.request.get('game_id')
             game = Game.get_by_key_name(game_id)
             #game = retrieveCache(game_id, Game)
-            if (self.user.user_id in game.users) and not (self.user.user_id in game.users_voted) and game.can_vote:
+            if (self.user.user_id in game.users) and and game.can_vote:
+                if self.user.user_id in game.users_voted:
+                    game = removeVote(game, user)
                 resetAFK(self.user)
                 choice = int(self.request.get('part_voted'))
                 game.users_voted.append(self.user.user_id)
