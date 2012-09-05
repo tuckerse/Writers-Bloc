@@ -23,7 +23,7 @@ class GameStatus(webapp.RequestHandler):
         response_info['num_players'] = game.current_players
         response_info['players'] = getPlayerNames(game)
         response_info['num_phases'] = game.num_phases
-        response_info['vote_this_turn'] = (len(game.users_voted_end_early) >= len(game.users)/2)
+        response_info['vote_this_turn'] = game.num_phases > 10
         self.response.headers['Content-type'] = 'application/json'
         if game.can_vote:
             response_info['phase'] = "v"
