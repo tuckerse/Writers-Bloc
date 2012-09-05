@@ -21,7 +21,7 @@ class DisplayCompleteVerification(BaseHandler):
             response['scores'] = getScoreInfo(game)
             response['profiles'], response['afks'] = getProfilesAndAFKS(response['scores'])
             self.response.out.write(json.dumps(response))
-            if (game.num_phases < 10 or game.went_to_submission) and (len(game.users_voted_end_early) < len(game.users)/2):
+            if (game.num_phases < 10 or game.went_to_submission):
                 if not game.display_phase and game.can_submit:
                     self.response.headers.add_header('response', "v")
                     logging.debug(self.response.headers)

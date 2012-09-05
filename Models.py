@@ -34,5 +34,4 @@ class Game(db.Model):
     scores = db.ListProperty(int)
     recent_score_data = db.ListProperty(int)
     went_to_submission = db.BooleanProperty()
-    users_voted_end_early = db.ListProperty(str)
     start_sentence = db.StringProperty()

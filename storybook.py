@@ -24,7 +24,6 @@ from waitingtostart import WaitingToStart
 from cancelgame import CancelGame
 from gamedeleted import GameDeleted
 from leavebeforestart import LeaveBeforeStart
-from voteendearly import VoteEndEarly
 from getlobby import GetLobby
 from getvisibility import GetVisibility
 from setvisibility import SetVisibility
@@ -56,7 +55,6 @@ routes = [
     ('/cancel_game', CancelGame),
     ('/game_deleted_error', GameDeleted),
     ('/leave_before_start', LeaveBeforeStart),
-    ('/vote_end_early', VoteEndEarly),
     ('/get_lobby', GetLobby),
     ('/get_visibility', GetVisibility),
     ('/set_visibility', SetVisibility),
