@@ -1,6 +1,8 @@
 var seconds = 0;	
 var phase = "";
-var storedChat = "";
+var votingDirections = "Voting Directions";
+var gameRules = "Game rules";
+var submissionDirections = "Submission Directions";
 var submitted = false;
 var currentChoice = "";
 var currentWinner = "";
@@ -25,10 +27,23 @@ function processKey(e)
   	if (e.keyCode == 13)  
 	{
     	var element = document.activeElement;
-		if(element.id == "next_part")
-			submitNextPart();
+		if(element.id == "button_input")
+        {
+            if(phase == "s")
+			    submitNextPart();
+            else if (phase == "v")
+                submitVote();
+        }
 		return false;
   	}
+}
+
+function buttonPressed()
+{
+    if(phase == "s")
+        submitNextPart();
+    else if (phase == "v")
+        submitVote();
 }
 
 function submitNextPart()
@@ -40,13 +55,12 @@ function submitNextPart()
 			var response = xmlHttp.getResponseHeader("success");
 			if(response == "s")
 			{
-				//document.getElementById("next_part").value = "The Moving Finger writes; and, having writ, Moves on.";
-				document.getElementById("next_part").disabled = "true";
+				document.getElementById("button_input").disabled = "true";
                 hasSubmitted = true;
 			}
 		}
 	}
-	var next_part = document.getElementById("next_part").value;
+	var next_part = document.getElementById("button_input").value;
     if(next_part != "")
     {
         document.getElementById("submit_button").disabled = "true";
@@ -299,9 +313,8 @@ function endGame()
 	phase = "e";
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
-	document.getElementById("next_part").value = "Chat will remain open for five minutes.";
-	document.getElementById("next_part").disabled = true;
-	document.getElementById("chatbox").innerHTML = storedChat;
+	document.getElementById("button_input").value = "Chat will remain open for five minutes.";
+	document.getElementById("button_input").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
 }
 
@@ -329,12 +342,13 @@ function acknowledgeFinishEndVote()
 function setToEndVotingPhase()
 {
 	document.getElementById("story").innerHTML = updatedStory;
-	document.getElementById("chatbox").innerHTML = "<form>";
-	document.getElementById("chatbox").innerHTML += "Would you like to continue the story?<br>";
-	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"0\" onclick=\"clickedSelection(this.value)\" selected=\"selected\" /> Yes<br>";
-	document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"1\" onclick=\"clickedSelection(this.value)\" /> No<br>";
-	document.getElementById("chatbox").innerHTML += "<form/>";
-	document.getElementById("chatbox").innerHTML += "<input id=\"end_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitEndVote()\"/>";
+	document.getElementById("infobox").innerHTML = "<form>";
+	document.getElementById("infobox").innerHTML += "Would you like to continue the story?<br>";
+	document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"0\" onclick=\"clickedSelection(this.value)\" selected=\"selected\" /> Yes<br>";
+	document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"1\" onclick=\"clickedSelection(this.value)\" /> No<br>";
+	document.getElementById("infobox").innerHTML += "<form/>";
+	//document.getElementById("infobox").innerHTML += "<input id=\"end_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitEndVote()\"/>";
+    document.getElementById("submit_button").value = "Vote";
 }
 
 function submitEndVote()
@@ -355,8 +369,8 @@ function submitEndVote()
 	while(response == null){}
 	if(response == "s")
 	{
-		document.getElementById("end_vote_button").disabled = true;
-		document.getElementById("end_vote_button").value = "Vote cast";
+		document.getElementById("submit_button").disabled = true;
+		document.getElementById("submit_button").value = "Vote cast";
 	}
 	else
 		alert("Vote not recieved properly, try again?");
@@ -393,7 +407,7 @@ function getChoices()
 		if(xmlHttp.readyState == 4)
 		{
 			response = JSON.parse(xmlHttp.responseText);
-			choices = response.choices;				
+			choices = response.choices;
 		}
 	}
 
@@ -417,7 +431,7 @@ function submitVote()
 	var response = xmlHttp.getResponseHeader("response");
 	if(response == "s")
 	{
-		document.getElementById("submit_vote_button").value = "Vote cast - Change vote?";
+		document.getElementById("button_input").value = "Vote cast - Change vote?";
         hasVoted = true;
 	}
 	else
@@ -431,31 +445,30 @@ function clickedSelection(val)
 
 function setToVotingPhase()
 {
-	storedChat = document.getElementById("chatbox").innerHTML;
-	document.getElementById("next_part").value = "Chat Disabled During Voting Phase.";
+	document.getElementById("button_input").value = votingDirections;
 	var choices = getChoices();
     var hasSelected = false;
-	document.getElementById("chatbox").innerHTML = "<form>";
+	document.getElementById("infobox").innerHTML = "<form>";
 	for(i = 0; i < choices.length; i++)
 	{
 		if(choices[i] == recentlySubmitted)
-			document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" disabled=\"true\"/>" + choices[i]  + "<br>";
+			document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" disabled=\"true\"/>" + choices[i]  + "<br>";
 		else
         {
             if(!hasSelected)
             {
-			    document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" selected=\"selected\"/>" + choices[i]  + "<br>";
+			    document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" selected=\"selected\"/>" + choices[i]  + "<br>";
                 hasSelected = true;
             }
             else
-                document.getElementById("chatbox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\"/>" + choices[i]  + "<br>";
+                document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\"/>" + choices[i]  + "<br>";
         }
 	}
-	document.getElementById("chatbox").innerHTML += "<form/>";
+	document.getElementById("infobox").innerHTML += "<form/>";
 	if(choices.length > 0)
-		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" style=\"background-color:#c00; color:#fff;\"/>";
+		document.getElementById("infobox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" style=\"background-color:#c00; color:#fff;\"/>";
 	else
-		document.getElementById("chatbox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" disabled=\"true\"/>";
+		document.getElementById("infobox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" disabled=\"true\"/>";
 }
 
 function acknowledgeFinishVote()
@@ -487,7 +500,7 @@ function acknowledgeFinishVote()
 
 function setToDisplayPhase()
 {
-	document.getElementById("chatbox").innerHTML = "Winning Segment: " + currentWinner + "<br>";
+	document.getElementById("infobox").innerHTML = "Winning Segment: " + currentWinner + "<br>";
 	var list = new Array();
 	for(entry in winningData)
 	{
@@ -495,17 +508,17 @@ function setToDisplayPhase()
 	}
 	for(user_entry in list)
 	{
-		document.getElementById("chatbox").innerHTML += list[user_entry] + "<br>";
+		document.getElementById("infobox").innerHTML += list[user_entry] + "<br>";
 	}
 }
 
 function setToSubmissionPhase()
 {
-	document.getElementById("chatbox").innerHTML = storedChat;
+	document.getElementById("infobox").innerHTML = gameRules + "<br>" + submissionDirections;
 	storedChat = "";
 	document.getElementById("story").innerHTML = updatedStory;
-	document.getElementById("next_part").value = "";
-	document.getElementById("next_part").disabled = false;
+	document.getElementById("button_input").value = "";
+	document.getElementById("button_input").disabled = false;
 	document.getElementById("submit_button").disabled = false;
 }
 
