@@ -431,7 +431,7 @@ function submitVote()
 	var response = xmlHttp.getResponseHeader("response");
 	if(response == "s")
 	{
-		document.getElementById("button_input").value = "Vote cast - Change vote?";
+		document.getElementById("submit_button").value = "Vote cast - Change vote?";
         hasVoted = true;
 	}
 	else
@@ -467,10 +467,6 @@ function setToVotingPhase()
         }
 	}
 	document.getElementById("infobox").innerHTML += "<form/>";
-	if(choices.length > 0)
-		document.getElementById("infobox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" style=\"background-color:#c00; color:#fff;\"/>";
-	else
-		document.getElementById("infobox").innerHTML += "<input id=\"submit_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitVote()\" disabled=\"true\"/>";
 }
 
 function acknowledgeFinishVote()
