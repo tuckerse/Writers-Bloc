@@ -12,7 +12,7 @@ class Vote(BaseHandler):
             game_id = self.request.get('game_id')
             game = Game.get_by_key_name(game_id)
             #game = retrieveCache(game_id, Game)
-            if (self.user.user_id in game.users) and and game.can_vote:
+            if (self.user.user_id in game.users) and game.can_vote:
                 if self.user.user_id in game.users_voted:
                     game = removeVote(game, user)
                 resetAFK(self.user)
