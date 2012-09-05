@@ -446,6 +446,8 @@ function clickedSelection(val)
 function setToVotingPhase()
 {
 	document.getElementById("button_input").value = votingDirections;
+    document.getElementById("submit_button").value = "Cast Vote";
+    document.getElementById("submit_button").disabled = false;
 	var choices = getChoices();
     var hasSelected = false;
 	document.getElementById("infobox").innerHTML = "<form>";
