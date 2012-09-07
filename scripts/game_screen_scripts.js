@@ -141,6 +141,7 @@ function tick()
 		statusCheck();
 		if(phase != oldPhase)
 		{
+            getUpdatedUserInfo();
             updateUserInfo();
             hasSubmitted = false;
             hasVoted = false;
@@ -547,6 +548,30 @@ function acknowledgeFinishDisplay()
 	xmlHttp.send(null);
 	while(response == null) {}
 	return response;			
+}
+
+function getUpdatedUserInfo()
+{
+    var response = null;
+    var parsed = null;
+    
+    function recievedUpdateResponse()
+    {
+        if(xmlHttp.readyState == 4)
+        {
+            parsed = JSON.parse(xmlHttp.responseText);
+            scoreInfo = parsed.scores;
+            profiles = parsed.profiles;
+            afks = parsed.afks;
+        }
+    }
+
+    var url = "/update_user_info?game_id=" + encodeURIComponent(game_id);
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", url, false);
+    xmlHttp.onreadystatechange = recievedUpdateResponse;
+    xmlHttp.send(null);
+    while(response == null) {}
 }
 
 function updateUserInfo()
