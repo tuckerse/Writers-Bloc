@@ -346,14 +346,14 @@ def finishGame(game):
     game.finished = True
     game.game_ended = datetime.datetime.now()
 	resolveAchievements(game)
-    game.put()
+    #game.put()  
+	#^^ Will need to uncomment this if you change the put() in the achievement framework
     #storeCache(game, str(game.game_id))
 
 def resolveAchievements(game):
 	#Will implement this tomorrow
 	#achievements is a list of dictionaries keys=[(winner_id, achievement_id, score]
 	achievements = applyAchievements(game)
-	return None
 
 
 def removeUser(game_id, user_id):
