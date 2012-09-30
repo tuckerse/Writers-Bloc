@@ -19,5 +19,3 @@ class UpdateUserInfo(BaseHandler):
             self.response.out.write(json.dumps(response))
 
         return
-            
-            

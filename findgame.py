@@ -14,4 +14,3 @@ class FindGame(BaseHandler):
                 return
 
             self.redirect("/waiting_to_start?" + urllib.urlencode({'game_id':game_id}))
-

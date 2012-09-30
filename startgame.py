@@ -25,4 +25,3 @@ class StartGame(BaseHandler):
             else:
                 self.render(u'cant_host_yet')
         return
-

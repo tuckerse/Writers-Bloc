@@ -47,4 +47,3 @@ class DisplayCompleteVerification(BaseHandler):
                 self.response.headers.add_header('response', "i")
         logging.debug(self.response.headers)
         return
-

@@ -42,4 +42,3 @@ class GameScreen(BaseHandler):
             else:
                 self.response.headers.add_header('success', 'f')
         return
-

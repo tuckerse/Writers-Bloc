@@ -50,4 +50,3 @@ class GameStatus(webapp.RequestHandler):
         self.response.out.write(response)
 
         return
-
