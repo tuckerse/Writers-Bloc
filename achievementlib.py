@@ -35,7 +35,7 @@ def updateGameAchievements(achievements, game):
     achievement_string_list = []
     for achievement in achievements:
         achievement_string_list.append((str(achievement['winner_id']) + '^' + str(achievement['achievement_id']))
-        index = user.index(achievement['winner_id'])
+        index = game.users.index(achievement['winner_id'])
         game.scores[index] += achievement['score']
 
     game.achievements = achievement_string_list
