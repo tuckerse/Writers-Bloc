@@ -344,8 +344,14 @@ def removeAFKVotes(game):
 def finishGame(game):
     game.finished = True
     game.game_ended = datetime.datetime.now()
+	resolveAchievements(game)
     game.put()
     #storeCache(game, str(game.game_id))
+
+def resolveAchievements(game):
+	#Will implement this tomorrow
+	return None
+
 
 def removeUser(game_id, user_id):
     game = Game.get_by_key_name(game_id)
