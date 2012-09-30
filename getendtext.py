@@ -16,4 +16,4 @@ class GetEndText(BaseHandler):
             response['end_text'] = getEndText(game)
             self.response.out.write(json.dumps(response))
 
-    return
+        return
