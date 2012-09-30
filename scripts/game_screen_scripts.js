@@ -593,7 +593,6 @@ function getUpdatedUserInfo()
     xmlHttp.onreadystatechange = recievedUpdateResponse;
     xmlHttp.send(null);
     while(parsed  == null) {}
-    alert("Finished getUpdatedUserInfo");
 }
 
 function updateUserInfo()
