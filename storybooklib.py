@@ -6,6 +6,7 @@ from Models import Game, LastUsedGameID
 from UserHandler import User
 from cacheLib import retrieveCache, storeCache
 from google.appengine.ext import db
+from achievementlib import applyAchievements
 
 MAX_PLAYERS = 8
 VOTE_TIME = 45
@@ -350,6 +351,8 @@ def finishGame(game):
 
 def resolveAchievements(game):
 	#Will implement this tomorrow
+	#achievements is a list of dictionaries keys=[(winner_id, achievement_id, score]
+	achievements = applyAchievements(game)
 	return None
 
 
