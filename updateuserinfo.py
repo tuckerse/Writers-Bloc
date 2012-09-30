@@ -16,6 +16,7 @@ class UpdateUserInfo(BaseHandler):
             self.response.headers['Content-type'] = 'application/json'
             response['scores'] = getScoreInfo(game)
             response['profiles'], response['afks'] = getProfilesAndAFKS(response['scores'])
+            logging.debug(json.dumps(response))
             self.response.out.write(json.dumps(response))
 
         return

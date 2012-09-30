@@ -574,7 +574,6 @@ function acknowledgeFinishDisplay()
 
 function getUpdatedUserInfo()
 {
-    var response = null;
     var parsed = null;
     
     function recievedUpdateResponse()
@@ -593,7 +592,7 @@ function getUpdatedUserInfo()
     xmlHttp.open("POST", url, false);
     xmlHttp.onreadystatechange = recievedUpdateResponse;
     xmlHttp.send(null);
-    while(response == null) {}
+    while(parsed  == null) {}
     alert("Finished getUpdatedUserInfo");
 }
 
