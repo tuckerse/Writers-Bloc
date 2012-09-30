@@ -46,6 +46,8 @@ function buttonPressed()
         submitNextPart();
     else if (phase == "v")
         submitVote();
+    else if (phase == "f")
+        submitEndVote();
 }
 
 function submitNextPart()
