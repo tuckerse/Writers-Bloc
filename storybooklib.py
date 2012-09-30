@@ -440,6 +440,6 @@ def parseAchievements(input_string_list):
     return_list = []
     for input_string in input_string_list:
         parts = input_string.split('^')
-        return_list.append({'winner_id':parts[0], 'achievement_id':parts[1]}))
+        return_list.append({'winner_id':parts[0], 'achievement_id':parts[1]})
 
     return return_list
