@@ -35,3 +35,4 @@ class Game(db.Model):
     recent_score_data = db.ListProperty(int)
     went_to_submission = db.BooleanProperty()
     start_sentence = db.StringProperty()
+    achievements = db.ListProperty(str)

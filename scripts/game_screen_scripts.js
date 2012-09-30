@@ -314,9 +314,31 @@ function endGame()
 	phase = "e";
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
+    document.getElementById("infobox").innerHTML = getEndGameText();
 	document.getElementById("button_input").value = "Chat will remain open for five minutes.";
 	document.getElementById("button_input").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
+}
+
+function getEndGameText()
+{
+    var response = null;
+    function onResponseEndGameText()
+    {
+        if(xmlHttp.readyState == 4)
+        {
+             response = JSON.parse(xmlHttp.responseText)
+        }
+    }
+
+    var url = "/get_end_text?game_id=" + encodeURIComponent(game_id);
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", url, false);
+    xmlHttp.onreadystatechange = onResponseEndGameText;
+    xmlHttp.setRequestHeader("Content-type", "application/json");
+    xmlHttp.send(null);
+    while(response == null){}
+    return response.end_text;
 }
 
 function acknowledgeFinishEndVote()

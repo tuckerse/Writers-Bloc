@@ -19,22 +19,31 @@ class Achievement:
 
 achievements = {}
 
+def loadAchievements():
+    achieve = Achievement(0, 'First Author', 'Lead author of this story', 10, firstAuthorDetermination)
+    achievements[achieve.iden] = achieve
+
 def applyAchievements(game):
     return_list = []
     for achievement in achievements:
         return_list += achievement.resolve(game)
 
-    addAchievementPoints(return_list, game)
-
+    updateGameAchievements(return_list, game)
     return return_list
 
-def addAchievementPoints(achievements, game):
+def updateGameAchievements(achievements, game):
+    achievement_string_list = []
     for achievement in achievements:
+        achievement_string_list.append((str(achievement['winner_id']) + '^' + str(achievement['achievement_id']))
         index = user.index(achievement['winner_id'])
-        scores[index] += achievement['score']
+        game.scores[index] += achievement['score']
 
+    game.achievements = achievement_string_list
     game.put()
     return
+
+def getAchievement(identifier):
+    return achievments[identifier]
 
 #####################################################################################################
 # Different Determination Functions

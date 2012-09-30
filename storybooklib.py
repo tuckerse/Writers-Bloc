@@ -6,7 +6,7 @@ from Models import Game, LastUsedGameID
 from UserHandler import User
 from cacheLib import retrieveCache, storeCache
 from google.appengine.ext import db
-from achievementlib import applyAchievements
+from achievementlib import applyAchievements, getAchievement
 
 MAX_PLAYERS = 8
 VOTE_TIME = 45
@@ -354,7 +354,11 @@ def resolveAchievements(game):
     #Will implement this tomorrow
     #achievements is a list of dictionaries keys=[(winner_id, achievement_id, score]
     achievements = applyAchievements(game)
+    storeAchievementData(achievements, game)
 
+def storeAchievementData(achievements, game):
+    #Should also put user achievement data storage here later
+    
 
 def removeUser(game_id, user_id):
     game = Game.get_by_key_name(game_id)
@@ -422,4 +426,24 @@ def removeVote(game, user):
     del game.users_voted[index]
     del game.votes[index]
     game.put()
-    return game
+
+def getEndText(game):
+    achievements = parseAchievements(game.achievements)
+    end_text = ''
+    for achievement in achievements:
+        user = User.get_by_key_name(achievement['winner_id'])
+        achievement_data = getAchievement(achievement['achievement_id'])
+        end_text += 'Achievement: ' + achievement_data.name + '\n'
+        end_text += 'Description: ' + achievement_data.description + '\n'
+        end_text += 'Winner: ' + trimName(user.name, user.display_type) + '\n'
+        end_text += 'Points Awarded: ' + str( achievement_data.points) + '\n\n'
+
+    return end_text
+
+def parseAchievements(input_string_list):
+    return_list = []
+    for input_string in input_string_list:
+        parts = input_string.split('^')
+        return_list.append({'winner_id':parts[0], 'achievement_id':parts[1]}))
+
+    return return_list

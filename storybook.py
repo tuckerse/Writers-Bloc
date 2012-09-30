@@ -30,6 +30,7 @@ from setvisibility import SetVisibility
 from usersettings import UserSettings
 from creategame import CreateGame
 from updateuserinfo import UpdateUserInfo
+from getendtext import GetEndText
 
 from storybooklib import LAST_USED_GAME_ID_KEY
 
@@ -61,7 +62,8 @@ routes = [
     ('/set_visibility', SetVisibility),
     ('/user_settings', UserSettings),
     ('/create_game', CreateGame),
-    ('/update_user_info', UpdateUserInfo)
+    ('/update_user_info', UpdateUserInfo),
+    ('/get_end_text', GetEndText)
 ]
 app = webapp.WSGIApplication(routes)
 
