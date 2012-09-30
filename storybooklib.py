@@ -356,10 +356,6 @@ def resolveAchievements(game):
     achievements = applyAchievements(game)
     storeAchievementData(achievements, game)
 
-def storeAchievementData(achievements, game):
-    #Should also put user achievement data storage here later
-    
-
 def removeUser(game_id, user_id):
     game = Game.get_by_key_name(game_id)
     try:
