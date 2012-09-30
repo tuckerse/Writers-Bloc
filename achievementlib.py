@@ -9,10 +9,10 @@ class Achievement:
         self.points = points
         self.determination_function = determination_function
 
-    def resolve(game):
+    def resolve(self, game):
         return addAchievementData(determination_function(game))
 
-    def addAchievementData(output):
+    def addAchievementData(self, output):
         for entry in output:
             entry['achievement_id'] = self.iden
             entry['score'] = self.points
