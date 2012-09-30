@@ -1,3 +1,5 @@
+import logging
+
 from cacheLib import retrieveCache, storeCache
 from UserHandler import User
 
@@ -26,7 +28,7 @@ def loadAchievements():
 def applyAchievements(game):
     return_list = []
     for key in achievements:
-        return_list += achievements[key].resolve(game)
+        return_list.append(achievements[key].resolve(game))
 
     updateGameAchievements(return_list, game)
     return return_list
