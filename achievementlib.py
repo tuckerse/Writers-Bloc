@@ -54,3 +54,6 @@ def firstAuthorDetermination(game):
     scores = game.scores
     user_id = game.users[scores.index(max(game.scores))]
     return [{'winner_id': user_id}]
+
+
+loadAchievements()
