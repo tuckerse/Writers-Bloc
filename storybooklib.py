@@ -345,9 +345,9 @@ def removeAFKVotes(game):
 def finishGame(game):
     game.finished = True
     game.game_ended = datetime.datetime.now()
-        resolveAchievements(game)
+    resolveAchievements(game)
     #game.put()
-        #^^ Will need to uncomment this if you change the put() in the achievement framework
+    #^^ Will need to uncomment this if you change the put() in the achievement framework
     #storeCache(game, str(game.game_id))
 
 def resolveAchievements(game):

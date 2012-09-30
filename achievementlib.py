@@ -10,9 +10,14 @@ class Achievement:
         self.determination_function = determination_function
 
     def resolve(game):
-        return determination_function(game)
+        return addAchievementData(determination_function(game))
 
-achievements = []
+    def addAchievementData(output):
+        for entry in output:
+            entry['achievement_id'] = self.iden
+            entry['score'] = self.points
+
+achievements = {}
 
 def applyAchievements(game):
     return_list = []
@@ -23,10 +28,19 @@ def applyAchievements(game):
 
     return return_list
 
-def addAchievementPoints(achievements, game)
+def addAchievementPoints(achievements, game):
     for achievement in achievements:
         index = user.index(achievement['winner_id'])
         scores[index] += achievement['score']
 
     game.put()
     return
+
+#####################################################################################################
+# Different Determination Functions
+#####################################################################################################
+
+def firstAuthorDetermination(game):
+    scores = game.scores
+    user_id = game.users[scores.index(max(game.scores))]
+    return [{'winner_id', user_id}]
