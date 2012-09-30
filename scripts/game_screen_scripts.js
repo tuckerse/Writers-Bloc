@@ -33,6 +33,8 @@ function processKey(e)
 			    submitNextPart();
             else if (phase == "v")
                 submitVote();
+            else if (phase == "f")
+                submitEndVote();
         }
 		return false;
   	}
@@ -541,6 +543,7 @@ function setToSubmissionPhase()
 	document.getElementById("button_input").value = "";
 	document.getElementById("button_input").disabled = false;
 	document.getElementById("submit_button").disabled = false;
+    document.getElementById("submit_button").value = "Submit";
 }
 
 function acknowledgeFinishDisplay()
