@@ -10,7 +10,7 @@ class Achievement:
         self.determination_function = determination_function
 
     def resolve(self, game):
-        return addAchievementData(determination_function(game))
+        return self.addAchievementData(self.determination_function(game))
 
     def addAchievementData(self, output):
         for entry in output:
