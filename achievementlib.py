@@ -25,8 +25,8 @@ def loadAchievements():
 
 def applyAchievements(game):
     return_list = []
-    for achievement in achievements:
-        return_list += achievement.resolve(game)
+    for key in achievements:
+        return_list += achievements[key].resolve(game)
 
     updateGameAchievements(return_list, game)
     return return_list
