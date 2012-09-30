@@ -351,8 +351,8 @@ def finishGame(game):
     #storeCache(game, str(game.game_id))
 
 def resolveAchievements(game):
-        #Will implement this tomorrow
-        #achievements is a list of dictionaries keys=[(winner_id, achievement_id, score]
+    #Will implement this tomorrow
+    #achievements is a list of dictionaries keys=[(winner_id, achievement_id, score]
     achievements = applyAchievements(game)
 
 
