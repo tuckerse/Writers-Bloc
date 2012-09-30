@@ -376,7 +376,7 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence):
     newGame.story = []
     newGame.users = []
     newGame.current_players = 0
-    newGame.num_phases = 1
+    newGame.num_phases = 9
     newGame.end_sentence = end_sentence
     newGame.start_sentence = start_sentence
     newGame.can_submit = False
