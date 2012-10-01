@@ -342,7 +342,6 @@ function getEndGameText()
     xmlHttp.setRequestHeader("Content-type", "application/json");
     xmlHttp.send(null);
     while(response == null){}
-    alert(response.end_text);
     return response.end_text;
 }
 

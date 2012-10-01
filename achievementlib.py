@@ -18,8 +18,9 @@ class Achievement:
         for entry in output:
             entry['achievement_id'] = self.iden
             entry['score'] = self.points
+        return output
 
-achievements = {}
+achievements = dict()
 
 def loadAchievements():
     achieve = Achievement(0, 'First Author', 'Lead author of this story', 10, firstAuthorDetermination)
@@ -28,31 +29,32 @@ def loadAchievements():
 def applyAchievements(game):
     return_list = []
     for key in achievements:
+        logging.debug(achievements[key])
         return_list.append(achievements[key].resolve(game))
 
     updateGameAchievements(return_list, game)
     return return_list
 
-def updateGameAchievements(achievements, game):
+def updateGameAchievements(achievement_list, game):
     achievement_string_list = []
-    for achievement in achievements:
-        achievement_string_list.append((str(achievement['winner_id']) + '^' + str(achievement['achievement_id'])))
-        index = game.users.index(achievement['winner_id'])
-        game.scores[index] += achievement['score']
+    for achievement in achievement_list:
+        for winner_data in achievement:
+            achievement_string_list.append((str(winner_data['winner_id']) + '^' + str(winner_data['achievement_id'])))
+            index = game.users.index(winner_data['winner_id'])
+            game.scores[index] += winner_data['score']
 
     game.achievements = achievement_string_list
     game.put()
     return
 
 def getAchievement(identifier):
-    return achievments[identifier]
+    return achievements[identifier]
 
 #####################################################################################################
 # Different Determination Functions
 #####################################################################################################
 
 def firstAuthorDetermination(game):
-    return_list = []
     scores = game.scores
     user_id = game.users[scores.index(max(game.scores))]
     return [{'winner_id': user_id}]

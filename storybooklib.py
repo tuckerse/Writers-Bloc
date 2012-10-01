@@ -423,10 +423,10 @@ def getEndText(game):
     for achievement in achievements:
         user = User.get_by_key_name(achievement['winner_id'])
         achievement_data = getAchievement(achievement['achievement_id'])
-        end_text += 'Achievement: ' + achievement_data.name + '\n'
-        end_text += 'Description: ' + achievement_data.description + '\n'
-        end_text += 'Winner: ' + trimName(user.name, user.display_type) + '\n'
-        end_text += 'Points Awarded: ' + str( achievement_data.points) + '\n\n'
+        end_text += 'Achievement: ' + achievement_data.name + '<br>'
+        end_text += 'Description: ' + achievement_data.description + '<br>'
+        end_text += 'Winner: ' + trimName(user.name, user.display_type) + '<br>'
+        end_text += 'Points Awarded: ' + str( achievement_data.points) + '<br><br>'
 
     return end_text
 
@@ -434,6 +434,6 @@ def parseAchievements(input_string_list):
     return_list = []
     for input_string in input_string_list:
         parts = input_string.split('^')
-        return_list.append({'winner_id':parts[0], 'achievement_id':parts[1]})
+        return_list.append({'winner_id':parts[0], 'achievement_id':int(parts[1])})
 
     return return_list
