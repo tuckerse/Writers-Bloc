@@ -1,4 +1,6 @@
 import logging
+import random
+import operator
 
 from cacheLib import retrieveCache, storeCache
 from UserHandler import User
@@ -23,8 +25,11 @@ class Achievement:
 achievements = dict()
 
 def loadAchievements():
-    achieve = Achievement(0, 'First Author', 'Lead author of this story', 10, firstAuthorDetermination)
-    achievements[achieve.iden] = achieve
+    first_author = Achievement(0, 'First Author', 'Lead author of this story', 0, firstAuthorDetermination)
+    achievements[first_author.iden] = first_author
+
+    team_edward = Achievement(0, 'Team Edward', 'Most mention of vampires', 25, teamEdwardDetermination)
+    achievements[team_edward.iden] = team_edward
 
 def applyAchievements(game):
     return_list = []
@@ -70,5 +75,31 @@ def firstAuthorDetermination(game):
     user_id = game.users[scores.index(high_score)]
     return [{'winner_id': user_id}]
 
+def teamEdwardDetermination(game):
+    #Words we are looking for
+    associated_words = ['vampire', 'vampiric', 'vampirism', 'dracula']
+    
+    #Initialize scores to 0
+    user_scores = dict()
+    
+    for user in game.users:
+        user_scores[user] = 0
+
+    for i in range(0, len(game.story)):
+        part = game.story[i]
+        user = game.winning_users[i]
+        lower_case = part.lower()
+        for word in associated_words:
+            user_scores[user] += part.count(word)
+
+    winning_user = max(user_scores.iterkeys(), key=lambda x: user_scores[x])
+    if user_score[winning_user] == 0
+        return []
+
+    value = random.random()
+    
+    if value > 0.8:
+        return [{'winner_id':winning_user}]
+    
 
 loadAchievements()
