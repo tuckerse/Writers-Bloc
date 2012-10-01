@@ -104,7 +104,7 @@ def teamEdwardDetermination(game):
             user_scores[user] += part.count(word)
 
     winning_user = max(user_scores.iterkeys(), key=lambda x: user_scores[x])
-    if user_score[winning_user] == 0
+    if user_score[winning_user] == 0:
         return []
 
     value = random.random()
