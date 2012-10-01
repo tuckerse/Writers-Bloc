@@ -13,6 +13,7 @@ var winningData;
 var scoreInfo;
 var oldPhase;
 var refreshDelay = 5;
+var stagger = Math.floor(Math.random()*5)
 var recentlySubmitted = "";
 var profiles;
 var afks;
@@ -139,7 +140,7 @@ function tick()
 	{
 		phaseChangeLogic();
 	}
-	else if(seconds%refreshDelay == 0)
+	else if(seconds%(refreshDelay+stagger) == 0)
 	{
 		oldPhase = phase;
 		statusCheck();
