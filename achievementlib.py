@@ -56,7 +56,12 @@ def getAchievement(identifier):
 
 def firstAuthorDetermination(game):
     scores = game.scores
-    user_id = game.users[scores.index(max(game.scores))]
+    high_score = max(game.scores)
+    if scores.count(high_score) > 1:
+        #Tie, do not award
+        return []
+    
+    user_id = game.users[scores.index(high_score)]
     return [{'winner_id': user_id}]
 
 
