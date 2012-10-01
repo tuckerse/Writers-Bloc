@@ -39,6 +39,12 @@ def updateGameAchievements(achievement_list, game):
     achievement_string_list = []
     for achievement in achievement_list:
         for winner_data in achievement:
+            
+            user = retrieveCache(winner_data['winner_id'], User)
+            if not winner_data['achievement_id'] in user.achievements:
+                user.achievements.append(winner_data['achievement_id'])
+            storeCache(user, user.user_id)
+            
             achievement_string_list.append((str(winner_data['winner_id']) + '^' + str(winner_data['achievement_id'])))
             index = game.users.index(winner_data['winner_id'])
             game.scores[index] += winner_data['score']

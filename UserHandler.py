@@ -13,6 +13,7 @@ class User(db.Model):
     last_hosted = db.DateTimeProperty()
     rounds_afk = db.IntegerProperty()
     display_type = db.IntegerProperty()
+    achievements = db.ListProperty(int)
 
     def refresh_data(self):
         """Refresh this user's data using the Facebook Graph API"""
