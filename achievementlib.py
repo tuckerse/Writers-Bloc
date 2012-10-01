@@ -28,8 +28,11 @@ def loadAchievements():
     first_author = Achievement(0, 'First Author', 'Lead author of this story', 0, firstAuthorDetermination)
     achievements[first_author.iden] = first_author
 
-    team_edward = Achievement(0, 'Team Edward', 'Most mention of vampires', 25, teamEdwardDetermination)
+    team_edward = Achievement(1, 'Team Edward', 'Most mention of vampires', 25, teamEdwardDetermination)
     achievements[team_edward.iden] = team_edward
+
+    best_seller = Achievement(2, 'Best Seller', 'Most sentences won', 10, bestSellerDetermination)
+    achievements[best_seller.iden] = best_seller    
 
 def applyAchievements(game):
     return_list = []
@@ -75,6 +78,14 @@ def firstAuthorDetermination(game):
     user_id = game.users[scores.index(high_score)]
     return [{'winner_id': user_id}]
 
+def bestSellerDetermination(game):
+    user_wins = dict()
+    for user in game.users:
+        user_wins[user] = game.winning_users.count[user]
+
+    highest_wins_user = max(user_wins.iterkeys(), key=lambda x: user_wins[x])
+    return [{'winner_id': highest_wins_user}]
+
 def teamEdwardDetermination(game):
     #Words we are looking for
     associated_words = ['vampire', 'vampiric', 'vampirism', 'dracula']
@@ -100,6 +111,7 @@ def teamEdwardDetermination(game):
     
     if value > 0.8:
         return [{'winner_id':winning_user}]
-    
+    else:
+        return []
 
 loadAchievements()
