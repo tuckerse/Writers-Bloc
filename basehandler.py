@@ -85,6 +85,7 @@ class BaseHandler(webapp.RequestHandler):
     def init_facebook(self):
         """Sets up the request specific Facebook and User instance"""
         facebook = Facebook()
+        logging.debug("init_facebook called")
         user = None
 
         # initial facebook request comes in as a POST with a signed_request
@@ -119,7 +120,10 @@ class BaseHandler(webapp.RequestHandler):
             if not user and facebook.access_token:
                 me = facebook.api(u'/me', {u'fields': _USER_FIELDS})
                 try:
-                    friends = [user[u'id'] for user in me[u'friends'][u'data']]
+                    if not u'friends' in me:
+                        friends = []
+                    else:
+                        friends = [user[u'id'] for user in me[u'friends'][u'data']]
                     user = User(key_name=facebook.user_id,
                         user_id=facebook.user_id, friends=friends,
                         access_token=facebook.access_token, name=me[u'name'],
@@ -127,6 +131,7 @@ class BaseHandler(webapp.RequestHandler):
                     #user.put()
                     storeCache(user, user.user_id)
                 except KeyError, ex:
+                    logging.debug(ex)
                     pass # ignore if can't get the minimum fields
 
         self.facebook = facebook
