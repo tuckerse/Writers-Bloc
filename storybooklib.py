@@ -61,8 +61,7 @@ def joinGame(user, game_id):
     result.current_players += 1
     resetAFK(user)
     if result.current_players == MAX_PLAYERS:
-        result.started = True
-        result.put()
+        startGame(game_id)
         #storeCache(result, str(game_id))
         return result.game_id
     result.put()
