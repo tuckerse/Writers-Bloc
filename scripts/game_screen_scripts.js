@@ -13,7 +13,7 @@ var winningData;
 var scoreInfo;
 var oldPhase;
 var refreshDelay = 5;
-var stagger = Math.floor(Math.random()*5)
+var stagger = Math.floor(Math.random()*5);
 var recentlySubmitted = "";
 var profiles;
 var afks;
