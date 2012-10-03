@@ -1,25 +1,35 @@
 {% extends "base.html" %}
 {% block body %}
-<img src="/storybook_icon.png" alt="Storybook"/>
+<center>
+<img src="/images/StorybookIcon75.png" alt="Storybook"/>
 <br>
 Writer's Bloc
 <br><br>
 
+<div class="find_game_button">
 <form method="link" action="find_game">
-	<input type="submit" value="Find Game">
+	<input type="submit" value="Find Game" alt="Find Game">
 </form>
+</div>
 
+<div class="view_lobby_button">
 <form method="link" action="view_lobby">
-	<input type="submit" value="View Lobby">
+	<input type="submit" value="View Lobby" alt="View Lobby">
 </form>
+</div>
 
+<div class="create_game_button">
 <form method="link" action="create_game">
-	<input type="submit" value="Create a Game">
+	<input type="submit" value="Create a Game" alt="Create Game">
 </form>
+</div>
 
+<div class="settings_button">
 <form method="link" action="user_settings">
-    <input type="submit" value="Settings">
+    <input type="submit" value="Settings" alt="Settings">
 </form>
+</div>
 
+</center>
 {% endblock %}
 

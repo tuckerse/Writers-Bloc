@@ -7,6 +7,7 @@ body {
   padding: 0;
   text-align: left;
   overflow: hidden;
+  background-image:url('/images/book_area.png');
 }
 h1 {
   border-bottom: 1px solid #1d4088;
@@ -15,11 +16,13 @@ h1 {
   font-size: 25px;
   margin: 0 0 15px 0;
   padding-bottom: 5px;
+  opacity:0.6;
 }
 #loginscreen {
   float: inherit;
   background: #ffffff;
   width: 375px;
+  opacity:0.6;
 }
 #gamescreen {
   border-bottom: 1px solid #1d4088;
@@ -27,8 +30,8 @@ h1 {
   background: #ffffff;
   font-size: 15px;
   margin: 0 auto;
+  opacity:0.6;
   width: 700px;
-  background-image:url('/book_area.png');
 }
 
 #story
@@ -47,6 +50,7 @@ h1 {
   float: left;
   background: #ffffff;
   width: 510px;
+  opacity:0.6;
 }
 
 #userbar {
@@ -55,7 +59,7 @@ h1 {
   top: 40px;
   background: #ffffff;
   width: 180px;
-  height: 654px
+  height: 654px;
 }
 
 #timer {
@@ -78,4 +82,45 @@ h1 {
   background: #fffff1;
   border-width: 1px;
   vertical-align: center;
+  opacity:0.6;
+}
+
+div.find_game_button input {
+background:url(/images/find_game_button.png) no-repeat;
+cursor:pointer;
+width: 50px;
+height: 50px;
+padding-top:5px;
+padding-bottom:5px;
+border: none;
+}
+
+div.view_lobby_button input {
+background:url(/images/view_lobby_button.png) no-repeat;
+cursor:pointer;
+width: 50px;
+padding-top:5px;
+padding-bottom:5px;
+height: 50px;
+border: none;
+}
+
+div.create_game_button input {
+background:url(/images/create_game_button.png) no-repeat;
+cursor:pointer;
+width: 50px;
+padding-top:5px;
+padding-bottom:5px;
+height: 50px;
+border: none;
+}
+
+div.settings_button input {
+background:url(/images/settings_button.png) no-repeat;
+cursor:pointer;
+width: 50px;
+height: 50px;
+padding-top:5px;
+padding-bottom:5px;
+border: none;
 }
