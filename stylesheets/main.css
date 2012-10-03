@@ -28,6 +28,7 @@ h1 {
   font-size: 15px;
   margin: 0 auto;
   width: 700px;
+  background-image:url('/book_area.png');
 }
 
 #story
