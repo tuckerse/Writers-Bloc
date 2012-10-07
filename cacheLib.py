@@ -27,17 +27,13 @@ def deleteData(data, key):
 
 def markPlayerHostedGame(user_id):
     user = retrieveCache(user_id, UserHandler.User)
-    logging.debug(str(user.last_hosted))
     user.last_hosted = datetime.datetime.now()
-    logging.debug(str(user.last_hosted))
     storeCache(user, user_id)
     newUser = retrieveCache(user_id, UserHandler.User)
-    logging.debug(str(newUser.last_hosted))
 
 def canPlayerHost(user_id):
     user = retrieveCache(user_id, UserHandler.User)
     if user.last_hosted is None:
-        logging.critical("This should by no means be happening right now")
         user.last_hosted = (datetime.datetime.now() - datetime.timedelta(seconds=HOST_COOLDOWN*2))
         storeCache(user, user_id)
     logging.debug((datetime.datetime.now() - user.last_hosted).seconds)

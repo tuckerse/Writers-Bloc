@@ -12,7 +12,6 @@ class SetVisibility(BaseHandler):
             storeCache(self.user, self.user.user_id)
             response_info = {'success': True}
             self.response.out.write(json.dumps(response_info))
-            logging.debug(json.dumps(response_info))
         else:
             logging.critical('Unauthorized visibility set attempt')
 

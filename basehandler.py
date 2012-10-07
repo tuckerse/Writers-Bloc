@@ -85,7 +85,6 @@ class BaseHandler(webapp.RequestHandler):
     def init_facebook(self):
         """Sets up the request specific Facebook and User instance"""
         facebook = Facebook()
-        logging.debug("init_facebook called")
         user = None
 
         # initial facebook request comes in as a POST with a signed_request
@@ -131,7 +130,6 @@ class BaseHandler(webapp.RequestHandler):
                     #user.put()
                     storeCache(user, user.user_id)
                 except KeyError, ex:
-                    logging.debug(ex)
                     pass # ignore if can't get the minimum fields
 
         self.facebook = facebook

@@ -22,13 +22,11 @@ def postStory(game):
     payload = urllib.urlencode({'uh':modhash, 'kind':'self', 'text':text, 'sr':'storybook', 'title':title, 'r':'storybook', 'api_type':'json'})
     response = urlfetch.fetch(url, payload, method=urlfetch.POST, headers=getHeaders(reddit_session_cookie))
     json_response = json.loads(response.content)
-    logging.debug(response.content)
 
 def login():
     url = 'https://ssl.reddit.com/api/login/' + user_name
     payload = urllib.urlencode({'api_type' : 'json', 'user' : user_name, 'passwd': password})
     response = urlfetch.fetch(url, payload, method=urlfetch.POST, headers=getHeaders(reddit_session_cookie))
-    logging.debug(response.content)
     json_response = json.loads(response.content)
     reddit_session_cookie.load(response.headers.get('set-cookie', ''))
     return json_response['json']['data']['modhash']
@@ -41,7 +39,6 @@ def getCookieHeaders(cookie):
     cookieHeader = ""
     for value in cookie.values():
         cookieHeader += "%s=%s; " % (value.key, value.value)
-    logging.debug('Cookie headers: ' + cookieHeader)
     return cookieHeader
 
 def getStoryInfo(game):
@@ -77,7 +74,6 @@ def getStoryString(game):
     return string
 
 def trimName(name, display_type):
-    logging.debug(name + ' ' + str(display_type))
     split_name = name.partition(' ')
     return_string = ''
     if display_type == 0:

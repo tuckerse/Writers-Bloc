@@ -24,26 +24,21 @@ class DisplayCompleteVerification(BaseHandler):
             if (game.num_phases < 10 or game.went_to_submission):
                 if not game.display_phase and game.can_submit:
                     self.response.headers.add_header('response', "v")
-                    logging.debug(self.response.headers)
                     return
                 elif datetime.datetime.now() > game.end_display_time:
                     changeToSubmissionPhase(game, self)
                     game.went_to_submission = True
                     game.put()
                     #storeCache(game, game_id)
-                    logging.debug(self.response.headers)
                     return
                 self.response.headers.add_header('response', "i")
                 self.response.headers.add_header('updated_story', "")
             else:
                 if (not game.display_phase) and game.end_voting:
                     self.response.headers.add_header('response', "v")
-                    logging.debug(self.response.headers)
                     return
                 elif datetime.datetime.now() > game.end_display_time:
                     changeToEndVotingPhase(game, self)
-                    logging.debug(self.response.headers)
                     return
                 self.response.headers.add_header('response', "i")
-        logging.debug(self.response.headers)
         return

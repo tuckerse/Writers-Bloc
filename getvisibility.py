@@ -9,7 +9,6 @@ class GetVisibility(BaseHandler):
         if self.user:
             response_info = {'visibility': self.user.display_type}
             self.response.out.write(json.dumps(response_info))
-            logging.debug(json.dumps(response_info))
         else:
             logging.critical('Unauthorized visibility check')
         return

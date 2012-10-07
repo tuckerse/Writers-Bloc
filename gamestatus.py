@@ -41,7 +41,6 @@ class GameStatus(webapp.RequestHandler):
             response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds
 
         response = json.dumps(response_info)
-        logging.debug(response_info)
 
         if ((datetime.datetime.now() - game.created).seconds) > MAX_GAME_CREATION and not game.started:
             db.delete(game)
