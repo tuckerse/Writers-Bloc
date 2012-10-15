@@ -133,6 +133,7 @@ class BaseHandler(webapp.RequestHandler):
                     pass # ignore if can't get the minimum fields
 
         self.facebook = facebook
+	logging.debug(type(user))
         self.user = user
 
     def init_csrf(self):
