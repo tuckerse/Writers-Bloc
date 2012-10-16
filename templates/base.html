@@ -15,6 +15,9 @@
 	<body>
 	<div id="fb-root"></div>
 	<script>
+	FB.Event.subscribe('auth.login', function() {
+  window.location.reload();
+});
 	window.fbAsyncInit = function() {
     FB.init({
       appId      : '394031443968167', // App ID
