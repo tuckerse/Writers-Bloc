@@ -71,7 +71,7 @@ class BaseHandler(webapp.RequestHandler):
         data[u'js_conf'] = json.dumps({
             u'appId': conf.FACEBOOK_APP_ID,
             u'canvasName': conf.FACEBOOK_CANVAS_NAME,
-            u'userIdOnServer': self.user.user_id if self.user else None,
+            u'userIdOnServer': self.user.id if self.user else None,
         })
         data[u'logged_in_user'] = self.user
         data[u'message'] = self.get_message()
@@ -108,7 +108,7 @@ class BaseHandler(webapp.RequestHandler):
                 if facebook.access_token and facebook.access_token != user.access_token:
                     user.access_token = facebook.access_token
                     #user.put()
-                    storeCache(user, user.user_id)
+                    storeCache(user, user.id)
                 # refresh data if we failed in doing so after a realtime ping
                 if user.dirty:
                     user.refresh_data()
@@ -128,7 +128,7 @@ class BaseHandler(webapp.RequestHandler):
                         access_token=facebook.access_token, name=me[u'name'],
                         email=me.get(u'email'), picture=me[u'picture']['url'], last_hosted=(datetime.datetime.now() - datetime.timedelta(minutes=5)), display_type=2, achievements=[])
                     #user.put()
-                    storeCache(user, user.user_id)
+                    storeCache(user, user.id)
                 except KeyError, ex:
                     pass # ignore if can't get the minimum fields
 
