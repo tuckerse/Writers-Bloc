@@ -134,6 +134,7 @@ class BaseHandler(webapp.RequestHandler):
 
         self.facebook = facebook
 	logging.debug(type(user))
+	logging.debug(user.keys())
         self.user = user
 
     def init_csrf(self):
