@@ -15,15 +15,16 @@
 	<body>
 	<div id="fb-root"></div>
 	<script>
-	FB.Event.subscribe('auth.login', function() {
-  window.location.reload();
-});
 	window.fbAsyncInit = function() {
     FB.init({
       appId      : '394031443968167', // App ID
       status     : true, // check login status
       cookie     : true, // enable cookies to allow the server to access the session
       xfbml      : true  // parse XFBML
+    });
+
+    FB.Event.subscribe('auth.login', function() {
+    setTimeout(function() { window.location.replace("/");}, 2500);
     });
 
     // Additional initialization code here
@@ -43,6 +44,7 @@
 	  js = d.createElement(s); js.id = id;
 	  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=APP_ID";
 	  fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));</script>
+	}(document, 'script', 'facebook-jssdk'));
+</script>
 </body>
 </html>

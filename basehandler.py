@@ -108,7 +108,7 @@ class BaseHandler(webapp.RequestHandler):
                 if facebook.access_token and facebook.access_token != user.access_token:
                     user.access_token = facebook.access_token
                     #user.put()
-                    storeCache(user, user.id)
+                    storeCache(user, user.user_id)
                 # refresh data if we failed in doing so after a realtime ping
                 if user.dirty:
                     user.refresh_data()
