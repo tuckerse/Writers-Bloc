@@ -123,17 +123,18 @@ class BaseHandler(webapp.RequestHandler):
                         friends = []
                     else:
                         friends = [user[u'id'] for user in me[u'friends'][u'data']]
-                    user = User(key_name=facebook.user_id,
+                    user_obj = User(key_name=facebook.user_id,
                         user_id=facebook.user_id, friends=friends,
                         access_token=facebook.access_token, name=me[u'name'],
-                        email=me.get(u'email'), picture=me[u'picture']['url'], last_hosted=(datetime.datetime.now() - datetime.timedelta(minutes=5)), display_type=2, achievements=[])
+                        email=me.get(u'email'), picture=me[u'picture'][u'data'][u'url'], last_hosted=(datetime.datetime.now() - datetime.timedelta(minutes=5)), display_type=2, achievements=[])
                     #user.put()
-                    storeCache(user, user.user_id)
+                    storeCache(user_obj, user_obj.user_id)
                 except KeyError, ex:
+                    logging.debug(ex)
                     pass # ignore if can't get the minimum fields
 
         self.facebook = facebook
-        self.user = user
+        self.user = user_obj
 
     def init_csrf(self):
         """Issue and handle CSRF token as necessary"""
