@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import getUserInfo, resetAFK, allUsersSubmitted, changeToVotingPhase
+from storybooklib import getUserInfo, resetAFK, allUsersSubmitted, changeToVotingPhase, cleanSubmission
 from django.utils import simplejson as json
 
 class GameScreen(BaseHandler):
@@ -29,6 +29,7 @@ class GameScreen(BaseHandler):
             if self.user.user_id in game.users and not int(self.user.user_id) in game.users_next_parts and game.can_submit:
                 resetAFK(self.user)
                 next_part = info['next_part']
+		next_part = cleanSubmission(next_part)
                 game = Game.get_by_key_name(str(game_id))
                 #game = retrieveCache(str(game_id), Game)
                 game.next_parts.append(next_part)

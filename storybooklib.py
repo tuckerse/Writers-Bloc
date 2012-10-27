@@ -1,6 +1,7 @@
 import datetime
 import random
 import sys
+import re
 
 from Models import Game, LastUsedGameID
 from UserHandler import User
@@ -19,6 +20,8 @@ SECOND_PLACE_BONUS = 1
 FIRST_PLACE_TIE_BONUS = 2
 SECOND_PLACE_TIE_BONUS = 1
 MAX_GAME_CREATION = 10*60
+URL_REGEX = "(((http(s))|(ftp))://)?(www\.)?([a-zA-Z0-9]+\.)*([a-zA-Z0-9]+)?(\.([a-zA-Z])+)" 
+EMAIL_REGEX = "[a-zA-Z0-9]+@([a-zA-Z0-9]+\.)*([a-zA-Z0-9]+)?(\.([a-zA-Z])+)"
 
 def findGame(user):
     query = Game.gql("WHERE current_players <:1 ORDER BY current_players ASC", MAX_PLAYERS)
@@ -436,3 +439,8 @@ def parseAchievements(input_string_list):
         return_list.append({'winner_id':parts[0], 'achievement_id':int(parts[1])})
 
     return return_list
+
+def cleanSubmission(next_part):
+    ret = re.sub(URL_REGEX, "URL", next_part)	
+    ret = re.sub(EMAIL_REGEX, "EMAIL", ret)
+    return ret
