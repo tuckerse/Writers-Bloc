@@ -16,13 +16,13 @@ h1 {
   font-size: 25px;
   margin: 0 0 15px 0;
   padding-bottom: 5px;
-  opacity:0.6;
+  opacity:0.9;
 }
 #loginscreen {
   float: inherit;
   background: #ffffff;
   width: 375px;
-  opacity:0.6;
+  opacity:0.9;
 }
 #gamescreen {
   border-bottom: 1px solid #1d4088;
@@ -30,7 +30,7 @@ h1 {
   background: #ffffff;
   font-size: 15px;
   margin: 0 auto;
-  opacity:0.6;
+  opacity:0.9;
   width: 700px;
 }
 
@@ -50,7 +50,7 @@ h1 {
   float: left;
   background: #ffffff;
   width: 510px;
-  opacity:0.6;
+  opacity:0.9;
 }
 
 #userbar {
@@ -82,7 +82,7 @@ h1 {
   background: #fffff1;
   border-width: 1px;
   vertical-align: center;
-  opacity:0.6;
+  opacity:0.9;
 }
 
 div.find_game_button input {
