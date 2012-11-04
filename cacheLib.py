@@ -36,7 +36,6 @@ def canPlayerHost(user_id):
     if user.last_hosted is None:
         user.last_hosted = (datetime.datetime.now() - datetime.timedelta(seconds=HOST_COOLDOWN*2))
         storeCache(user, user_id)
-    logging.debug((datetime.datetime.now() - user.last_hosted).seconds)
     return (datetime.datetime.now() - user.last_hosted).seconds > HOST_COOLDOWN
 
 def resetPlayerHost(user_id):
