@@ -20,8 +20,8 @@ SECOND_PLACE_BONUS = 1
 FIRST_PLACE_TIE_BONUS = 2
 SECOND_PLACE_TIE_BONUS = 1
 MAX_GAME_CREATION = 10*60
-URL_REGEX = "(((http(s))|(ftp))://)?(www\.)?([a-zA-Z0-9]+\.)*([a-zA-Z0-9]+)?(\.([a-zA-Z])+)+" 
-EMAIL_REGEX = "[a-zA-Z0-9]+@([a-zA-Z0-9]+\.)*([a-zA-Z0-9]+)?(\.([a-zA-Z])+)"
+URL_REGEX = "(((http(s)?)|(ftp))://)?(www\.)?([a-zA-Z0-9]*\.)+[a-zA-Z0-9]*(/[a-zA-Z0-9/?&_=]*)*" 
+EMAIL_REGEX = "[a-zA-Z0-9]+@([a-zA-Z0-9\.]+\.)*([a-zA-Z0-9]+)?(\.([a-zA-Z])+)"
 
 def findGame(user):
     query = Game.gql("WHERE current_players <:1 ORDER BY current_players ASC", MAX_PLAYERS)
