@@ -23,6 +23,7 @@ function statusCheck()
 			var started = response.started;
 			if(started == "y")
 			{
+                forward = true;
 				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
 			}
 		}
