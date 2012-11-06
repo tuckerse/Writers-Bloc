@@ -48,3 +48,13 @@ function returnToMenu()
 	xmlHttp.send(JSON.stringify(info));
 	window.location.replace('/');
 }
+
+function unload()
+{
+    var xmlHttp = new XMLHttpRequest();
+    var url = "/leave_before_start";
+    var info = {"game_id" : game_id, "user_id" : user_id};
+    xmlHttp.open("POST", url, false);
+    xmlHttp.setRequestHeader("Content-type", "application/json");
+    xmlHttp.send(JSON.stringify(info));
+}

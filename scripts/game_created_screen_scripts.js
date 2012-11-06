@@ -21,6 +21,7 @@ function statusCheck()
 			var started = response.started;
 			if(started == "y")
 			{
+                forward = true;
 				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
 			}
 		}
@@ -52,6 +53,19 @@ function returnToMenu()
 	xmlHttp.setRequestHeader("Content-type", "application/json");
 	xmlHttp.send(JSON.stringify(info));
 	window.location.replace('/');
+}
+
+function unloaded()
+{
+    if(!forward)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        var url = "/cancel_game";
+        var info = {"game_id" : game_id};
+        xmlHttp.open("POST", url, false);
+        xmlHttp.setRequestHeader("Content-type", "application/json");
+        xmlHttp.send(JSON.stringify(info));
+    }
 }
 
 var intervalID = window.setInterval(statusCheck, 5000);

@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block body %}
-<script type="text/javascript"> var game_id  = "{{ game_id }}" ; var MAX_PLAYERS = "{{ MAX_PLAYERS }}" ;</script>
+<script type="text/javascript"> 
+    var game_id  = "{{ game_id }}";
+    var MAX_PLAYERS = "{{ MAX_PLAYERS }}";
+    var forward = false;
+    window.onbeforeunload = 
+        function() 
+        { 
+            if(!forward)
+            {
+                return "You will be removed from the game if you leave";
+            }
+        };
+    window.onunload = unloaded();
+</script>
 	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game. Note: No one may join once the game has started.
 
 <div id="current_players">
