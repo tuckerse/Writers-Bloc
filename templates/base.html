@@ -15,6 +15,7 @@
 	<body>
 	<div id="fb-root"></div>
 	<script>
+    window.onbeforeunload = function() { return "Warning: Going back will exit you from the app."; };
 	window.fbAsyncInit = function() {
     FB.init({
       appId      : '394031443968167', // App ID
