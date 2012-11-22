@@ -3,28 +3,6 @@
 <script type="text/javascript"> 
     var game_id  = "{{ game_id }}";
     var MAX_PLAYERS = "{{ MAX_PLAYERS }}";
-    var forward = false;
-    function unloaded()
-    {
-        if(!forward)
-        {
-            var xmlHttp = new XMLHttpRequest();
-            var url = "/cancel_game";
-            var info = {"game_id" : game_id};
-            xmlHttp.open("POST", url, false);
-            xmlHttp.setRequestHeader("Content-type", "application/json");
-            xmlHttp.send(JSON.stringify(info));
-        }
-    }
-    window.onbeforeunload = 
-        function() 
-        { 
-            if(!forward)
-            {
-                return "You will be removed from the game if you leave";
-            }
-        };
-    window.onunload = unloaded();
 </script>
 	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game. Note: No one may join once the game has started.
 

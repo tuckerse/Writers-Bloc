@@ -10,7 +10,9 @@ function statusCheck()
 			response = JSON.parse(xmlHttp.responseText);
 			var deleted = response.deleted;
 			if(deleted)
+            {
 				window.location.replace("/game_deleted_error");
+            }
 			var num_players = response.num_players;
 			document.getElementById("current_players").innerHTML = num_players + "/" + MAX_PLAYERS + " Players<br>Current Players:<br>";
 			var players = response.players;
@@ -21,7 +23,6 @@ function statusCheck()
 			var started = response.started;
 			if(started == "y")
 			{
-                forward = true;
 				window.location.replace("/game_screen?game_id=" + encodeURIComponent(game_id));
 			}
 		}
