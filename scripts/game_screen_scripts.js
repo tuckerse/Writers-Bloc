@@ -333,7 +333,7 @@ function getEndGameText()
     {
         if(xmlHttp.readyState == 4)
         {
-             response = JSON.parse(xmlHttp.responseText)
+             response = JSON.parse(xmlHttp.responseText);
         }
     }
 
