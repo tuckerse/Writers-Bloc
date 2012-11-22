@@ -61,6 +61,7 @@ function submitNextPart()
 			if(response == "s")
 			{
 				document.getElementById("button_input").disabled = "true";
+                document.getElementById("submit_button").value = "Sentence Submitted";
                 hasSubmitted = true;
 			}
 		}
