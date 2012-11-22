@@ -11,4 +11,4 @@ class MenuPage(BaseHandler):
                 storeCache(self.user, self.user.user_id)
                 self.render(u'user_settings')
             else:
-                self.render(u'menu_screen')
+                self.render(u'menu_screen', in_game=(not self.user.current_game is None), game_id=self.user.current_game)

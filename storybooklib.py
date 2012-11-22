@@ -63,6 +63,8 @@ def joinGame(user, game_id):
     result.users.append(user.user_id)
     result.current_players += 1
     resetAFK(user)
+    user.current_game = str(game_id)
+    storeCache(user, user.user_id)
     if result.current_players == MAX_PLAYERS:
         startGame(game_id)
         #storeCache(result, str(game_id))
@@ -356,12 +358,22 @@ def finishGame(game):
     game.finished = True
     game.game_ended = datetime.datetime.now()
     applyAchievements(game)
+    clearUsersFromGame(game)
     #game.put()
     #^^ Will need to uncomment this if you change the put() in the achievement framework
     #storeCache(game, str(game.game_id))
 
+def clearUsersFromGame(game):
+    for user_id in game.users:
+        user = retrieveCache(user_id, User)
+        user.current_game = None
+        storeCache(user, user_id)
+
 def removeUser(game_id, user_id):
     game = Game.get_by_key_name(game_id)
+    user = retrieveCache(user_id, User)
+    user.current_game = None
+    storeCache(user, user_id)
     try:
         game.users.remove(user_id)
         game.current_players = game.current_players - 1

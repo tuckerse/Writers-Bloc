@@ -15,6 +15,7 @@ class User(db.Model):
     display_type = db.IntegerProperty()
     achievements = db.ListProperty(int)
     first_time = db.BooleanProperty()
+    current_game = db.StringProperty()
 
     def refresh_data(self):
         """Refresh this user's data using the Facebook Graph API"""

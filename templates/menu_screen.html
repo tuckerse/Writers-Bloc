@@ -26,6 +26,11 @@
 </div>
 </div>
 <br><br><br>
+{% if in_game %}
+<form method"link" action="javascript:window.location.replace('/game_screen?game_id={{ game_id }}')">
+    <input type="submit" value="Game you got disconnected from">
+</form>
+{% endif %}
 <form method="link" action="/other_games">
     <input type="submit" value="Other Games">
 </form>
