@@ -32,7 +32,7 @@ class Game(db.Model):
     end_end_vote_time = db.DateTimeProperty()
     game_ended = db.DateTimeProperty()
     scores = db.ListProperty(int)
-    recent_score_data = db.ListProperty(int)
+    recent_score_data = db.ListProperty(str)
     went_to_submission = db.BooleanProperty()
     start_sentence = db.StringProperty()
     achievements = db.ListProperty(str)

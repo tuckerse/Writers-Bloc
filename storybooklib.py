@@ -182,7 +182,7 @@ def determineWinner(game):
     for i in range(0, len(game.users)):
         user_score = scores[game.users[i]] if (game.users[i] in game.users_voted) else 0
         user_bonus = bonuses[game.users[i]] if (game.users[i] in game.users_voted) else 0
-        game.recent_score_data[i] = {"votes": user_score, "bonus": user_bonus}
+        game.recent_score_data[i] = str(user_score) + ';' + str(user_bonus)
         game.scores[i] += user_score + user_bonus
 
 def trimName(name, display_type):
@@ -218,9 +218,12 @@ def getRecentScoreInfo(game):
         user = retrieveCache(user_id, User)
         temp = {}
         temp['user_name'] = trimName(user.name, user.display_type)
-        temp['score_votes'] = game.recent_score_data[i]['votes']
-        temp['score_bonus'] = game.recent_score_data[i]['bonus']
-        temp['score'] = game.recent_score_data[i]['score']
+        votes, bonus = game.recent_score_data[i].split(";")
+        votes = int(votes)
+        bonus = int(bonus)
+        temp['score_votes'] = votes
+        temp['score_bonus'] = bonus
+        temp['score'] = votes + bonus
         submitted = game.users_next_parts.count(user_id) > 0
         if submitted:
             temp['sentence'] = game.next_parts[game.users_next_parts.index(user_id)]
@@ -416,7 +419,7 @@ def getPlayerNames(game):
 def resetRecentScoreData(game):
     game.recent_score_data = []
     for user in game.users:
-        game.recent_score_data.append(0)
+        game.recent_score_data.append('')
 
 def removeVote(game, user):
     index = game.users_voted.index(user.user_id)
