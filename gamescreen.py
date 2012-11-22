@@ -8,6 +8,9 @@ from django.utils import simplejson as json
 class GameScreen(BaseHandler):
     def get(self):
         game_id = self.request.get('game_id')
+        if game_id is None:
+            info = json.loads(self.request.body)
+            game_id = info['game_id']
         game = Game.get_by_key_name(str(game_id))
         #game = retrieveCache(str(game_id), Game)
         self.response.headers['Content-type'] = 'text/html'
