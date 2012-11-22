@@ -126,7 +126,7 @@ class BaseHandler(webapp.RequestHandler):
                     user = User(key_name=facebook.user_id,
                         user_id=facebook.user_id, friends=friends,
                         access_token=facebook.access_token, name=me[u'name'],
-                        email=me.get(u'email'), picture=me[u'picture'][u'data'][u'url'], last_hosted=datetime.datetime.min, display_type=2, achievements=[])
+                        email=me.get(u'email'), picture=me[u'picture'][u'data'][u'url'], last_hosted=datetime.datetime.min, display_type=2, achievements=[], first_time=True)
                     #user.put()
                     storeCache(user, user.user_id)
                 except Exception, ex:
