@@ -40,6 +40,7 @@ function statusCheck()
 
 function returnToMenu()
 {
+    forward = true;
 	var xmlHttp = new XMLHttpRequest();
 	var url = "/leave_before_start";
 	var info = {"game_id" : game_id, "user_id" : user_id};
