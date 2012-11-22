@@ -131,10 +131,12 @@ def changeToDisplayPhase(game, request_handler = None):
 
 def determineWinner(game):
     scores = {}
+    bonuses = {}
     all_voted_one = False
 
     for user in game.users:
         scores[user] = 0
+        bonuses[user] = 0
 
     max_votes = 0
     second_place = 0
@@ -160,15 +162,15 @@ def determineWinner(game):
     tie = (max_votes == second_votes) and (len(game.next_parts) > 1)
 
     if all_voted_one:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
+        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
     elif tie:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_TIE_BONUS
-        scores[str(game.users_next_parts[second_place])] += FIRST_PLACE_TIE_BONUS
+        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_TIE_BONUS
+        bonuses[str(game.users_next_parts[second_place])] += FIRST_PLACE_TIE_BONUS
     elif len(game.next_parts) > 1:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
-        scores[str(game.users_next_parts[second_place])] += SECOND_PLACE_BONUS
+        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
+        bonuses[str(game.users_next_parts[second_place])] += SECOND_PLACE_BONUS
     else:
-        scores[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
+        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
 
     game.winning_sentences.append(game.next_parts[winning_index])
     game.winning_users.append(game.users_next_parts[winning_index])
@@ -179,8 +181,9 @@ def determineWinner(game):
 
     for i in range(0, len(game.users)):
         user_score = scores[game.users[i]] if (game.users[i] in game.users_voted) else 0
-        game.recent_score_data[i] = user_score
-        game.scores[i] += user_score
+        user_bonus = bonuses[game.users[i]] if (game.users[i] in game.users_voted) else 0
+        game.recent_score_data[i] = {"votes": user_score, "bonus": user_bonus}
+        game.scores[i] += user_score + user_bonus
 
 def trimName(name, display_type):
     split_name = name.partition(' ')
@@ -215,7 +218,9 @@ def getRecentScoreInfo(game):
         user = retrieveCache(user_id, User)
         temp = {}
         temp['user_name'] = trimName(user.name, user.display_type)
-        temp['score'] = game.recent_score_data[i]
+        temp['score_votes'] = game.recent_score_data[i]['votes']
+        temp['score_bonus'] = game.recent_score_data[i]['bonus']
+        temp['score'] = game.recent_score_data[i]['score']
         submitted = game.users_next_parts.count(user_id) > 0
         if submitted:
             temp['sentence'] = game.next_parts[game.users_next_parts.index(user_id)]

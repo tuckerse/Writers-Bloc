@@ -531,7 +531,7 @@ function setToDisplayPhase()
 	var list = new Array();
 	for(entry in winningData)
 	{
-		list[winningData[entry].position - 1] = "<b>" + winningData[entry].position + "</b>. " + winningData[entry].sentence + " | Score: " + winningData[entry].score + " | Author: " + winningData[entry].user_name;
+		list[winningData[entry].position - 1] = "<b>" + winningData[entry].position + "</b>. " + winningData[entry].sentence + " | Score: " + winningData[entry].score_votes + " + " + winningData[entry].score_bonus + " = " winningData[entry].score + " | Author: " + winningData[entry].user_name;
 	}
 	for(user_entry in list)
 	{
