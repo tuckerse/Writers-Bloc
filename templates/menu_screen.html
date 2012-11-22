@@ -25,10 +25,11 @@
 </form>
 </div>
 </div>
-<br><br><br>
+<br><br>
 {% if in_game %}
+<FONT COLOR= #FF00000> Hey, you got disconnected from a game somehow, but you can rejoin it! </font>
 <form method"link" action="javascript:window.location.replace('/game_screen?game_id={{ game_id }}')">
-    <input type="submit" value="Game you got disconnected from">
+    <input type="submit" value="Join Disconnected Game">
 </form>
 {% endif %}
 <form method="link" action="/other_games">
