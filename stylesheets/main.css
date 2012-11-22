@@ -8,6 +8,7 @@ body {
   text-align: left;
   overflow: hidden;
   background-image:url('/images/book_area.png');
+  background-position:right top;
 }
 h1 {
   border-bottom: 1px solid #1d4088;
