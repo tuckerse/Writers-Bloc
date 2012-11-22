@@ -55,17 +55,4 @@ function returnToMenu()
 	window.location.replace('/');
 }
 
-function unloaded()
-{
-    if(!forward)
-    {
-        var xmlHttp = new XMLHttpRequest();
-        var url = "/cancel_game";
-        var info = {"game_id" : game_id};
-        xmlHttp.open("POST", url, false);
-        xmlHttp.setRequestHeader("Content-type", "application/json");
-        xmlHttp.send(JSON.stringify(info));
-    }
-}
-
 var intervalID = window.setInterval(statusCheck, 5000);
