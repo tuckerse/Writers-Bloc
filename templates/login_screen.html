@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div id="loginscreen">
-  <h1>Welcome to Writer's Bloc!</h1>
+<script>
+    //THIS REDIRECT ABSOLUTELY NEEDS TO BE HTTPS IN THE LIVE VERSION
+  var oauth_url = 'https://www.facebook.com/dialog/oauth/';
+  oauth_url += '?client_id=394031443968167';
+  oauth_url += '&redirect_uri=' + encodeURIComponent('http://apps.facebook.com/storybookwebapp/');
+  oauth_url += '&scope=email,offline_access'
 
-  <div id="info">
-    <p>
-      To start playing Writer's Bloc you must login with your Facebook account.
-    </p>
-  </div>
-
-  <div id="login-flow">
-    <fb:login-button perms="email,offline_access" show-faces="true"></fb:login-button>
-  </div>
-</div>
+  window.top.location = oauth_url;
+</script>
 {% endblock %}
