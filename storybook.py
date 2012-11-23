@@ -32,6 +32,7 @@ from creategame import CreateGame
 from updateuserinfo import UpdateUserInfo
 from getendtext import GetEndText
 from othergames import OtherGames
+from donationpage import DonationPage
 
 from storybooklib import LAST_USED_GAME_ID_KEY
 
@@ -65,7 +66,8 @@ routes = [
     ('/create_game', CreateGame),
     ('/update_user_info', UpdateUserInfo),
     ('/get_end_text', GetEndText),
-    ('/other_games', OtherGames)
+    ('/other_games', OtherGames),
+    ('/donation_page', DonationPage)
 ]
 app = webapp.WSGIApplication(routes)
 
