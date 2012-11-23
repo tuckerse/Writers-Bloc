@@ -4,13 +4,13 @@
     var game_id  = "{{ game_id }}";
     var MAX_PLAYERS = "{{ MAX_PLAYERS }}";
 </script>
-	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game. Note: No one may join once the game has started.
+	Your game has been created. Once the game is full, it will automatically be started. Otherwise, you may start it early if you do not want a full game (though you must have more than one person you forever aloner you. Note: No one may join once the game has started.
 
 <div id="current_players">
 	Initializing Game...
 </div>
 
-<input type="button" name="early_start" Value="Start Early?" onClick="startEarly()">
+<input type="button" id="early_start" name="early_start" disabled=true Value="Start Early?" onClick="startEarly()">
 <form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
 <script type="text/javascript" src="/scripts/game_created_screen_scripts.js"></script>
 

@@ -15,6 +15,11 @@ function statusCheck()
             }
 			var num_players = response.num_players;
 			document.getElementById("current_players").innerHTML = num_players + "/" + MAX_PLAYERS + " Players<br>Current Players:<br>";
+            if(num_players > 1)
+                document.getElementById("early_start").disabled = false;
+            else if(num_players == 1)
+                document.getElementById("early_start").disabled = true;
+
 			var players = response.players;
 			for(i in players)
 			{

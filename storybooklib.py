@@ -132,60 +132,114 @@ def changeToDisplayPhase(game, request_handler = None):
     #storeCache(game, str(game.game_id))
 
 def determineWinner(game):
+    score_structure, other_data = generateScoreStructure(game)
+
+    first_place = (0, '')
+    second_place = (0, '')
+    tie = False
+    
+    #No tie for first place
+    if len(score_structure[0]['user_list']) <= 1:
+        first_place = score_structure[0]['user_list'][0]
+        
+        #And no tie for second place
+        if len(score_structure[1]['user_list']) <= 1:
+            second_place = score_structure[1]['user_list'][0]
+        #And tie for second place
+        else:
+            second_one, second_two = getTwoLongestSentences(score_structure[1]['user_list'])
+            second_place = second_one
+
+    #Tie for first place
+    else:
+        tie = True
+        first_one, first_two = getTwoLongestSentences(score_structure[0]['user_list'])
+        first_place = first_one
+        second_place = first_two
+
     scores = {}
     bonuses = {}
-    all_voted_one = False
 
-    for user in game.users:
-        scores[user] = 0
-        bonuses[user] = 0
+    for user_id in game.users:
+        scores[user_id] = other_data[user_id][0]
+        bonuses[user_id] = 0
 
-    max_votes = 0
-    second_place = 0
-    second_votes = 0
-    winning_index = 0
-
-    for i in range(0, len(game.next_parts)):
-        vote_count = game.votes.count(i)
-        scores[str(game.users_next_parts[i])] += vote_count
-        if vote_count > max_votes:
-            max_votes = vote_count
-            winning_index = i
-
-    if max_votes == len(game.votes):
-        all_voted_one = True
-
-    for i in range(0, len(game.next_parts)):
-        vote_count = game.votes.count(i)
-        if (vote_count > second_votes and not (i == winning_index)) or ((vote_count == max_votes) and not (i == winning_index)):
-            second_votes = vote_count
-            second_place = i
-
-    tie = (max_votes == second_votes) and (len(game.next_parts) > 1)
-
-    if all_voted_one:
-        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
-    elif tie:
-        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_TIE_BONUS
-        bonuses[str(game.users_next_parts[second_place])] += FIRST_PLACE_TIE_BONUS
-    elif len(game.next_parts) > 1:
-        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
-        bonuses[str(game.users_next_parts[second_place])] += SECOND_PLACE_BONUS
+    if tie:
+        bonuses[first_place[0]] += FIRST_PLACE_TIE_BONUS
+        bonuses[second_place[0]] += FIRST_PLACE_TIE_BONUS
     else:
-        bonuses[str(game.users_next_parts[winning_index])] += FIRST_PLACE_BONUS
+        bonuses[first_place[0]] += FIRST_PLACE_BONUS
+        bonuses[second_place[0]] += SECOND_PLACE_BONUS
 
-    game.winning_sentences.append(game.next_parts[winning_index])
-    game.winning_users.append(game.users_next_parts[winning_index])
-    #game.winning_users_names.append(trimName((User.get_by_key_name(str(game.users_next_parts[winning_index]))).name))
-    winning_user = retrieveCache(str(game.users_next_parts[winning_index]), User)
-    game.winning_users_names.append(trimName(winning_user.name, winning_user.display_type))
-    game.story.append(game.next_parts[winning_index])
-
+    game.winning_sentences.append(first_place[1])
+    game.winning_users.append(first_place[0])
+    game.winning_users_names.append(NAMEGOESHERE)
+    game.story.append(first_place[1])
+    
     for i in range(0, len(game.users)):
-        user_score = scores[game.users[i]] if (game.users[i] in game.users_voted) else 0
-        user_bonus = bonuses[game.users[i]] if (game.users[i] in game.users_voted) else 0
-        game.recent_score_data[i] = str(user_score) + ';' + str(user_bonus)
-        game.scores[i] += user_score + user_bonus
+        bonus_str = ''
+
+        if (game.users[i] == first_place[0] or game.users[i] == second_place[0])  and tie:
+            bonus_str = str(FIRST_PLACE_TIE_BONUS)
+        elif (game.users[i] == first_place[0]):
+            bonus_str = str(FIRST_PLACE_BONUS)
+        elif (game.users[i] == second_place[0]):
+            bonus_str = str(SECOND_PLACE_BONUS)
+
+        game.recent_score_data[i] = str(scores[game.users[i]]) + ';' + bonus_str
+        game.scores[i] = scores[game.users[i]] + bonuses[game.users[i]]
+
+    game.put()
+        
+    
+def getTwoLongestSentences(score_struct_list):
+    sorted_list = sorted(score_struct_list, key=lambda x: len(x[1]))
+    return sorted_list[0]. sorted_list[1]
+
+def generateScoreStructure(game):
+    users_submitted = game.users_next_parts
+    votes = game.votes
+    next_parts = game.next_parts
+    
+    user_vote_score = {}
+    
+    for i in range(0, len(game.users)):
+        user_vote_score[game.users[i]] = (0, "")
+
+    for i in range(0, len(users_submitted)):
+        user_vote_score[users_submitted[i]] = (votes.count(i), next_parts[i])
+    
+    top_score, second_score = getTopScores(user_vote_score)
+    
+    score_struct = ({}, {})
+    score_struct[0]['score'] = top_score
+    score_struct[0]['user_list'] = []
+    score_struct[1]['score'] = second_score
+    score_struct[1]['user_list'] = []
+    
+    for key in user_vote_score.keys():
+        if user_vote_score[key][0] == top_score:
+            score_struct[0]['user_list'].append((key, user_vote_score[key][1]))
+        elif user_vote_score[key][0] == second_score:
+            score_struct[1]['user_list'].append((key, user_vote_score[key][1]))
+
+    return score_struct, user_vote_score    
+
+def getTopScores(score_struct):
+    top = -1
+    for entry in score_struct:
+        if entry[0] > top:
+            top = entry[0]
+
+    second = -1
+    for entry in score_struct:
+        if entry[0] > second and not entry[0] == top:
+            second = entry[0]      
+ 
+    if second == -1:
+        second = top
+
+    return top, second
 
 def trimName(name, display_type):
     split_name = name.partition(' ')

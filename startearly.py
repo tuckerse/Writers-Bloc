@@ -14,7 +14,7 @@ class StartEarly(BaseHandler):
             #game = retrieveCache(game_id, Game)
             if not self.user.user_id in game.users:
                 self.render(u'error_screen')
-            else:
+            elif len(game.users) > 1:
                 startGame(game_id)
                 self.redirect("/game_screen?" + urllib.urlencode({'game_id':game_id}))
 
