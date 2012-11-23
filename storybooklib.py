@@ -2,6 +2,7 @@ import datetime
 import random
 import sys
 import re
+import logging
 
 from Models import Game, LastUsedGameID
 from UserHandler import User
@@ -173,7 +174,8 @@ def determineWinner(game):
 
     game.winning_sentences.append(first_place[1])
     game.winning_users.append(first_place[0])
-    game.winning_users_names.append(NAMEGOESHERE)
+    user = retrieveCache(str(first_place[0]), User)
+    game.winning_users_names.append(trimName(user.name, user.display_type))
     game.story.append(first_place[1])
     
     for i in range(0, len(game.users)):
@@ -194,7 +196,7 @@ def determineWinner(game):
     
 def getTwoLongestSentences(score_struct_list):
     sorted_list = sorted(score_struct_list, key=lambda x: len(x[1]))
-    return sorted_list[0]. sorted_list[1]
+    return sorted_list[0], sorted_list[1]
 
 def generateScoreStructure(game):
     users_submitted = game.users_next_parts
@@ -210,6 +212,9 @@ def generateScoreStructure(game):
         user_vote_score[users_submitted[i]] = (votes.count(i), next_parts[i])
     
     top_score, second_score = getTopScores(user_vote_score)
+    top_score = int(top_score)
+    second_score = int(second_score)
+    logging.debug(str(top_score) + " " + str(second_score))
     
     score_struct = ({}, {})
     score_struct[0]['score'] = top_score
@@ -218,11 +223,14 @@ def generateScoreStructure(game):
     score_struct[1]['user_list'] = []
     
     for key in user_vote_score.keys():
+        logging.debug(str(user_vote_score[key][0]) + "&&" + str(top_score) + " " + str(type(user_vote_score[key][0])) + " " + str(type(top_score)))
         if user_vote_score[key][0] == top_score:
             score_struct[0]['user_list'].append((key, user_vote_score[key][1]))
         elif user_vote_score[key][0] == second_score:
             score_struct[1]['user_list'].append((key, user_vote_score[key][1]))
 
+    logging.debug(score_struct[0]['user_list'])
+    logging.debug(score_struct[1]['user_list'])
     return score_struct, user_vote_score    
 
 def getTopScores(score_struct):
@@ -429,8 +437,6 @@ def removeUser(game_id, user_id):
     user.current_game = None
     storeCache(user, user_id)
     try:
-        game.users.remove(user_id)
-        game.current_players = game.current_players - 1
         game.put()
         #storeCache(game, str(game.game_id))
     except Exception, ex:
