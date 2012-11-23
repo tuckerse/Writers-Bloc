@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<script>
+	function returnToMenu()
+	{
+		window.location.replace('/');
+	}
+</script>
+<br><br>
+Sorry! It doesn't appear there are any games for you to join! Might want to check the lobby though, just in case.
+<br><br>
+
+<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+{% endblock %}
+

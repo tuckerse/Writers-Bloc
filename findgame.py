@@ -10,7 +10,7 @@ class FindGame(BaseHandler):
             game_id = findGame(self.user)
 
             if game_id is None:
-                self.redirect("/")
+                self.redirect("/no_games")
                 return
 
             self.redirect("/waiting_to_start?" + urllib.urlencode({'game_id':game_id}))
