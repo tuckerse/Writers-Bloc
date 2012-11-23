@@ -43,7 +43,7 @@ def cleanupProcess(games):
             if game.end_display_time is not None:
                 times.append(game.end_display_time)
             if game.end_end_vote_time is not None:
-                times.append(end_end_vote_time)
+                times.append(game.end_end_vote_time)
 
             for i in range(0, len(times)):
                 times[i] = (datetime.datetime.now() - times[i]).seconds
