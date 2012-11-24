@@ -149,7 +149,10 @@ def determineWinner(game):
         
         #And no tie for second place
         if len(score_structure[1]['user_list']) <= 1:
-            second_place = score_structure[1]['user_list'][0]
+            if len(score_structure[1]['user_list']) == 0:
+                second_place = (-1, '')
+            else:
+                second_place = score_structure[1]['user_list'][0]
         #And tie for second place
         else:
             second_one, second_two = getTwoLongestSentences(score_structure[1]['user_list'])
@@ -171,10 +174,12 @@ def determineWinner(game):
 
     if tie:
         bonuses[first_place[0]] += FIRST_PLACE_TIE_BONUS
-        bonuses[second_place[0]] += FIRST_PLACE_TIE_BONUS
+        if second_place[0] != -1:
+            bonuses[second_place[0]] += FIRST_PLACE_TIE_BONUS
     else:
         bonuses[first_place[0]] += FIRST_PLACE_BONUS
-        bonuses[second_place[0]] += SECOND_PLACE_BONUS
+        if second_place[0] != -1:
+            bonuses[second_place[0]] += SECOND_PLACE_BONUS
 
     game.winning_sentences.append(first_place[1])
     game.winning_users.append(first_place[0])
