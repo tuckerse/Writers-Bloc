@@ -104,6 +104,8 @@ def startGame(game_id):
     end_submission = current_time + datetime.timedelta(seconds=SUBMISSION_TIME)
     game.end_submission_time = end_submission
     game.can_submit = True
+    game.next_parts = []
+    game.users_next_parts = []
     for user in game.users:
         game.scores.append(0)
     game.put()
