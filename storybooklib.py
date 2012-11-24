@@ -117,6 +117,10 @@ def markAFKS(game, acted_list):
             user.rounds_afk += 1
             storeCache(user, user_id)
 
+    for user_id in acted_list:
+        user = retrieveCache(user_id, User)
+        resetAFK(user)        
+
 def changeToDisplayPhase(game, request_handler = None):
     game.can_submit = False
     game.can_vote = False
@@ -356,7 +360,7 @@ def getProfilesAndAFKS(scoreList):
         #user = User.get_by_key_name(user_id)
         user = retrieveCache(user_id, User)
         profiles.append(user.picture)
-        if user.rounds_afk >= 2:
+        if user.rounds_afk >= 3:
             afks.append(True)
         else:
             afks.append(False)
