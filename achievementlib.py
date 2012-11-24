@@ -81,7 +81,7 @@ def firstAuthorDetermination(game):
 def bestSellerDetermination(game):
     user_wins = dict()
     for user in game.users:
-        user_wins[user] = game.winning_users.count[user]
+        user_wins[user] = game.winning_users.count(user)
 
     highest_wins_user = max(user_wins.iterkeys(), key=lambda x: user_wins[x])
     return [{'winner_id': highest_wins_user}]
@@ -104,7 +104,7 @@ def teamEdwardDetermination(game):
             user_scores[user] += part.count(word)
 
     winning_user = max(user_scores.iterkeys(), key=lambda x: user_scores[x])
-    if user_score[winning_user] == 0:
+    if user_scores[winning_user] == 0:
         return []
 
     value = random.random()
