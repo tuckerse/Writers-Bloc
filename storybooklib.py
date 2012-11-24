@@ -535,3 +535,22 @@ def cleanSubmission(next_part):
     ret = re.sub(URL_REGEX, "URL", next_part)	
     ret = re.sub(EMAIL_REGEX, "EMAIL", ret)
     return ret
+
+def checkForDoubleSubmissions(game):
+    new_parts = []
+    new_users = []
+    
+    for part in game.next_parts:
+        if part not in new_parts:
+            new_parts.append(part)
+
+    for user in game.users_next_parts:
+        if user not in new_users:
+            new_users.append(user)
+
+    game.next_parts = new_parts
+    game.users_next_parts = new_users
+
+    game.put()
+
+    return game
