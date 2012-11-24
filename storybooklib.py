@@ -162,7 +162,7 @@ def determineWinner(game):
     bonuses = {}
 
     for user_id in game.users:
-        scores[user_id] = other_data[user_id][0]
+        scores[user_id] = other_data[user_id][0] if (user_id in game.users or len(game.next_parts) == 1) else 0
         bonuses[user_id] = 0
 
     if tie:
