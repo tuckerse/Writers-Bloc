@@ -126,7 +126,6 @@ def markAFKS(game, acted_list):
 def changeToDisplayPhase(game, request_handler = None):
     game.can_submit = False
     game.can_vote = False
-    game.end_submission_time = None
     game.display_phase = True
     game.went_to_submission = False
     game.end_display_time = datetime.datetime.now() + datetime.timedelta(seconds=DISPLAY_TIME)

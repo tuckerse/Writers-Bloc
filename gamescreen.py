@@ -1,4 +1,5 @@
 import logging
+import datetime
 
 from basehandler import BaseHandler
 from Models import Game
@@ -37,7 +38,8 @@ class GameScreen(BaseHandler):
                 game.next_parts.append(next_part)
                 game.users_next_parts.append(self.user.user_id)
                 game.put()
-                if allUsersSubmitted(game):
+                time_left = abs((datetime.datetime.now() - game.end_submission_time).seconds) 
+                if allUsersSubmitted(game) and time_left > 10:
                     changeToVotingPhase(game)
                 self.response.headers.add_header('success', 's')
             else:
