@@ -324,6 +324,8 @@ function endGame()
 	document.getElementById("button_input").value = "Chat will remain open for five minutes.";
 	document.getElementById("button_input").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
+    getUpdatedUserInfo();
+    updateUserInfo();
 }
 
 function getEndGameText()
