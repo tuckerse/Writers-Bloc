@@ -165,7 +165,7 @@ function tick()
 	else if(phase == "v")
 	{
 		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
-        if(seconds == 1  && !hasVoted)
+        if(seconds == 1  && !hasVoted && (currentChoice != ""))
         {
             submitVote();
         }
@@ -455,18 +455,21 @@ function getChoices()
 
 function submitVote()
 {
-	var url = "/vote?game_id=" + encodeURIComponent(game_id) + "&part_voted=" + encodeURIComponent(currentChoice);
-	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, false);
-	xmlHttp.send(null);
-	var response = xmlHttp.getResponseHeader("response");
-	if(response == "s")
-	{
-		document.getElementById("submit_button").value = "Vote cast - Change vote?";
-        hasVoted = true;
-	}
-	else
-		alert("Vote not recieved properly, try again?");
+    if(currentChoice != "")
+    {
+	    var url = "/vote?game_id=" + encodeURIComponent(game_id) + "&part_voted=" + encodeURIComponent(currentChoice);
+	    xmlHttp = new XMLHttpRequest();
+	    xmlHttp.open("POST", url, false);
+	    xmlHttp.send(null);
+	    var response = xmlHttp.getResponseHeader("response");
+	    if(response == "s")
+	    {
+		    document.getElementById("submit_button").value = "Vote cast - Change vote?";
+            hasVoted = true;
+	    }
+	    else
+		    alert("Vote not recieved properly, try again?");
+    }
 }
 
 function clickedSelection(val)
