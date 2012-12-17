@@ -17,6 +17,8 @@ class CancelGame(BaseHandler):
                 db.delete(game)
                 #deleteData(game, game_id)
                 resetPlayerHost(self.user.user_id)
+                self.user.current_game = None
+                storeCache(self.user, self.user.user_id)
             except Exception, ex:
                 logging.critical(ex)
         else:
