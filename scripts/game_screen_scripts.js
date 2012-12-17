@@ -157,7 +157,7 @@ function tick()
 	if(phase == "s")
 	{
 		document.getElementById("timer").innerHTML = "Submission Time Remaining: " + seconds + " second(s).";
-        if(seconds == 5 && !hasSubmitted)
+        if(seconds == 1 && !hasSubmitted)
         {
             submitNextPart();
         }
@@ -165,7 +165,7 @@ function tick()
 	else if(phase == "v")
 	{
 		document.getElementById("timer").innerHTML = "Voting Time Remaining: " + seconds + " second(s).";
-        if(seconds == 5  && !hasVoted)
+        if(seconds == 1  && !hasVoted)
         {
             submitVote();
         }
