@@ -58,8 +58,8 @@ function returnToMenu()
 	xmlHttp.open("POST", url, false);
 	xmlHttp.setRequestHeader("Content-type", "application/json");
 	xmlHttp.send(JSON.stringify(info));
-    window.setTimeout(window.location.replace('/'), 1000);
-	//window.location.replace('/');
+    //window.setTimeout(window.location.replace('/'), 1000);
+	window.location.replace('/');
 }
 
 var intervalID = window.setInterval(statusCheck, 5000);
