@@ -199,7 +199,7 @@ def determineWinner(game):
             bonus_str = str(SECOND_PLACE_BONUS)
 
         game.recent_score_data[i] = str(scores[game.users[i]]) + ';' + bonus_str
-        game.scores[i] = scores[game.users[i]] + bonuses[game.users[i]]
+        game.scores[i] += scores[game.users[i]] + bonuses[game.users[i]]
 
     game.put()
         
