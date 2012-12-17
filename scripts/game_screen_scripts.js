@@ -321,7 +321,7 @@ function endGame()
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
     document.getElementById("infobox").innerHTML = getEndGameText();
-	document.getElementById("button_input").value = "Chat will remain open for five minutes.";
+	document.getElementById("button_input").value = "Story Finished.";
 	document.getElementById("button_input").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
     getUpdatedUserInfo();
