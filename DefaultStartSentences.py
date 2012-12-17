@@ -1,31 +1,21 @@
 from random import choice
 
 class defaultStart:
-    default_list = ['This is the saddest story I have ever heard.',
+    default_list = ['It was a dark and stormy night.',
 
                     '\"How many demons have you slain?\" the man said to Balendro. \"Just one, but it was a big one.\"',
 
-                    'It was a dark and stormy night.',
-
-                    'It was always a pleasure to kill.',
-
-                    '\"You don\'t remember me?\" he said to his detainee. \"Let me remind you of how our histories interweave...\"',
-
-                    'Mykal stood on the edge of the cliff, ready to jump, ready to end his sea of troubles.',
-
                     '\"Fight the state.\" These were the words that have echoed in my mind for years.',
 
-                    'It was an abnormally bright day in November when I lost her.',
+                    'It was an abnormally bright day in November when we parted ways.',
 
-                    'A wise man once said, \"Happy families are all alike; every unhappy family is unhappy in its own way.\"',
-
-                    'I had heard the story from various people, and as generally happens in situations such as this, every person told a different tale.',
+                    'I had heard this story from various people, and as generally happens in situations such as this, every person told a different tale.',
 
                     'It wasn\'t until he was on the firing squad that the Major thought about this day.',
 
                     '\"Where am I?!\" Nathaniel screamed into the darkness.',
 
-                    'I remember vividly the day of the assassination and how our lives changed thereafter.',
+                    'The park was empty, considering the weather.',
 
                     'My story begins on the happiest day of my life.',
 
@@ -35,7 +25,7 @@ class defaultStart:
 
                     'In the dark, damp cell, he began scribbling on the walls.',
 
-                    'My brothers always said it would be a cold day in hell when I found true love.',
+                    'I really should have known when to give up.',
 
                     'There was no possibility of taking a walk that day.',
 
@@ -47,15 +37,7 @@ class defaultStart:
 
                     '\"That was a mistake.\"',
 
-                    'Our final run was just a little too interesting.',
-
-                    'I am a sick man, a spiteful man.',
-
-                    'They shot her first.',
-
                     'He was a man named John Slattery, and he almost deserved it.',
-
-                    'I died the morning of December 12th, 1992.',
 
                     'We were halfway out of town when the drugs started to kick in.',
 
@@ -65,17 +47,28 @@ class defaultStart:
 
                     '\"Who are you?\"',
 
-                    'I never gave much thought into how I would die...',
+                    'She waited impatiently for the bus to pick up the kids.',
 
                     '\"Sorry I\'ve been gone so long. I won\'t let you down again.\"',
 
                     'They called him the Code Warrior. He lives now, but only in our memories.',
 
-                    'I love this town.',
+                    'I\'ve always loved this town.',
 
-                    'I fought on the losing side of the New Great War.'
+                    'I would rather have not known.'
+
+                    'I couldn\'t help but overhear the women in the corner'
+
+                    'We were scheduled to leave exactly at noon.'
+
+                    'No one could believe they were back together.'
+
+                    'She was crazy.'
+
+                    'The whole idea didn\'t really appeal to him.'
                                     ]
 
     @staticmethod
     def getRandomDefault():
         return choice(defaultStart.default_list)
+
