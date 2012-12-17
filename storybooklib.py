@@ -156,13 +156,13 @@ def determineWinner(game):
                 second_place = score_structure[1]['user_list'][0]
         #And tie for second place
         else:
-            second_one, second_two = getTwoLongestSentences(score_structure[1]['user_list'])
+            second_one, second_two = tieBreaker(score_structure[1]['user_list'])
             second_place = second_one
 
     #Tie for first place
     else:
         tie = True
-        first_one, first_two = getTwoLongestSentences(score_structure[0]['user_list'])
+        first_one, first_two = tieBreaker(score_structure[0]['user_list'])
         first_place = first_one
         second_place = first_two
 
@@ -204,8 +204,11 @@ def determineWinner(game):
     game.put()
         
     
-def getTwoLongestSentences(score_struct_list):
-    sorted_list = sorted(score_struct_list, key=lambda x: len(x[1]))
+def tieBreaker(score_struct_list):
+    #For shortest sentence wins tie
+    #sorted_list = sorted(score_struct_list, key=lambda x: len(x[1]))
+    sorted_list = list(score_struct_list)
+    random.shuffle(sorted_list)
     return sorted_list[0], sorted_list[1]
 
 def generateScoreStructure(game):
