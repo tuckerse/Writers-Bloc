@@ -85,6 +85,7 @@ def changeToVotingPhase(game, request_handler = None):
         #No one submitted, delete the game
         clearUsersFromGame(game)
         deleteGame(game)
+        request_handler.response.headers.add_header('completed', "d")
         return
     game.can_submit = False
     game.can_vote = True
