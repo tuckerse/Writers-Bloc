@@ -63,13 +63,6 @@ h1 {
   height: 654px;
 }
 
-#timer {
-  float: right;
-  position: relative;
-  background: #ffffff;
-  width: 180lpx;
-}
-
 #end_early_button_area {
   float: right;
   position: relative;
