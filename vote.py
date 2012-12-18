@@ -14,7 +14,7 @@ class Vote(BaseHandler):
             #game = retrieveCache(game_id, Game)
             if (self.user.user_id in game.users) and game.can_vote:
                 if self.user.user_id in game.users_voted:
-                    game = removeVote(game, user)
+                    game = removeVote(game, self.user)
                 resetAFK(self.user)
                 choice = int(self.request.get('part_voted'))
                 game.users_voted.append(self.user.user_id)
