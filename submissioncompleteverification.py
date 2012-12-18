@@ -16,7 +16,7 @@ class SubmissionCompleteVerification(BaseHandler):
             game = Game.get_by_key_name(game_id)
             #game = retrieveCache(game_id, Game)
             if game is None:
-                self.response.headers.adD_header('completed', "d")
+                self.response.headers.add_header('completed', "d")
                 return
             if not game.can_submit and game.can_vote:
                 self.response.headers.add_header('completed', "v")
