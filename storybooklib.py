@@ -309,10 +309,26 @@ def getRecentScoreInfo(game):
         scores.append(temp)
 
     scores = sortByScore(scores)
+    winning_users_name = game.winning_users_names[len(game.winning_users_names) - 1]
+    if not scores[0]['user_name'] ==  winning_users_name:
+        makeFirst(scores, winning_users_name)
+    
     for i in range(0, len(scores)):
         (scores[i])['position'] = i+1
 
     return scores
+
+def makeFirst(scores, winning_users_name):
+    index = -1
+    
+    for i in range(0, len(scores)):
+        if scores[i]['user_name'] == winning_users_name:
+            index = i
+            break
+
+    temp = scores[0]
+    scores[0] = scores[index]
+    scores[index] = temp        
 
 def sortByScore(scores):
     return quicksort(scores)
