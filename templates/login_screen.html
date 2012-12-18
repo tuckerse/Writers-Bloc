@@ -8,6 +8,6 @@
   oauth_url += '&redirect_uri=' + encodeURIComponent('http://apps.facebook.com/storybookwebapp/');
   oauth_url += '&scope=email,offline_access'
 
-  window.top.location = oauth_url;
+  window.top.location.replace(oauth_url);
 </script>
 {% endblock %}
