@@ -6,7 +6,7 @@ import logging
 
 from Models import Game, LastUsedGameID
 from UserHandler import User
-from cacheLib import retrieveCache, storeCache
+from cacheLib import retrieveCache, storeCache, deleteData
 from google.appengine.ext import db
 from achievementlib import applyAchievements, getAchievement
 
@@ -77,7 +77,15 @@ def joinGame(user, game_id):
 def allUsersSubmitted(game):
     return (len(game.users) == len(game.users_next_parts))
 
+def deleteGame(game):
+    deleteData(game, str(game.game_id))
+
 def changeToVotingPhase(game, request_handler = None):
+    if len(game.next_parts) == 0:
+        #No one submitted, delete the game
+        clearUsersFromGame(game)
+        deleteGame(game)
+        return
     game.can_submit = False
     game.can_vote = True
     game.end_submission_time = None
