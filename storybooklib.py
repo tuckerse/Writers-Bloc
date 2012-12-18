@@ -189,7 +189,7 @@ def determineWinner(game):
     game.story.append(first_place[1])
     
     for i in range(0, len(game.users)):
-        bonus_str = ''
+        bonus_str = '0'
 
         if (game.users[i] == first_place[0] or game.users[i] == second_place[0])  and tie:
             bonus_str = str(FIRST_PLACE_TIE_BONUS)
