@@ -258,6 +258,8 @@ function phaseChangeLogic()
 			statusCheck();
 			setToVotingPhase();
 		}	
+        else if(response == "d")
+            window.location.replace("/game_deleted_error")
 		else
 		{
 			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
@@ -503,26 +505,26 @@ function setToVotingPhase()
 	document.getElementById("infobox").innerHTML += "<form/>";
 }
 
-function acknowledgeFinishVote()
-{
-	var response = null;
+    function acknowledgeFinishVote()
+    {
+        var response = null;
 
-	function recievedAckFinishVote()
-	{
-		if(xmlHttp.readyState == 4)
-		{
-			if(xmlHttp.getResponseHeader("completed") == "v")
-			{
-				response = JSON.parse(xmlHttp.responseText);
-				winningData = response.winning_data;
-				currentWinner = xmlHttp.getResponseHeader("recent_winner");
-			}
-			else
-				response = 0;
-		}
-	}
-	var url = "/vote_complete_verification?game_id=" + encodeURIComponent(game_id);
-	xmlHttp = new XMLHttpRequest();
+        function recievedAckFinishVote()
+        {
+            if(xmlHttp.readyState == 4)
+            {
+                if(xmlHttp.getResponseHeader("completed") == "v")
+                {
+                    response = JSON.parse(xmlHttp.responseText);
+                    winningData = response.winning_data;
+                    currentWinner = xmlHttp.getResponseHeader("recent_winner");
+                }
+                else
+                    response = 0;
+            }
+        }
+        var url = "/vote_complete_verification?game_id=" + encodeURIComponent(game_id);
+        xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("POST", url, false);
 	xmlHttp.onreadystatechange = recievedAckFinishVote;
 	xmlHttp.send(null);
