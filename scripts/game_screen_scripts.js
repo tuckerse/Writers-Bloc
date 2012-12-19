@@ -548,7 +548,7 @@ function setToDisplayPhase()
 
 function setToSubmissionPhase()
 {
-    if(num_phases >= 10)
+    if(num_phases > 10)
         document.getElementById("infobox").innerHTML = "Extension vote successful!<br><br>" + gameRules + "<br>" + submissionDirections;
     else
 	    document.getElementById("infobox").innerHTML = gameRules + "<br>" + submissionDirections;
