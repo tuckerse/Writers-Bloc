@@ -115,6 +115,8 @@ function statusCheck()
                 }
                 catch(err){}
             }
+            else
+                document.getElementById("waiting_on").innerHTML = "";
 		}
 	}
 	
