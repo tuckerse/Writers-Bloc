@@ -17,6 +17,8 @@ class Vote(BaseHandler):
                     game = removeVote(game, self.user)
                 resetAFK(self.user)
                 choice = int(self.request.get('part_voted'))
+                if str(self.user.user_id) == game.users_next_parts[choice]:
+                    logging.critical('Attempt to vote for self detected. user_id: ' + str(self.user.user_id))
                 game.users_voted.append(self.user.user_id)
                 game.votes.append(choice)
                 if allUsersVoted(game):
