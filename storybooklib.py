@@ -474,6 +474,7 @@ def removeUser(game_id, user_id):
     user = retrieveCache(user_id, User)
     user.current_game = None
     game.users.remove(str(user_id))
+    game.current_players -= 1
     storeCache(user, user_id)
     try:
         game.put()
