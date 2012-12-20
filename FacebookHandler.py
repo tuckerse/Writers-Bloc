@@ -91,3 +91,11 @@ class Facebook(object):
     @staticmethod
     def base64_url_encode(data):
         return base64.urlsafe_b64encode(data).rstrip('=')
+
+class FacebookApiError(Exception):
+     def __init__(self, result):
+         self.result = result
+ 
+     def __str__(self):
+         return self.__class__.__name__ + ': ' + json.dumps(self.result)
+
