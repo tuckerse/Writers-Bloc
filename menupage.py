@@ -15,5 +15,6 @@ class MenuPage(BaseHandler):
                 in_game = False
                 if not self.user.current_game is None:
                     game = Game.get_by_key_name(str(self.user.current_game))
-                    in_game = game.started 
+                    if not game is None:
+                        in_game = game.started 
                 self.render(u'menu_screen', in_game=in_game, game_id=self.user.current_game)
