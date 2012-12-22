@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import resetAFK
+from storybooklib import resetAFK, allUsersEndVoted
 
 class EndVote(BaseHandler):
     def post(self):
@@ -20,7 +20,20 @@ class EndVote(BaseHandler):
                 game.put()
                 #storeCache(game, game_id)
                 self.response.headers.add_header('response', "s")
+                
+                if allUsersEndVoted(game):
+                    outcome = finishGameTally(game)
+                    if outcome:
+                        finishGame(game)
+                        self.response.headers.add_header('response', "e")
+                        return
+                    else:
+                        changeToSubmissionPhase(game, self)
+                        self.response.headers.add_header('response', "c")
+                        return
+
                 return
+            
 
         self.response.headers.add_header('response', "n")
         return

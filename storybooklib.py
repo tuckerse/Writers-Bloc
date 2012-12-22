@@ -584,3 +584,6 @@ def checkForDoubleSubmissions(game):
     game.put()
 
     return game
+
+def allUsersEndVoted(game):
+    return len(game.end_votes) == len(game.users)

@@ -24,6 +24,7 @@ class GameStatus(webapp.RequestHandler):
         response_info['players'] = getPlayerNames(game)
         response_info['num_phases'] = game.num_phases
         response_info['vote_this_turn'] = game.num_phases > 10
+        response_info['finished'] = game.finished
         self.response.headers['Content-type'] = 'application/json'
         if game.can_vote:
             response_info['phase'] = "v"
@@ -39,6 +40,9 @@ class GameStatus(webapp.RequestHandler):
         elif game.end_voting:
             response_info['phase'] = "f"
             response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds
+        elif game.finished:
+            response_info['phase'] = "e"
+            response_info['seconds_left'] = -1
 
         response = json.dumps(response_info)
 
