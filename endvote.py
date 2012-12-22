@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import resetAFK, allUsersEndVoted
+from storybooklib import resetAFK, allUsersEndVoted, finishGameTally, finishGame, changeToSubmissionPhase
 
 class EndVote(BaseHandler):
     def post(self):
