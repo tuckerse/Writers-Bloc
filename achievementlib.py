@@ -1,9 +1,10 @@
 import logging
-import random
 import operator
 
 from cacheLib import retrieveCache, storeCache
 from UserHandler import User
+
+EDWARD_THRESHOLD = 5
 
 class Achievement:
     def __init__(self, iden, name, description, points, determination_function):
@@ -106,10 +107,8 @@ def teamEdwardDetermination(game):
     winning_user = max(user_scores.iterkeys(), key=lambda x: user_scores[x])
     if user_scores[winning_user] == 0:
         return []
-
-    value = random.random()
     
-    if value > 0.8:
+    if user_scores[winning_user] > EDWARD_THRESHOLD:
         return [{'winner_id':winning_user}]
     else:
         return []
