@@ -402,7 +402,7 @@ function submitEndVote()
 	xmlHttp.onreadystatechange = onResponseEndVote;
 	xmlHttp.send(null);
 	while(response == null){}
-	if(response == "s")
+	if(response == "s" || response == "c" || response == "e")
 	{
 		document.getElementById("submit_button").disabled = true;
 		document.getElementById("submit_button").value = "Vote cast";
