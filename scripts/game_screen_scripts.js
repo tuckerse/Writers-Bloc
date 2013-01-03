@@ -199,7 +199,7 @@ function oldPhaseChangeLogic()
 		if(response == "v")
 		{
 			statusCheck();
-			if(phase == "f")
+			if(phase == "e")
 			{
                 endGame();
 			}
@@ -253,7 +253,7 @@ function phaseChangeLogic()
 		if(response == "v")
 		{
 			statusCheck();
-			if(phase == "f")
+			if(phase == "e")
 			{
                 endGame();
 			}
