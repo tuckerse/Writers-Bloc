@@ -41,9 +41,6 @@ class GameStatus(webapp.RequestHandler):
         elif game.display_phase:
             response_info['phase'] = "d"
             response_info['seconds_left'] = (game.end_display_time - datetime.datetime.now()).seconds
-        elif game.end_voting:
-            response_info['phase'] = "f"
-            response_info['seconds_left'] = (game.end_end_vote_time - datetime.datetime.now()).seconds
 
         response = json.dumps(response_info)
 
