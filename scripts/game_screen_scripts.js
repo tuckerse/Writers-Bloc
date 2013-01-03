@@ -34,8 +34,6 @@ function processKey(e)
 			    submitNextPart();
             else if (phase == "v")
                 submitVote();
-            else if (phase == "f")
-                submitEndVote();
         }
 		return false;
   	}
@@ -47,8 +45,6 @@ function buttonPressed()
         submitNextPart();
     else if (phase == "v")
         submitVote();
-    else if (phase == "f")
-        submitEndVote();
 }
 
 function submitNextPart()
@@ -176,10 +172,6 @@ function tick()
 	{
 		document.getElementById("timer").innerHTML = "Displaying Winning Segment: " + seconds + " second(s).";
 	}
-	else if(phase == "f")
-	{
-		document.getElementById("timer").innerHTML = "End Voting Time Remaining: " + seconds + " second(s).";
-	}
 }
 
 function oldPhaseChangeLogic()
@@ -220,7 +212,7 @@ function oldPhaseChangeLogic()
 			statusCheck();
 			if(phase == "f")
 			{
-				setToEndVotingPhase();
+                endGame();
 			}
 			else if(phase == "s")
 				setToSubmissionPhase();		
@@ -232,22 +224,6 @@ function oldPhaseChangeLogic()
 			seconds = 1;
 		}
 	}	
-	else if(oldPhase == "f")
-	{
-		var response = acknowledgeFinishEndVote();
-		if(response == "e")
-			endGame();
-		else if(response == "c")
-		{
-			statusCheck();
-			setToSubmissionPhase();
-		}
-		else
-		{
-			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
-			seconds = 1;
-		}
-	}
 }
 
 function phaseChangeLogic()
@@ -290,7 +266,7 @@ function phaseChangeLogic()
 			statusCheck();
 			if(phase == "f")
 			{
-				setToEndVotingPhase();
+                endGame();
 			}
 			else if(phase == "s")
 				setToSubmissionPhase();		
@@ -301,22 +277,6 @@ function phaseChangeLogic()
 			seconds = 1;
 		}
 	}	
-	else if(phase == "f")
-	{
-		var response = acknowledgeFinishEndVote();
-		if(response == "e")
-			endGame();
-		else if(response == "c")
-		{
-			statusCheck();
-			setToSubmissionPhase();
-		}
-		else
-		{
-			document.getElementById("timer").innerHTML = "Your game seems to have finished before everyone else... Time Lord?";
-			seconds = 1;
-		}
-	}
 }
 
 function endGame()
@@ -351,64 +311,6 @@ function getEndGameText()
     xmlHttp.send(null);
     while(response == null){}
     return response.end_text;
-}
-
-function acknowledgeFinishEndVote()
-{
-	var response = null;
-	function onResponseFinishSubmission()
-	{
-		if(xmlHttp.readyState == 4)
-		{
-			response = xmlHttp.getResponseHeader("response");
-		}
-	}
-	var url = "/end_vote_complete_verification?game_id=" + encodeURIComponent(game_id);
-	var info = {"game_id" : game_id};
-	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, false);
-	xmlHttp.onreadystatechange = onResponseFinishSubmission;
-	xmlHttp.setRequestHeader("Content-type", "application/json");
-	xmlHttp.send(JSON.stringify(info));
-	while(response == null){}
-	return response;
-}
-
-function setToEndVotingPhase()
-{
-	document.getElementById("story").innerHTML = updatedStory;
-	document.getElementById("infobox").innerHTML = "<form>";
-	document.getElementById("infobox").innerHTML += "Would you like to continue the story?<br>";
-	document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"0\" onclick=\"clickedSelection(this.value)\" selected=\"selected\" /> Yes<br>";
-	document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"end_vote_selection\" value=\"1\" onclick=\"clickedSelection(this.value)\" /> No<br>";
-	document.getElementById("infobox").innerHTML += "<form/>";
-	//document.getElementById("infobox").innerHTML += "<input id=\"end_vote_button\" type=\"button\" value=\"Vote\" onclick=\"submitEndVote()\"/>";
-    document.getElementById("submit_button").value = "Vote";
-}
-
-function submitEndVote()
-{
-	var response = null;
-	function onResponseEndVote()
-	{
-		if(xmlHttp.readyState == 4)
-		{
-			response = xmlHttp.getResponseHeader("response");
-		}
-	}
-	var url = "/cast_end_vote?game_id=" + encodeURIComponent(game_id) + "&selection=" + encodeURIComponent(currentChoice);
-	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, false);
-	xmlHttp.onreadystatechange = onResponseEndVote;
-	xmlHttp.send(null);
-	while(response == null){}
-	if(response == "s" || response == "c" || response == "e")
-	{
-		document.getElementById("submit_button").disabled = true;
-		document.getElementById("submit_button").value = "Vote cast";
-	}
-	else
-		alert("Vote not recieved properly, try again?");
 }
 
 function acknowledgeFinishSubmission()
@@ -507,26 +409,25 @@ function setToVotingPhase()
 	document.getElementById("infobox").innerHTML += "<form/>";
 }
 
-    function acknowledgeFinishVote()
+function acknowledgeFinishVote()
+{
+    var response = null;
+    function recievedAckFinishVote()
     {
-        var response = null;
-
-        function recievedAckFinishVote()
+        if(xmlHttp.readyState == 4)
         {
-            if(xmlHttp.readyState == 4)
+            if(xmlHttp.getResponseHeader("completed") == "v")
             {
-                if(xmlHttp.getResponseHeader("completed") == "v")
-                {
-                    response = JSON.parse(xmlHttp.responseText);
-                    winningData = response.winning_data;
-                    currentWinner = xmlHttp.getResponseHeader("recent_winner");
-                }
-                else
-                    response = 0;
+                response = JSON.parse(xmlHttp.responseText);
+                winningData = response.winning_data;
+                currentWinner = xmlHttp.getResponseHeader("recent_winner");
             }
+            else
+                response = 0;
         }
-        var url = "/vote_complete_verification?game_id=" + encodeURIComponent(game_id);
-        xmlHttp = new XMLHttpRequest();
+    }
+    var url = "/vote_complete_verification?game_id=" + encodeURIComponent(game_id);
+    xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("POST", url, false);
 	xmlHttp.onreadystatechange = recievedAckFinishVote;
 	xmlHttp.send(null);
