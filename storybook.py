@@ -17,8 +17,6 @@ from getchoices import GetChoices
 from vote import Vote
 from votecompleteverification import VoteCompleteVerification
 from displaycompleteverification import DisplayCompleteVerification
-from endvotecompleteverification import EndVoteCompleteVerification
-from endvote import EndVote
 from joingame import JoinGame
 from waitingtostart import WaitingToStart
 from cancelgame import CancelGame
@@ -53,8 +51,6 @@ routes = [
     ('/vote', Vote),
     ('/vote_complete_verification', VoteCompleteVerification),
     ('/display_complete_verification', DisplayCompleteVerification),
-    ('/end_vote_complete_verification', EndVoteCompleteVerification),
-    ('/cast_end_vote', EndVote),
     ('/join_game', JoinGame),
     ('/waiting_to_start', WaitingToStart),
     ('/cancel_game', CancelGame),
