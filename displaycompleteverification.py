@@ -34,11 +34,11 @@ class DisplayCompleteVerification(BaseHandler):
                 self.response.headers.add_header('response', "i")
                 self.response.headers.add_header('updated_story', "")
             else:
-                if (not game.display_phase) and game.end_voting:
+                if (not game.display_phase) and game.finished:
                     self.response.headers.add_header('response', "v")
                     return
                 elif datetime.datetime.now() > game.end_display_time:
-                    changeToEndVotingPhase(game, self)
+                    finishGame(game)
                     return
                 self.response.headers.add_header('response', "i")
         return
