@@ -3,7 +3,7 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import getStoryStringForGameScreen, getScoreInfo, getProfilesAndAFKS, changeToSubmissionPhase
+from storybooklib import getStoryStringForGameScreen, getScoreInfo, getProfilesAndAFKS, changeToSubmissionPhase, finishGame
 from django.utils import simplejson as json
 
 class DisplayCompleteVerification(BaseHandler):
