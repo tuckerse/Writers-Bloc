@@ -15,7 +15,6 @@ VOTE_TIME = 45
 LAST_USED_GAME_ID_KEY = "a45tfyhssert356t"
 SUBMISSION_TIME = 90
 DISPLAY_TIME = 20
-END_VOTING_TIME = 20
 FIRST_PLACE_BONUS = 3
 SECOND_PLACE_BONUS = 1
 FIRST_PLACE_TIE_BONUS = 2
@@ -404,12 +403,8 @@ def getProfilesAndAFKS(scoreList):
 def changeToSubmissionPhase(game, request_handler = None):
     game.can_submit = True
     game.can_vote = False
-    game.end_voting = False
-    game.can_vote = False
     game.end_submission_time = datetime.datetime.now() + datetime.timedelta(seconds=SUBMISSION_TIME)
     game.display_phase = False
-    game.end_users_voted = []
-    game.end_votes = []
     clearPhaseInformation(game)
     if not request_handler == None:
         request_handler.response.headers.add_header('response', "v")
@@ -422,37 +417,6 @@ def clearPhaseInformation(game):
     game.votes = []
     game.users_voted = []
     game.num_phases = game.num_phases + 1
-
-def changeToEndVotingPhase(game, request_handler = None):
-    game.end_voting = True
-    game.can_vote = False
-    game.end_end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=END_VOTING_TIME)
-    game.display_phase = False
-    if not request_handler == None:
-        request_handler.response.headers.add_header('response', "v")
-    game.put()
-    #storeCache(game, str(game.game_id))
-
-
-def finishGameTally(game):
-    #true is finished
-    removeAFKVotes(game)
-    count_no = game.end_votes.count(0)
-    count_yes = game.end_votes.count(1)
-    if count_yes > count_no:
-        return True
-    return False
-
-def removeAFKVotes(game):
-    for user_id in game.users:
-        user = retrieveCache(user_id, User)
-        if user.rounds_afk >= 2:
-            if user_id in game.end_users_voted:
-                index = game.end_users_voted.index(user_id)
-                del game.end_users_voted[index]
-                del game.end_votes[index]
-
-    game.put()
 
 def finishGame(game):
     game.finished = True
@@ -500,7 +464,6 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence):
     newGame.display_phase = False
     newGame.finished = False
     newGame.started = False
-    newGame.users_voted_end_early = []
     newGame.users
     newGame.put()
     #storeCache(newGame, str(game_id))
@@ -584,6 +547,3 @@ def checkForDoubleSubmissions(game):
     game.put()
 
     return game
-
-def allUsersEndVoted(game):
-    return len(game.end_votes) == len(game.users)
