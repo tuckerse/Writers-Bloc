@@ -537,6 +537,9 @@ function setToVotingPhase()
 function setToDisplayPhase()
 {
 	document.getElementById("infobox").innerHTML = "Winning Segment: " + currentWinner + "<br>";
+    document.getElementById("button_input").value = "";
+    document.getElementById("submit_button").value = "Display Phase";
+    document.getElementById("submit_button").disabled = true;
 	var list = new Array();
 	for(entry in winningData)
 	{
