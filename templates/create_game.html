@@ -6,21 +6,44 @@
 <br>
 <br><br>
 </center>
-<div style="padding-bottom: 2px; padding-top: 2px;">
-	<form name = "part_input" action = "/start_game" method=post>
-	First Sentence (Leave blank for a default sentence): <input type="text" name="start_sentence" /> <br>
-	End Sentence (Leave blank for a default sentence): <input type="text" name="end_sentence" />
-	<input type="submit" value="Submit" />
-	</form>
-</div>
-
 <script type="text/javascript">
 function returnToMenu()
 {
 	window.location.replace('/');
 }
-</script>
+function createGame()
+{
+    var info = {"start_sentence": document.getElementByID("start_sentence").value(), "end_sentence": document.getElementByID("end_sentence").value(), "length": getLength()}; 
+    var url = "/start_game";
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", url, false);
+    alert(JSON.stringify(info));
+    alert(info);
+    xmlHttp.send(JSON.stringify(info));
+}  
+function getLength()
+{
+    var radios = document.getElementsByName("length");
 
+    for(var i = 0, l = radios.length; i < l; i++)
+    {
+        if (radios[i].checked)
+            return parseInt(radios[i].value);
+    }
+}
+</script>
+<div style="padding-bottom: 2px; padding-top: 2px;">
+	<form name = "part_input">
+	First Sentence (Leave blank for a default sentence): <div id="start_sentence" input type="text" name="start_sentence" /> <br>
+	End Sentence (Leave blank for a default sentence): <div id ="end_sentence" input type="text" name="end_sentence" /> <br>
+    <input type = "radio" name = "length" value = "7"> Short (7 turns) <br>
+    <input type = "radio" name = "length" value = "10" checked> Medium (10 turns) <br>
+    <input type = "radio" name = "length" value = "20"> Long (20 turns) <br>
+    <input type = "radio" name = "length" value = "50"> Epic (50 turns) <br>
+    
+	</form>
+    <form><INPUT TYPE="button" VALUE="Submit" onClick="createGame()"></form>
+</div>
 <form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
 
 {% endblock %}

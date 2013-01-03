@@ -447,7 +447,7 @@ def removeUser(game_id, user_id):
         logging.critical(ex)
 
 
-def initializeGame(game_id, max_players, start_sentence, end_sentence):
+def initializeGame(game_id, max_players, start_sentence, end_sentence, length):
     game_id = getNextGameID()
     newGame = Game(key_name=str(game_id))
     newGame.game_id = game_id
@@ -464,7 +464,8 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence):
     newGame.display_phase = False
     newGame.finished = False
     newGame.started = False
-    newGame.users
+    newGame.users = []
+    newGame.game_length = length
     newGame.put()
     #storeCache(newGame, str(game_id))
     return game_id
