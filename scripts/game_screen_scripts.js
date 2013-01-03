@@ -77,17 +77,6 @@ function submitNextPart()
     }
 }
 
-function updateTurnsLeft(voteThisTurn)
-{
-	var string = "Next End Vote: ";
-	if(voteThisTurn || (num_phases >=10))
-		string += "This Turn";
-	else
-		string += (11 - num_phases).toString() + " Turn(s)";
-
-	document.getElementById("turns_left").innerHTML = string;
-}
-
 function statusCheck()
 {
 	var response = null;
