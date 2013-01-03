@@ -38,6 +38,7 @@ class DisplayCompleteVerification(BaseHandler):
                     self.response.headers.add_header('response', "v")
                     return
                 elif datetime.datetime.now() > game.end_display_time:
+                    self.response.headers.add_header('response', "v")
                     finishGame(game)
                     return
                 self.response.headers.add_header('response', "i")
