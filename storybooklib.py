@@ -23,8 +23,8 @@ MAX_GAME_CREATION = 10*60
 URL_REGEX = "(((http(s)?)|(ftp))://)?(www\.)?([a-zA-Z0-9]*\.)+[a-zA-Z0-9]+(/[a-zA-Z0-9/?&_=]*)*" 
 EMAIL_REGEX = "[a-zA-Z0-9]+@([a-zA-Z0-9\.]+\.)*([a-zA-Z0-9]+)?(\.([a-zA-Z])+)"
 
-def findGame(user):
-    query = Game.gql("WHERE current_players <:1 ORDER BY current_players ASC", MAX_PLAYERS)
+def findGame(user, length):
+    query = Game.gql("WHERE current_players <:1 AND game_length =:2 ORDER BY current_players ASC", MAX_PLAYERS, length)
     results = query.fetch(None)
     if len(results) == 0:
         return None

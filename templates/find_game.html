@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block body %}
+<center>
+<br>
+<img src="/images/banner.png" alt="Writer's Bloc"/>
+<br>
+<br><br>
+</center>
+<script type="text/javascript">
+function returnToMenu()
+{
+	window.location.replace('/');
+}
+function getLength()
+{
+    var radios = document.part_input.length_input;
+
+    for(var i = 0, l = radios.length; i < l; i++)
+    {
+        if (radios[i].checked)
+            return parseInt(radios[i].value, 10);
+    }
+    
+    return 0;
+}
+function findGame()
+{
+    var url = "/find_game?length=" + encodeURIComponent(getLength());
+    window.location.replace(url);
+}
+</script>
+<center>
+<div style="padding-bottom: 2px; padding-top: 2px;">
+	<form name = "part_input">
+    <input type = "radio" name = "length_input" value = "7"> Short (7 turns) <br>
+    <input type = "radio" name = "length_input" value = "10" checked> Medium (10 turns) <br>
+    <input type = "radio" name = "length_input" value = "20"> Long (20 turns) <br>
+    <input type = "radio" name = "length_input" value = "50"> Epic (50 turns) <br>
+    
+	</form>
+    <form><INPUT TYPE="button" VALUE="Submit" onClick="findGame()"></form>
+</div>
+<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+</center>
+
+{% endblock %}
+
