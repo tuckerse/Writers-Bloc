@@ -13,7 +13,8 @@ class GetLobby(BaseHandler):
                 response['games'].append({
                     'game_id':game.game_id,
                     'current_players':game.current_players,
-                    'end_sentence':game.end_sentence
+                    'end_sentence':game.end_sentence,
+                    'length': game.game_length
                 })
             self.response.out.write(json.dumps(response))
         else:
