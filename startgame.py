@@ -6,6 +6,8 @@ from DefaultEndSentences import defaultEnd
 from storybooklib import joinGame, initializeGame, MAX_PLAYERS, getNextGameID
 from django.utils import simplejson as json
 
+import logging
+
 class StartGame(BaseHandler):
     def post(self):
         if not self.user:
@@ -13,6 +15,7 @@ class StartGame(BaseHandler):
         else:
             if canPlayerHost(self.user.user_id):
                 info = json.loads(self.request.body)
+                logging.error(self.request.body)
                 end_sentence = info['end_sentence']
                 start_sentence = info['start_sentence']
                 length = info['length']
