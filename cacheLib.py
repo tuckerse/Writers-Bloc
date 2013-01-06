@@ -29,7 +29,7 @@ def markPlayerHostedGame(user_id):
     user = retrieveCache(user_id, UserHandler.User)
     user.last_hosted = datetime.datetime.now()
     storeCache(user, user_id)
-    newUser = retrieveCache(user_id, UserHandler.User)
+    return user
 
 def canPlayerHost(user_id):
     user = retrieveCache(user_id, UserHandler.User)
@@ -42,3 +42,4 @@ def resetPlayerHost(user_id):
     user = retrieveCache(user_id, UserHandler.User)
     user.last_hosted = (datetime.datetime.now() - datetime.timedelta(seconds=HOST_COOLDOWN*2))
     storeCache(user, user_id)
+    return user

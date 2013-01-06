@@ -11,14 +11,15 @@ class CancelGame(BaseHandler):
         if self.user:
             info = json.loads(self.request.body)
             game_id = info['game_id']
+            user = self.user
             try:
                 game = Game.get_by_key_name(game_id)
                 #game = retrieveCache(game_id, Game)
                 db.delete(game)
                 #deleteData(game, game_id)
-                resetPlayerHost(self.user.user_id)
+                user = resetPlayerHost(user.user_id)
                 self.user.current_game = None
-                storeCache(self.user, self.user.user_id)
+                storeCache(user, user.user_id)
             except Exception, ex:
                 logging.critical(ex)
         else:
