@@ -63,3 +63,4 @@ function returnToMenu()
 }
 
 var intervalID = window.setInterval(statusCheck, 5000);
+

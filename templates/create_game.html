@@ -17,6 +17,14 @@ function createGame()
     var url = "/start_game";
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", url, false);
+    xmlHttp.onreadystatechange=function()
+    {
+        if(xmlHttp.readyState == 4)
+        {
+            document.body.innerHTML = "";
+            document.write(xmlHttp.responseText);
+        }
+    };
     xmlHttp.send(JSON.stringify(info));
 }  
 function getLength()
