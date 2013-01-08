@@ -102,7 +102,6 @@ function statusCheck()
 			    phase = response.phase;
 			seconds = response.seconds_left + 1;
 			num_phases = response.num_phases;
-			updateTurnsLeft(response.vote_this_turn);
             if(phase == "s" || phase == "v")
             {
                 try
