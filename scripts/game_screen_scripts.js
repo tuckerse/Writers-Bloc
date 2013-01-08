@@ -88,7 +88,18 @@ function statusCheck()
 			response = JSON.parse(xmlHttp.responseText);
 			if(response.deleted)
 				window.location.replace("/game_deleted_error");
-			phase = response.phase;
+            if(phase == "")
+            {
+                phase = response.phase;
+                if (phase == "s")
+                    setToSubmissionPhase();
+                else if(phase == "v")
+                    setToVotingPhase();
+                else if(phase == "d")
+                    setToDisplayPhase(); 
+            }
+            else
+			    phase = response.phase;
 			seconds = response.seconds_left + 1;
 			num_phases = response.num_phases;
 			updateTurnsLeft(response.vote_this_turn);
