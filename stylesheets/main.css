@@ -1,8 +1,12 @@
+@font-face{
+    font-family: griffy_regular;
+    src: url('/font.ttf');
+}
 body {
   color: #000;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-family: griffy_regular;
   background: #ffffff;
-  font-size: 14px;
+  font-size: 16px;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -27,7 +31,7 @@ h1 {
   border-bottom: 1px solid #1d4088;
   color: #000000;
   background: #ffffff;
-  font-size: 15px;
+  font-size: 18px;
   margin: 0 auto;
   opacity:0.9;
   width: 560px;
@@ -37,8 +41,8 @@ h1 {
 {
  height: 280px;
  width: 400px;
- font-family: "Trebuchet MS", Helvetica, sans-serif
- font-size: 14px;
+ font-family: griffy_regular;
+ font-size: 16px;
  overflow-y: scroll;
  overflow-x: hidden;
  border-style: solid;
