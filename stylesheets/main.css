@@ -75,6 +75,8 @@ h1 {
 #userbartext {
   position: relative;
   border-style: solid;
+  width: 144px;
+  height: 523px;
   background: #fffff1;
   border-width: 1px;
   vertical-align: center;
