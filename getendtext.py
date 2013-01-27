@@ -1,7 +1,7 @@
 import logging
 
 from basehandler import BaseHandler
-from storybooklib import getEndText
+#from storybooklib import getEndText
 from Models import Game
 from django.utils import simplejson as json
 

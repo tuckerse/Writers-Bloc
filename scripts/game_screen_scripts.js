@@ -283,13 +283,17 @@ function endGame()
 	phase = "e";
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
-    document.getElementById("infobox").innerHTML = getEndGameText();
+    //document.getElementById("infobox").innerHTML = getEndGameText();
+    document.getElementById("infobox").innerHTML = "";
 	document.getElementById("button_input").value = "Story Finished.";
 	document.getElementById("button_input").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
     getUpdatedUserInfo();
     updateUserInfo();
 }
+
+/*
+Removed for release
 
 function getEndGameText()
 {
@@ -311,6 +315,7 @@ function getEndGameText()
     while(response == null){}
     return response.end_text;
 }
+*/
 
 function acknowledgeFinishSubmission()
 {

@@ -8,7 +8,8 @@ from Models import Game, LastUsedGameID
 from UserHandler import User
 from cacheLib import retrieveCache, storeCache, deleteData
 from google.appengine.ext import db
-from achievementlib import applyAchievements, getAchievement
+#Removed for release
+#from achievementlib import applyAchievements, getAchievement
 
 MAX_PLAYERS = 8
 VOTE_TIME = 45
@@ -427,9 +428,16 @@ def clearPhaseInformation(game):
 def finishGame(game):
     game.finished = True
     game.game_ended = datetime.datetime.now()
+
+    """
+    Removed for release
+    
     applyAchievements(game)
+
+    """
+
     clearUsersFromGame(game)
-    #game.put()
+    game.put()
     #^^ Will need to uncomment this if you change the put() in the achievement framework
     #storeCache(game, str(game.game_id))
 
@@ -510,6 +518,9 @@ def removeVote(game, user):
     del game.votes[index]
     game.put()
 
+"""
+Removed For Release
+
 def getEndText(game):
     achievements = parseAchievements(game.achievements)
     end_text = ''
@@ -530,6 +541,7 @@ def parseAchievements(input_string_list):
         return_list.append({'winner_id':parts[0], 'achievement_id':int(parts[1])})
 
     return return_list
+"""
 
 def cleanSubmission(next_part):
     ret = re.sub(URL_REGEX, "URL", next_part)	
