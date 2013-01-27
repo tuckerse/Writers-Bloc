@@ -17,8 +17,14 @@
 	Initializing Game...
 </div>
 
-<input type="button" id="early_start" name="early_start" disabled=true Value="Start Early?" onClick="startEarly()">
-<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+<div class="button-container">
+    <form action="javascript:startEarly();">
+        <input id="early_start" type="hidden" name="early_start" src="/images/submit_button.png" width=150 height=150  alt="Submit" onMouseOver="this.src='/images/submit_button_hover.png'" onMouseOut="this.src='/images/submit_button.png'">
+    </form>
+    <form action="javascript:returnToMenu();">
+        <input type="image" src="/images/return_button.png" width=150 height=150 alt="Return To Menu" onMouseOver="this.src='/images/return_button_hover.png'" onMouseOut="this.src='/images/return_button.png'">
+    </form>
+</div>
 <script type="text/javascript" src="/scripts/game_created_screen_scripts.js"></script>
 
 {% endblock %}
