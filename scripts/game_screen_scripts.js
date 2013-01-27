@@ -90,13 +90,13 @@ function statusCheck()
 				window.location.replace("/game_deleted_error");
             if(phase == "")
             {
-                phase = response.phase;
                 if (phase == "s")
                     setToSubmissionPhase();
-                else if(phase == "v")
+                else if(response.phase == "v")
                     setToVotingPhase();
-                else if(phase == "d")
+                else if(response.phase == "d")
                     setToDisplayPhase(); 
+                phase = response.phase;
             }
             else
 			    phase = response.phase;
@@ -455,7 +455,8 @@ function setToSubmissionPhase()
 {
 	document.getElementById("infobox").innerHTML = gameRules + "<br>" + submissionDirections;
 	storedChat = "";
-	document.getElementById("story").innerHTML = updatedStory;
+    if(phase != "")
+	    document.getElementById("story").innerHTML = updatedStory;
 	document.getElementById("button_input").value = "";
 	document.getElementById("button_input").disabled = false;
 	document.getElementById("submit_button").disabled = false;
