@@ -35,10 +35,7 @@ function submitChanges()
         if(xmlHttp.readyState==4)
         {
             response = JSON.parse(xmlHttp.responseText);
-            if(response.success)
-                document.getElementById("change_ack").innerHTML = "Changes Recieved!";
-            else
-                document.getElementById("change_ack").innerHTML = "Changes not Recieved"; 
+            window.location.replace('/');
         }
     }
 
