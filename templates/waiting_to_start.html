@@ -13,12 +13,19 @@
     </center>
     Game ID: {{ game_id }} <br><br>
 	You have joined a game. Now you are just waiting for enough people to join, or for the host to start it early.
+    <br>
 
 <div id="current_players">
 	Fetching Game Data...
 </div>
 
-<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+<div class="button-container">
+    <form action="javascript:returnToMenu();">
+        <input type="image" src="/images/return_button.png" width=150 height=150 alt="Return To Menu" onMouseOver="this.src='/images/return_button_hover.png'" onMouseOut="this.src='/images/return_button.png'">
+    </form>
+</div>
+
 <script type="text/javascript" src="/scripts/waiting_to_start.js"></script>
+
 {% endblock %}
 
