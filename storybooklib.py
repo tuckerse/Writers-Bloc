@@ -253,9 +253,12 @@ def generateScoreStructure(game):
     return score_struct, user_vote_score    
 
 def getTopScores(score_struct):
-    r =  set(sorted([score_struct[entry][0] for entry in score_struct]))
-    return r[-1], r[-2]       
-    
+    r =  sorted(list(set([score_struct[entry][0] for entry in score_struct])))
+    if len(r) == 1:
+        return r[0], r[0]
+    else:
+        return r[-1], r[-2]
+
     """
     top = -1
     for entry in score_struct:
