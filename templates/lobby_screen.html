@@ -7,7 +7,7 @@
     <br>
     <br><br>
 	<div id="select_game">
-		<select id="selection" size="10" style="height:350px;width:500px;overflow-y: scroll;overflow-x: scroll;border-style: solid; border-width: 1px;">
+		<select id="selection" selected="" size="10" style="height:350px;width:500px;overflow-y: scroll;overflow-x: scroll;border-style: solid; border-width: 1px;">
 			{% for game in games %}
 				<option value="{{ game.game_id }}"> <b>Game ID: {{ game.game_id }} | Length: {{ game.game_length }} | Current Players: {{ game.current_players }}/8 | End Sentence: {{ game.end_sentence }} </b></option>
 			{% endfor %}

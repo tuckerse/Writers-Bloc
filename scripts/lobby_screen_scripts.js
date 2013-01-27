@@ -1,6 +1,6 @@
 function buttonClicked()
 {
-	if(document.getElementById("selection").value != null)
+	if(document.getElementById("selection").value != "")
 	{
 		joined = joinGame(document.getElementById("selection").value);
 	}
