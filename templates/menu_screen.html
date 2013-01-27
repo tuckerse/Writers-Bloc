@@ -38,6 +38,14 @@
 <form method="link" action="/donation_page">
     <input type="submit" value="Donation Page">
 </form>
+<div class="button-container">
+    <form action="javascript:window.location.replace('/other_games')">
+        <input type="image" src="/images/others_button.png" width=150 height=150  alt="Other Games" onMouseOver="this.src='/images/others_button_hover.png'" onMouseOut="this.src='/images/others_button.png'">
+    </form>
+    <form action="javascript:window.location.replace('/donation_page')">
+        <input type="image" src="/images/donate_button.png" width=150 height=150 alt="Donate" onMouseOver="this.src='/images/donate_button_hover.png'" onMouseOut="this.src='/images/donate_button.png'">
+    </form>
+</div>
 </center>
 {% endblock %}
 
