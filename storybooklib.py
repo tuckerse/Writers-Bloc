@@ -233,8 +233,6 @@ def generateScoreStructure(game):
         user_vote_score[users_submitted[i]] = (votes.count(i), next_parts[i])
     
     top_score, second_score = getTopScores(user_vote_score)
-    top_score = int(top_score)
-    second_score = int(second_score)
     logging.debug(str(top_score) + " " + str(second_score))
     
     score_struct = ({}, {})
@@ -255,6 +253,10 @@ def generateScoreStructure(game):
     return score_struct, user_vote_score    
 
 def getTopScores(score_struct):
+    r =  set(sorted([score_struct[entry][0] for entry in score_struct]))
+    return r[-1], r[-2]       
+    
+    """
     top = -1
     for entry in score_struct:
         if entry[0] > top:
@@ -269,6 +271,7 @@ def getTopScores(score_struct):
         second = top
 
     return top, second
+    """
 
 def trimName(name, display_type):
     split_name = name.partition(' ')
