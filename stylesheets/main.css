@@ -6,7 +6,7 @@ body {
   color: #000;
   font-family: griffy_regular;
   background: #ffffff;
-  font-size: 16px;
+  font-size: 20px;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -123,6 +123,26 @@ padding-bottom:10px;
 border: none;
 }
 
+div.submit_button input {
+background:url(/images/submit_button.png) no-repeat;
+cursor:pointer;
+width: 150px;
+height: 150px;
+padding-top: 10px;
+padding-bottom: 10px;
+border: none;
+}
+
+div.return_button input {
+background:url(/images/return_button.png) no-repeat;
+cursor: pointer;
+width: 150px;
+height: 150px;
+padding-top: 10px;
+padding-bottom: 10px;
+border: none;
+}
+
 #background {
     width: 100%;
     height: 100%;
@@ -135,4 +155,14 @@ border: none;
 .stretch {
     width: 100%;
     height: 100%;
+}
+
+.button-container form,
+.button-container form div {
+    display: inline;
+}
+
+.button-container button {
+    display: inline;
+    vertical-align: middle;
 }
