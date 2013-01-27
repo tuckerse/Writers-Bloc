@@ -18,6 +18,11 @@ You can't host another game yet! You must wait 5 minutes between each game you h
 <br><br>
 But don't let this stop you from playing! You can still join other games!
 
-<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+
+<div class="button-container">
+    <form action="javascript:returnToMenu();">
+        <input type="image" src="/images/return_button.png" width=150 height=150 alt="Return To Menu" onMouseOver="this.src='/images/return_button_hover.png'" onMouseOut="this.src='/images/return_button.png'">
+    </form>
+</div>
 {% endblock %}
 

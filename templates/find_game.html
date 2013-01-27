@@ -38,9 +38,16 @@ function findGame()
     <input type = "radio" name = "length_input" value = "50"> Epic (50 turns) <br>
     
 	</form>
-    <form><INPUT TYPE="button" VALUE="Submit" onClick="findGame()"></form>
 </div>
-<form><INPUT TYPE="button" VALUE="Return to Menu" onClick="returnToMenu()"></form>
+
+<div class="button-container">
+    <form action="javascript:findGame();">
+        <input type="image" src="/images/submit_button.png" width=150 height=150  alt="Find Game" onMouseOver="this.src='/images/submit_button_hover.png'" onMouseOut="this.src='/images/submit_button.png'">
+    </form>
+    <form action="javascript:returnToMenu();">
+        <input type="image" src="/images/return_button.png" width=150 height=150 alt="Return To Menu" onMouseOver="this.src='/images/return_button_hover.png'" onMouseOut="this.src='/images/return_button.png'">
+    </form>
+</div>
 </center>
 
 {% endblock %}
