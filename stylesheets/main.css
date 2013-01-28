@@ -83,6 +83,13 @@ h1 {
   opacity:0.9;
 }
 
+.text_box {
+    background:url(/images/text_box.png) no-repeat;
+    width: 300px;
+    height: 25px;
+    border: none;
+}
+
 div.find_game_button input {
 background:url(/images/find_game_button.png) no-repeat;
 cursor:pointer;
@@ -165,4 +172,18 @@ border: none;
 .button-container button {
     display: inline;
     vertical-align: middle;
+}
+
+input[type="checkbox"] {
+    position:absolute;
+    clip: rect(0,0,0,0);
+    clip: rect(0 0 0 0);
+}
+
+input[type="checkbox"] + label::before {
+    content: url('images/checkbox.png');
+}
+
+input[type="checkbox"]:checked + label::before {
+    content: url('images/checkbox-checked.png');
 }
