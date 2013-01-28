@@ -88,6 +88,7 @@ h1 {
     width: 300px;
     height: 25px;
     border: none;
+    text-indent: 15px;
 }
 
 div.find_game_button input {
