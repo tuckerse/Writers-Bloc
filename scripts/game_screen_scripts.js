@@ -281,10 +281,11 @@ function phaseChangeLogic()
 function endGame()
 {
 	phase = "e";
+    var data = getWinner();
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
     //document.getElementById("infobox").innerHTML = getEndGameText();
-    document.getElementById("infobox").innerHTML = "";
+    document.getElementById("infobox").innerHTML = data.winner + "is first author with " + data.points + " points!";
 	document.getElementById("button_input").value = "Story Finished.";
 	document.getElementById("button_input").disabled = true;
 	document.getElementById("timer").innerHTML = "<form><INPUT TYPE=\"button\" VALUE=\"Return to Menu\" onClick=\"window.location.replace(\'/\')\"></form>";
@@ -316,6 +317,25 @@ function getEndGameText()
     return response.end_text;
 }
 */
+
+function getWinner()
+{
+    var response = null;
+    function onResponseWinner()
+    {
+        if(xmlHttp.readyState == 4)
+            reponse = JSON.parse(xmlHttp.responseText);
+    }
+
+    var url = "/get_winner?game_id=" + encodeURIComponent(game_id);
+    xmlHttp = new XMLHttpRequest();
+    xmlHtpp.open("POST", url, false);
+    xmlHttp.onreadystatechange = onResponseWinner;
+    xmlHttp.setRequestHeader("Content-type", "application/json");
+    xmlHttp.send(null);
+    while(response == null){}
+    return response;
+}
 
 function acknowledgeFinishSubmission()
 {
