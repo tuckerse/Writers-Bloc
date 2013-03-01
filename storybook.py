@@ -33,6 +33,7 @@ from othergames import OtherGames
 from donationpage import DonationPage
 from nogames import NoGames
 from findgamepage import FindGamePage
+from rulespage import RulesPage
 
 from storybooklib import LAST_USED_GAME_ID_KEY
 
@@ -67,7 +68,8 @@ routes = [
     ('/other_games', OtherGames),
     ('/donation_page', DonationPage),
     ('/no_games', NoGames),
-    ('/find_game_page', FindGamePage)
+    ('/find_game_page', FindGamePage),
+    ('/rules_page', RulesPage)
 ]
 app = webapp.WSGIApplication(routes)
 

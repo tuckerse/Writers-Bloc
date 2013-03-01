@@ -28,10 +28,14 @@
 <br><br>
 {% if in_game %}
 <FONT COLOR= #FF00000> Hey, you got disconnected from a game somehow, but you can rejoin it! </font>
-<form method"link" action="javascript:window.location.replace('/game_screen?game_id={{ game_id }}')">
+<form method="link" action="javascript:window.location.replace('/game_screen?game_id={{ game_id }}')">
     <input type="submit" value="Join Disconnected Game">
 </form>
 {% endif %}
+
+<form method="link" action="javascript:window.location.replace('/rules_screen')">
+    <input type="submit" value="View Rules">
+</form>
 <div class="button-container">
     <form action="javascript:window.location.replace('/other_games')">
         <input type="image" src="/images/others_button.png" width=150 height=150  alt="Other Games" onMouseOver="this.src='/images/others_button_hover.png'" onMouseOut="this.src='/images/others_button.png'">

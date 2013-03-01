@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block body %}
+<script>
+	function returnToMenu()
+	{
+		window.location.replace('/');
+	}
+</script>
+<center>
+<br>
+<img src="/images/banner.png" alt="Writer's Bloc"/>
+<br>
+<br><br>
+</center>
+Rules and such.
+<br><br>
+
+<div class="button-container">
+    <form action="javascript:returnToMenu();">
+        <input type="image" src="/images/return_button.png" width=150 height=150 alt="Return To Menu" onMouseOver="this.src='/images/return_button_hover.png'" onMouseOut="this.src='/images/return_button.png'">
+    </form>
+</div>
+{% endblock %}
+
