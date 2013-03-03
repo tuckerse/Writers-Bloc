@@ -324,12 +324,12 @@ function getWinner()
     function onResponseWinner()
     {
         if(xmlHttp.readyState == 4)
-            reponse = JSON.parse(xmlHttp.responseText);
+            response = JSON.parse(xmlHttp.responseText);
     }
 
     var url = "/get_winner?game_id=" + encodeURIComponent(game_id);
     xmlHttp = new XMLHttpRequest();
-    xmlHtpp.open("POST", url, false);
+    xmlHttp.open("POST", url, false);
     xmlHttp.onreadystatechange = onResponseWinner;
     xmlHttp.setRequestHeader("Content-type", "application/json");
     xmlHttp.send(null);
