@@ -2,7 +2,7 @@ import logging
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import changeToDisplayPhase, allUsersVoted, resetAFK, removeVote
+from storybooklib import changeToDisplayPhase, allUsersVoted, removeVote
 
 class Vote(BaseHandler):
     def post(self):
@@ -15,7 +15,6 @@ class Vote(BaseHandler):
             if (self.user.user_id in game.users) and game.can_vote:
                 if self.user.user_id in game.users_voted:
                     game = removeVote(game, self.user)
-                resetAFK(self.user)
                 choice = int(self.request.get('part_voted'))
                 if str(self.user.user_id) == game.users_next_parts[choice]:
                     logging.critical('Attempt to vote for self detected. user_id: ' + str(self.user.user_id))

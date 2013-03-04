@@ -3,7 +3,7 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import getRecentScoreInfo, markAFKS, changeToDisplayPhase
+from storybooklib import getRecentScoreInfo, changeToDisplayPhase
 from django.utils import simplejson as json
 
 class VoteCompleteVerification(BaseHandler):
@@ -20,7 +20,6 @@ class VoteCompleteVerification(BaseHandler):
                 recent_winner_string = "\"" + game.winning_sentences[len(game.winning_sentences)-1] + "\" By: " + game.winning_users_names[len(game.winning_users_names) - 1]
                 self.response.headers.add_header('recent_winner', recent_winner_string)
             elif datetime.datetime.now() > game.end_vote_time:
-                markAFKS(game, game.users_voted)
                 changeToDisplayPhase(game, self)
             else:
                 self.response.headers.add_header('completed', "i")

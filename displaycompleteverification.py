@@ -19,7 +19,8 @@ class DisplayCompleteVerification(BaseHandler):
             self.response.headers['Content-type'] = 'application/json'
             response['updated_story'] = getStoryStringForGameScreen(game)
             response['scores'] = getScoreInfo(game)
-            response['profiles'], response['afks'] = getProfilesAndAFKS(response['scores'])
+            response['profiles'] = getProfilesAndAFKS(response['scores'])
+            response['afks'] = []
             self.response.out.write(json.dumps(response))
             if (game.num_phases < game.game_length or game.went_to_submission):
                 if not game.display_phase and game.can_submit:

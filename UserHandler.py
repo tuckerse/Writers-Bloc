@@ -11,7 +11,6 @@ class User(db.Model):
     friends = db.StringListProperty()
     dirty = db.BooleanProperty()
     last_hosted = db.DateTimeProperty()
-    rounds_afk = db.IntegerProperty()
     display_type = db.IntegerProperty()
     achievements = db.ListProperty(int)
     first_time = db.BooleanProperty()

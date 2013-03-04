@@ -52,10 +52,6 @@ def getUserInfo(game_id):
 
     return name_list, pic_list
 
-def resetAFK(user):
-    user.rounds_afk = 0
-    storeCache(user, user.user_id)
-
 def joinGame(user, game_id):
     result = Game.get_by_key_name(str(game_id))
     #result = retrieveCache(str(game_id), Game)
@@ -63,7 +59,6 @@ def joinGame(user, game_id):
         return False
     result.users.append(user.user_id)
     result.current_players += 1
-    resetAFK(user)
     user.current_game = str(game_id)
     storeCache(user, user.user_id)
     if result.current_players == MAX_PLAYERS:
@@ -120,17 +115,6 @@ def startGame(game_id):
     game.put()
     #storeCache(game, str(game_id))
     return True
-
-def markAFKS(game, acted_list):
-    for user_id in game.users:
-        if not user_id in acted_list:
-            user = retrieveCache(user_id, User)
-            user.rounds_afk += 1
-            storeCache(user, user_id)
-
-    for user_id in acted_list:
-        user = retrieveCache(user_id, User)
-        resetAFK(user)        
 
 def changeToDisplayPhase(game, request_handler = None):
     game.can_submit = False
@@ -397,18 +381,13 @@ def getScoreInfo(game):
 
 def getProfilesAndAFKS(scoreList):
     profiles = []
-    afks = []
     for entry in scoreList:
         user_id = entry['user_id']
         #user = User.get_by_key_name(user_id)
         user = retrieveCache(user_id, User)
         profiles.append(user.picture)
-        if user.rounds_afk >= 3:
-            afks.append(True)
-        else:
-            afks.append(False)
 
-    return profiles, afks
+    return profiles
 
 def changeToSubmissionPhase(game, request_handler = None):
     game.can_submit = True
@@ -473,8 +452,8 @@ def initializeGame(game_id, max_players, start_sentence, end_sentence, length):
     newGame.story = []
     newGame.users = []
     newGame.current_players = 0
-    #newGame.num_phases = 1
-    newGame.num_phases = 9
+    newGame.num_phases = 1
+    #newGame.num_phases = 9
     newGame.end_sentence = end_sentence
     newGame.start_sentence = start_sentence
     newGame.can_submit = False

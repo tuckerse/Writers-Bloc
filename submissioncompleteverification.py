@@ -4,7 +4,7 @@ import datetime
 from basehandler import BaseHandler
 from django.utils import simplejson as json
 from Models import Game
-from storybooklib import markAFKS, changeToVotingPhase
+from storybooklib import changeToVotingPhase
 
 class SubmissionCompleteVerification(BaseHandler):
     def post(self):
@@ -22,7 +22,6 @@ class SubmissionCompleteVerification(BaseHandler):
                 self.response.headers.add_header('completed', "v")
                 return
             elif datetime.datetime.now() > game.end_submission_time:
-                markAFKS(game, game.users_next_parts)
                 changeToVotingPhase(game, self)
                 return
             self.response.headers.add_header('completed', "i")

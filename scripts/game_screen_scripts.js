@@ -16,7 +16,6 @@ var refreshDelay = 5;
 var stagger = Math.floor(Math.random()*5);
 var recentlySubmitted = "";
 var profiles;
-var afks;
 var hasSubmitted = false;
 var hasVoted = false;
 document.onkeypress = processKey;
@@ -503,7 +502,6 @@ function acknowledgeFinishDisplay()
 				updatedStory = parsed.updated_story;
 				scoreInfo = parsed.scores;
 				profiles = parsed.profiles;
-                afks = parsed.afks;
 				updateUserInfo();
 			}
 		}
@@ -528,7 +526,6 @@ function getUpdatedUserInfo()
             parsed = JSON.parse(xmlHttp.responseText);
             scoreInfo = parsed.scores;
             profiles = parsed.profiles;
-            afks = parsed.afks;
         }
     }
 
@@ -545,10 +542,7 @@ function updateUserInfo()
 	var list = new Array();
 	for(entry in scoreInfo)
 	{
-        if(afks[entry])
-		    list[scoreInfo[entry].position - 1] = "<img src=\"" + profiles[entry] + "\" width=\"25\" height=\"25\"/><b>" + scoreInfo[entry].position + ".</b> (AFK)(" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
-        else
-            list[scoreInfo[entry].position - 1] = "<img src=\"" + profiles[entry] + "\" width=\"25\" height=\"25\"/><b>" + scoreInfo[entry].position + ".</b> (" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
+        list[scoreInfo[entry].position - 1] = "<img src=\"" + profiles[entry] + "\" width=\"25\" height=\"25\"/><b>" + scoreInfo[entry].position + ".</b> (" + scoreInfo[entry].score + ") " + scoreInfo[entry].user_name;
 	}
 	document.getElementById("userbartext").innerHTML = "Scoreboard:<br>";
 	for(user_entry in list)
