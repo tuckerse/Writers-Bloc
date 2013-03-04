@@ -226,6 +226,7 @@ def generateScoreStructure(game):
     users_submitted = game.users_next_parts
     votes = game.votes
     next_parts = game.next_parts
+    users_voted = game.users_voted
     
     user_vote_score = {}
     
@@ -233,7 +234,7 @@ def generateScoreStructure(game):
         user_vote_score[game.users[i]] = (0, "")
 
     for i in range(0, len(users_submitted)):
-        user_vote_score[users_submitted[i]] = (votes.count(i), next_parts[i])
+        user_vote_score[users_submitted[i]] = (votes.count(i), next_parts[i]) if users_submitted[i] in users_voted else (0, next_parts[i])
     
     top_score, second_score = getTopScores(user_vote_score)
     logging.debug(str(top_score) + " " + str(second_score))
