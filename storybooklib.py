@@ -185,13 +185,13 @@ def determineWinner(game):
         bonus_str = '0'
 
         if game.users[i] == first_place[0]  and tie:
-            bonus_str = str(FIRST_PLACE_TIE_BONUS) if not (scores[first_place[0]]  == 0) else 0
+            bonus_str = str(FIRST_PLACE_TIE_BONUS) if not (scores[first_place[0]]  == 0) else '0'
         elif game.users[i] == second_place[0] and tie:
-            bonus_str = str(FIRST_PLACE_TIE_BONUS) if not (scores[second_place[0]] == 0) else 0
+            bonus_str = str(FIRST_PLACE_TIE_BONUS) if not (scores[second_place[0]] == 0) else '0'
         elif (game.users[i] == first_place[0]):
-            bonus_str = str(FIRST_PLACE_BONUS) if not (scores[first_place[0]]  == 0) else 0
+            bonus_str = str(FIRST_PLACE_BONUS) if not (scores[first_place[0]]  == 0) else '0'
         elif (game.users[i] == second_place[0]):
-            bonus_str = str(SECOND_PLACE_BONUS) if not (scores[second_place[0]] == 0) else 0
+            bonus_str = str(SECOND_PLACE_BONUS) if not (scores[second_place[0]] == 0) else '0'
 
         game.recent_score_data[i] = str(scores[game.users[i]]) + ';' + bonus_str
         game.scores[i] += scores[game.users[i]] + bonuses[game.users[i]]
