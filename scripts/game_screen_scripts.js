@@ -70,6 +70,8 @@ function submitNextPart()
 	    var info = {"game_id": game_id, "next_part": next_part};
 	    xmlHttp = new XMLHttpRequest();
 	    xmlHttp.onreadystatechange = onResponseNextPart;
+        xmlHttp.timeout = 7000;
+        xmlHttp.ontimeout = timeout();
 	    xmlHttp.open("POST", url, true);
 	    xmlHttp.setRequestHeader("Content-type", "application/json");
 	    xmlHttp.send(JSON.stringify(info));	
@@ -120,6 +122,8 @@ function statusCheck()
 	xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("POST", url, false);
 	xmlHttp.onreadystatechange = onResponseStatusCheck;
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
 	xmlHttp.setRequestHeader("Content-type", "application/json");
 	xmlHttp.send(JSON.stringify(info));
 	while(response == null) {}
@@ -328,8 +332,10 @@ function getWinner()
 
     var url = "/get_winner?game_id=" + encodeURIComponent(game_id);
     xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("POST", url, false);
+    xmlHttp.open("POST", url, true);
     xmlHttp.onreadystatechange = onResponseWinner;
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
     xmlHttp.setRequestHeader("Content-type", "application/json");
     xmlHttp.send(null);
     while(response == null){}
@@ -349,8 +355,10 @@ function acknowledgeFinishSubmission()
 	var url = "/submission_complete_verification";
 	var info = {"game_id" : game_id};
 	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, false);
+	xmlHttp.open("POST", url, true);
 	xmlHttp.onreadystatechange = onResponseFinishSubmission;
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
 	xmlHttp.setRequestHeader("Content-type", "application/json");
 	xmlHttp.send(JSON.stringify(info));
 	while(response == null){}
@@ -374,8 +382,10 @@ function getChoices()
 	var url = "/get_choices";
 	var info = {"game_id" : game_id};
 	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, false);
+	xmlHttp.open("POST", url, true);
 	xmlHttp.onreadystatechange = onChoicesResponse;
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
 	xmlHttp.setRequestHeader("Content-type", "application/json");
 	xmlHttp.send(JSON.stringify(info));
 	while(choices == null){}
@@ -388,6 +398,8 @@ function submitVote()
     {
 	    var url = "/vote?game_id=" + encodeURIComponent(game_id) + "&part_voted=" + encodeURIComponent(currentChoice);
 	    xmlHttp = new XMLHttpRequest();
+        xmlHttp.timeout = 7000;
+        xmlHttp.ontimeout = timeout();
 	    xmlHttp.open("POST", url, false);
 	    xmlHttp.send(null);
 	    var response = xmlHttp.getResponseHeader("response");
@@ -451,6 +463,8 @@ function acknowledgeFinishVote()
     }
     var url = "/vote_complete_verification?game_id=" + encodeURIComponent(game_id);
     xmlHttp = new XMLHttpRequest();
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
 	xmlHttp.open("POST", url, false);
 	xmlHttp.onreadystatechange = recievedAckFinishVote;
 	xmlHttp.send(null);
@@ -508,6 +522,8 @@ function acknowledgeFinishDisplay()
 	}
 	var url = "/display_complete_verification?game_id=" + encodeURIComponent(game_id);
 	xmlHttp = new XMLHttpRequest();
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
 	xmlHttp.open("POST", url, false);
 	xmlHttp.onreadystatechange = recievedResponseFinishDisplay;
 	xmlHttp.send(null);
@@ -531,6 +547,8 @@ function getUpdatedUserInfo()
 
     var url = "/update_user_info?game_id=" + encodeURIComponent(game_id);
     xmlHttp = new XMLHttpRequest();
+    xmlHttp.timeout = 7000;
+    xmlHttp.ontimeout = timeout();
     xmlHttp.open("POST", url, false);
     xmlHttp.onreadystatechange = recievedUpdateResponse;
     xmlHttp.send(null);
@@ -549,6 +567,11 @@ function updateUserInfo()
 	{
 		document.getElementById("userbartext").innerHTML += list[user_entry] + "<br>";
 	}	
+}
+
+function timeout()
+{
+    window.location.replace("/timeout");
 }
 
 var timerID = window.setInterval(tick, 1000);
