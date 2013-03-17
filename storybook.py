@@ -73,7 +73,7 @@ routes = [
     ('/find_game_page', FindGamePage),
     ('/rules_page', RulesPage),
     ('/get_winner', GetWinner),
-    ('timeout', Timeout)
+    ('/timeout', Timeout)
 ]
 app = webapp.WSGIApplication(routes)
 
