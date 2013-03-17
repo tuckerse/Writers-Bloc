@@ -1,6 +1,7 @@
 from google.appengine.api import urlfetch
 from django.utils import simplejson as json
 from UserHandler import User
+from storybooklib import jsonLoad
 
 import logging
 import urllib
@@ -21,13 +22,13 @@ def postStory(game):
     url = 'http://www.reddit.com/api/submit'
     payload = urllib.urlencode({'uh':modhash, 'kind':'self', 'text':text, 'sr':'storybook', 'title':title, 'r':'storybook', 'api_type':'json'})
     response = urlfetch.fetch(url, payload, method=urlfetch.POST, headers=getHeaders(reddit_session_cookie))
-    json_response = json.loads(response.content)
+    json_response = jsonLoad(response.content)
 
 def login():
     url = 'https://ssl.reddit.com/api/login/' + user_name
     payload = urllib.urlencode({'api_type' : 'json', 'user' : user_name, 'passwd': password})
     response = urlfetch.fetch(url, payload, method=urlfetch.POST, headers=getHeaders(reddit_session_cookie))
-    json_response = json.loads(response.content)
+    json_response = jsonLoad(response.content)
     reddit_session_cookie.load(response.headers.get('set-cookie', ''))
     return json_response['json']['data']['modhash']
 

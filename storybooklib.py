@@ -3,11 +3,14 @@ import random
 import sys
 import re
 import logging
+import urllib
 
 from Models import Game, LastUsedGameID
 from UserHandler import User
 from cacheLib import retrieveCache, storeCache, deleteData
 from google.appengine.ext import db
+from django.utils import simplejson as json
+
 #Removed for release
 #from achievementlib import applyAchievements, getAchievement
 
@@ -548,3 +551,10 @@ def checkForDoubleSubmissions(game):
     game.put()
 
     return game
+
+def jsonLoad(string):
+    if (string)[-1] == '=':
+        return json.loads((urllib.unquote(string))[:-1])
+    else:
+        return json.loads(urllib.unquote(string))
+

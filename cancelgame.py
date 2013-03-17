@@ -5,11 +5,12 @@ from basehandler import BaseHandler
 from Models import Game
 from google.appengine.ext import db
 from cacheLib import resetPlayerHost, storeCache
+from storybooklib import jsonLoad
 
 class CancelGame(BaseHandler):
     def post(self):
         if self.user:
-            info = json.loads(self.request.body)
+            info = jsonLoad(self.request.body)
             game_id = info['game_id']
             user = self.user
             try:

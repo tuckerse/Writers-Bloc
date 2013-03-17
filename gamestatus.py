@@ -4,11 +4,11 @@ import datetime
 from google.appengine.ext import db, webapp
 from django.utils import simplejson as json
 from Models import Game
-from storybooklib import getPlayerNames, MAX_GAME_CREATION
+from storybooklib import getPlayerNames, MAX_GAME_CREATION, jsonLoad
 
 class GameStatus(webapp.RequestHandler):
     def post(self):
-        info = json.loads(self.request.body)
+        info = jsonLoad(self.request.body)
         game_id = info['game_id']
         response_info = {}
         game = Game.get_by_key_name(str(game_id))

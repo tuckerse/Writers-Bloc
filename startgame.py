@@ -3,8 +3,11 @@ from UserHandler import User
 from cacheLib import canPlayerHost, markPlayerHostedGame, retrieveCache
 from DefaultStartSentences import defaultStart
 from DefaultEndSentences import defaultEnd
-from storybooklib import joinGame, initializeGame, MAX_PLAYERS, getNextGameID
+from storybooklib import joinGame, initializeGame, MAX_PLAYERS, getNextGameID, jsonLoad
 from django.utils import simplejson as json
+
+import logging
+import urllib
 
 class StartGame(BaseHandler):
     def post(self):
@@ -12,7 +15,7 @@ class StartGame(BaseHandler):
             self.render(u'login_screen')
         else:
             if canPlayerHost(self.user.user_id):
-                info = json.loads(self.request.body)
+                info = jsonLoad(self.request.body)
                 end_sentence = info['end_sentence']
                 start_sentence = info['start_sentence']
                 length = info['length']

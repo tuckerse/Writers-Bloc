@@ -3,14 +3,14 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import getUserInfo, allUsersSubmitted, changeToVotingPhase, cleanSubmission
+from storybooklib import getUserInfo, allUsersSubmitted, changeToVotingPhase, cleanSubmission, jsonLoad
 from django.utils import simplejson as json
 
 class GameScreen(BaseHandler):
     def get(self):
         game_id = self.request.get('game_id')
         if game_id is None:
-            info = json.loads(self.request.body)
+            info = jsonLoad(self.request.body)
             game_id = info['game_id']
         game = Game.get_by_key_name(str(game_id))
         #game = retrieveCache(str(game_id), Game)
@@ -26,7 +26,7 @@ class GameScreen(BaseHandler):
         if not self.user:
             logging.critical("Invalid part submission detected!")
         else:
-            info = json.loads(self.request.body)
+            info = jsonLoad(self.request.body)
             game_id = info['game_id']
             game = Game.get_by_key_name(str(game_id))
             #game = retrieveCache(str(game_id), Game)

@@ -4,14 +4,14 @@ import datetime
 from basehandler import BaseHandler
 from django.utils import simplejson as json
 from Models import Game
-from storybooklib import changeToVotingPhase
+from storybooklib import changeToVotingPhase, jsonLoad
 
 class SubmissionCompleteVerification(BaseHandler):
     def post(self):
         if not self.user:
             logging.critical("Invalid submission completion verification detected!")
         else:
-            info = json.loads(self.request.body)
+            info = jsonLoad(self.request.body)
             game_id = str(info['game_id'])
             game = Game.get_by_key_name(game_id)
             #game = retrieveCache(game_id, Game)
