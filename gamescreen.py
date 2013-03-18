@@ -19,7 +19,8 @@ class GameScreen(BaseHandler):
             self.render(u'login_screen')
         else:
             names, pictures = getUserInfo(game_id)
-            self.render(u'game_screen', game_id=game_id, user_id=self.user.user_id, end_sentence=game.end_sentence, start_sentence=game.start_sentence, zipList=zip(names,pictures))
+            story_text = getStoryStringForGameScreen(game)
+            self.render(u'game_screen', game_id=game_id, user_id=self.user.user_id, story_text=story_text, zipList=zip(names,pictures))
         return
 
     def post(self):
