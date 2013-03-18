@@ -120,7 +120,7 @@ function statusCheck()
 	var url = "/game_status";
 	var info = {"game_id" : game_id};
 	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, false);
+	xmlHttp.open("POST", url, true);
 	xmlHttp.onreadystatechange = onResponseStatusCheck;
     xmlHttp.timeout = 7000;
     xmlHttp.ontimeout = timeout;
@@ -400,7 +400,7 @@ function submitVote()
 	    xmlHttp = new XMLHttpRequest();
         xmlHttp.timeout = 7000;
         xmlHttp.ontimeout = timeout;
-	    xmlHttp.open("POST", url, false);
+	    xmlHttp.open("POST", url, true);
 	    xmlHttp.send(null);
 	    var response = xmlHttp.getResponseHeader("response");
 	    if(response == "s")
@@ -465,7 +465,7 @@ function acknowledgeFinishVote()
     xmlHttp = new XMLHttpRequest();
     xmlHttp.timeout = 7000;
     xmlHttp.ontimeout = timeout;
-	xmlHttp.open("POST", url, false);
+	xmlHttp.open("POST", url, true);
 	xmlHttp.onreadystatechange = recievedAckFinishVote;
 	xmlHttp.send(null);
 	while(response == null) {}
@@ -549,7 +549,7 @@ function getUpdatedUserInfo()
     xmlHttp = new XMLHttpRequest();
     xmlHttp.timeout = 7000;
     xmlHttp.ontimeout = timeout;
-    xmlHttp.open("POST", url, false);
+    xmlHttp.open("POST", url, true);
     xmlHttp.onreadystatechange = recievedUpdateResponse;
     xmlHttp.send(null);
     while(parsed  == null) {}
