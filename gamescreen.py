@@ -3,7 +3,7 @@ import datetime
 
 from basehandler import BaseHandler
 from Models import Game
-from storybooklib import getUserInfo, allUsersSubmitted, changeToVotingPhase, cleanSubmission, jsonLoad
+from storybooklib import getUserInfo, allUsersSubmitted, changeToVotingPhase, cleanSubmission, jsonLoad, getStoryStringForGameScreen
 from django.utils import simplejson as json
 
 class GameScreen(BaseHandler):
