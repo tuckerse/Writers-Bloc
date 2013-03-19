@@ -31,7 +31,7 @@ class GameScreen(BaseHandler):
             game_id = info['game_id']
             game = Game.get_by_key_name(str(game_id))
             #game = retrieveCache(str(game_id), Game)
-            if self.user.user_id in game.users and not int(self.user.user_id) in game.users_next_parts and game.can_submit:
+            if self.user.user_id in game.users and not self.user.user_id in game.users_next_parts and game.can_submit:
                 next_part = info['next_part']
 		next_part = cleanSubmission(next_part)
                 game = Game.get_by_key_name(str(game_id))
