@@ -29,7 +29,7 @@ function statusCheck()
 		}
 	}
 
-	var url = "/game_status";
+	var url = "/game_status?anonymous=1";
 	var info = {"game_id" : game_id};
 	xmlHttp.open("POST", url, false);
 	xmlHttp.setRequestHeader("Content-type", "application/json");

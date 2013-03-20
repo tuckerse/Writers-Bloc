@@ -115,7 +115,7 @@ function statusCheck()
 	}
 	
 
-	var url = "/game_status";
+	var url = "/game_status?anonymous=0";
 	var info = {"game_id" : game_id};
 	xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("POST", url, false);

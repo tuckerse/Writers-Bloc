@@ -5,10 +5,16 @@ from basehandler import BaseHandler
 from Models import Game
 from storybooklib import getUserInfo, allUsersSubmitted, changeToVotingPhase, cleanSubmission, jsonLoad, getStoryStringForGameScreen
 from django.utils import simplejson as json
+from cacheLib import retrieveCache, storeCache
+from UserHandler import User
 
 class GameScreen(BaseHandler):
     def get(self):
         game_id = self.request.get('game_id')
+        user = retrieveCache(self.user.user_id, User)
+        if abs((datetime.datetime.now() - user.last_active).seconds) < 15:
+            self.render(u'multiple_user_error')
+            return
         if game_id is None:
             info = jsonLoad(self.request.body)
             game_id = info['game_id']

@@ -4,10 +4,18 @@ import datetime
 from google.appengine.ext import db, webapp
 from django.utils import simplejson as json
 from Models import Game
+from cacheLib import retrieveCache, storeCache
 from storybooklib import getPlayerNames, MAX_GAME_CREATION, jsonLoad
+from UserHandler import User
+from basehandler import BaseHandler
 
-class GameStatus(webapp.RequestHandler):
+class GameStatus(BaseHandler):
     def post(self):
+        anonymous = self.request.get('anonymous')
+        if anonymous == "0":
+            user = retrieveCache(self.user.user_id, User)
+            user.last_active = datetime.datetime.now()
+            user = storeCache(user, self.user.user_id)
         info = jsonLoad(self.request.body)
         game_id = info['game_id']
         response_info = {}

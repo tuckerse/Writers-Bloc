@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+<script>
+	function returnToMenu()
+	{
+		window.location.replace('/');
+	}
+</script>
+<center>
+<br>
+<img src="/images/banner.png" alt="Writer's Bloc"/>
+<br>
+<br><br>
+</center>
+
+Whoops! It appears that you have tried to access the same game from multiple sessions. 
+
+If this is not the case, please wait 15 seconds and try again.
+
+<div class="button-container">
+    <form action="javascript:returnToMenu();">
+        <input type="image" src="/images/return_button.png" width=150 height=150 alt="Return To Menu" onMouseOver="this.src='/images/return_button_hover.png'" onMouseOut="this.src='/images/return_button.png'">
+    </form>
+</div>
+{% endblock %}
+
