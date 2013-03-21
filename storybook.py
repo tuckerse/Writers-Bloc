@@ -37,6 +37,7 @@ from rulespage import RulesPage
 from getwinner import GetWinner
 from timeout import Timeout
 from authenticationpage import AuthenticationPage
+from authenticationpopup import AuthenticationPopup
 
 from storybooklib import LAST_USED_GAME_ID_KEY
 
@@ -44,7 +45,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '0.96')
 
 routes = [
-    ('/', MenuPage),
+    ('/', AuthenticationPage),
+    ('/menu_page', MenuPage),
     ('/find_game', FindGame),
     ('/game_screen', GameScreen),
     ('/game_status', GameStatus),
@@ -75,7 +77,8 @@ routes = [
     ('/rules_page', RulesPage),
     ('/get_winner', GetWinner),
     ('/timeout', Timeout),
-    ('/authentication_page', AuthenticationPage)
+    ('/authentication_page', AuthenticationPage),
+    ('/authentication.popup', AuthenticationPopup)
 ]
 app = webapp.WSGIApplication(routes)
 
