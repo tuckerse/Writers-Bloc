@@ -5,3 +5,8 @@ indexes:
   - name: started
   - name: current_players
     direction: desc 
+
+- kind: Game
+  properties:
+  - name: game_length
+  - name: current_players
