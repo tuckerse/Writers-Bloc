@@ -13,6 +13,7 @@ handlers:
 - url: /font\.ttf
   static_files: fonts/Griffy-Regular.ttf
   upload: fonts/Griffy-Regular\.ttf
+  mime_type: application/x-font-ttf
 
 - url: /images
   static_dir: images
