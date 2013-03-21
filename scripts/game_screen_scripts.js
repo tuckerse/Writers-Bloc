@@ -552,5 +552,3 @@ function updateUserInfo()
 }
 
 var timerID = window.setInterval(tick, 1000);
-statusCheck();	
-
