@@ -13,11 +13,11 @@
 # under the License.
 
 # Facebook Application ID and Secret.
-FACEBOOK_APP_ID = '394031443968167'
-FACEBOOK_APP_SECRET = '85134ab84260c1626beab7d8c486055b'
+FACEBOOK_APP_ID = '116995748462491'
+FACEBOOK_APP_SECRET = 'e6d4e15ac7c31417f0ec55ebbdcaa4bc'
 
 # Canvas Page name.
-FACEBOOK_CANVAS_NAME = 'Storybook'
+FACEBOOK_CANVAS_NAME = 'Writer\'s Bloc'
 
 # A random token for use with the Real-time API.
 FACEBOOK_REALTIME_VERIFY_TOKEN = 'RANDOM TOKEN'
