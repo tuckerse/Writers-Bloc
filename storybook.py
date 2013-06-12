@@ -42,7 +42,7 @@ from authenticationpopup import AuthenticationPopup
 from storybooklib import LAST_USED_GAME_ID_KEY
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-use_library('django', '0.96')
+use_library('django', '1.2')
 
 routes = [
     ('/', AuthenticationPage),
