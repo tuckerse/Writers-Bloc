@@ -357,10 +357,10 @@ def getStoryString(game):
     return string
 
 def getStoryStringForGameScreen(game):
-    string = game.start_sentence + "... \n\n\n"
+    string = game.start_sentence + "... \n\n"
     for s in game.story:
         string += s + ' '
-    string += "\n\n\n..." + game.end_sentence
+    string += "\n\n..." + game.end_sentence
     return string
 
 def getScoreInfo(game):
