@@ -23,6 +23,9 @@ class VoteCompleteVerification(BaseHandler):
                 changeToDisplayPhase(game, self)
             else:
                 self.response.headers.add_header('completed', "i")
+            
+            #Update the game data after the recent score data is added
+            game = Game.get_by_key_name(game_id)
             response = {}
             response['winning_data'] = getRecentScoreInfo(game)
             self.response.out.write(json.dumps(response))
