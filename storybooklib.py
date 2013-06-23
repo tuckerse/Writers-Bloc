@@ -501,7 +501,7 @@ def removeVote(game, user):
     index = game.users_voted.index(user.user_id)
     del game.users_voted[index]
     del game.votes[index]
-    game.put()
+    return game.put()
 
 """
 Removed For Release
