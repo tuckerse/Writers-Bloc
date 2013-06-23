@@ -534,6 +534,7 @@ def cleanSubmission(next_part):
     return ret
 
 def checkForDoubleSubmissions(game):
+    """
     new_parts = []
     new_users = []
     
@@ -551,6 +552,29 @@ def checkForDoubleSubmissions(game):
     game.put()
 
     return game
+    """
+    
+    new_parts = []
+    new_users = []
+    deletes = []
+
+    for i in range(0, len(game.users_next_parts)):
+        if not game.users_next_parts[i] in new_users:
+            new_users.append(game.users_next_parts[i])
+        else:
+            deletes.append(i)
+
+    temp = game.next_parts
+    for index in deletes:
+        del temp[index]
+
+    for part in game.next_parts:
+        new_parts.append(part)
+
+    game.next_parts = new_parts
+    game.users_next_parts = new_users
+
+    return game.put()
 
 def jsonLoad(string):
     if (string)[-1] == '=':
