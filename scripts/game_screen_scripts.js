@@ -367,6 +367,7 @@ function getChoices()
 		{
 			response = JSON.parse(xmlHttp.responseText);
 			choices = response.choices;
+            cant_vote = response.cant_vote;
 		}
 	}
 
