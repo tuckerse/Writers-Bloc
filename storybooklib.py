@@ -574,7 +574,9 @@ def checkForDoubleSubmissions(game):
     game.next_parts = new_parts
     game.users_next_parts = new_users
 
-    return game.put()
+    game.put()
+    
+    return game
 
 def jsonLoad(string):
     if (string)[-1] == '=':
