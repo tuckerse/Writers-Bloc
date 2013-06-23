@@ -1,4 +1,5 @@
 var seconds = 0;	
+var cant_vote = 0;
 var phase = "";
 var votingDirections = "Voting Directions";
 var gameRules = "Game rules";
@@ -14,7 +15,6 @@ var scoreInfo;
 var oldPhase;
 var refreshDelay = 5;
 var stagger = Math.floor(Math.random()*5);
-var recentlySubmitted = "";
 var profiles;
 var hasSubmitted = false;
 var hasVoted = false;
@@ -65,7 +65,6 @@ function submitNextPart()
     if(next_part != "")
     {
         document.getElementById("submit_button").disabled = "true";
-	    recentlySubmitted = next_part;
 	    var url = "/game_screen";
 	    var info = {"game_id": game_id, "next_part": next_part};
 	    xmlHttp = new XMLHttpRequest();
@@ -417,7 +416,7 @@ function setToVotingPhase()
 	document.getElementById("infobox").innerHTML = "<form>";
 	for(i = 0; i < choices.length; i++)
 	{
-		if(choices[i] == recentlySubmitted)
+		if(i == cant_vote)
 			document.getElementById("infobox").innerHTML += "<input type=\"radio\" name=\"vote_selection\" value=\"" + i + "\" onclick=\"clickedSelection(this.value)\" disabled=\"true\"/>" + choices[i]  + "<br>";
 		else
         {

@@ -584,3 +584,8 @@ def jsonLoad(string):
     else:
         return json.loads(urllib.unquote(string))
 
+
+def whichCantVote(user_id, game):
+    for i in range(0, len(game.users_next_parts)):
+        if user_id == game.users_next_parts[i]:
+            return i
