@@ -1,6 +1,5 @@
 import os
 
-from google.appengine.dist import use_library
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from Models import LastUsedGameID
@@ -40,7 +39,6 @@ from timeout import Timeout
 from storybooklib import LAST_USED_GAME_ID_KEY
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-use_library('django', '1.2')
 
 routes = [
     ('/', MenuPage),
