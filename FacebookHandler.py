@@ -13,14 +13,12 @@ import os
 
 from UserHandler import User
 from uuid import uuid4
-from google.appengine.dist import use_library
 from django.utils import simplejson as json
 from google.appengine.api import urlfetch, taskqueue
 from google.appengine.ext import db, webapp
 from google.appengine.ext.webapp import util, template
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.dist import use_library
 
 class Facebook(object):
     """Wraps the Facebook specific logic"""
