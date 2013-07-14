@@ -282,7 +282,7 @@ function endGame()
     var data = getWinner();
 	document.getElementById("story_title").innerHTML = "And so it was written...";
 	document.getElementById("submit_button").disabled = true;
-    //document.getElementById("infobox").innerHTML = getEndGameText();
+    document.getElementById("story").innerHTML = data.updatedStory;
     document.getElementById("infobox").innerHTML = data.winner + "is first author with " + data.points + " points!";
 	document.getElementById("button_input").value = "Story Finished.";
 	document.getElementById("button_input").disabled = true;
