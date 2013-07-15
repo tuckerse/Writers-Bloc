@@ -33,6 +33,7 @@ class GameStatus(BaseHandler):
         response_info['num_phases'] = game.num_phases
         response_info['vote_this_turn'] = game.num_phases > 10
         response_info['finished'] = game.finished
+        response_info['total_phases'] = game.game_length
         self.response.headers['Content-type'] = 'application/json'
         
         if game.finished:

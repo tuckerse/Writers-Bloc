@@ -100,6 +100,7 @@ function statusCheck()
 			    phase = response.phase;
 			seconds = response.seconds_left + 1;
 			num_phases = response.num_phases;
+            total_phases = response.total_phases;
             if(phase == "s" || phase == "v")
             {
                 try
@@ -123,7 +124,7 @@ function statusCheck()
 	xmlHttp.send(JSON.stringify(info));
 	while(response == null) {}
 	if(num_phases != 0)
-		document.getElementById("story_title").innerHTML = "The Story So Far... Turn " + (num_phases);
+		document.getElementById("story_title").innerHTML = "The Story So Far... Turn " + (num_phases) + " of " + (total_phases);
 	return;
 }
 
