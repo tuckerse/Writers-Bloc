@@ -51,7 +51,10 @@ def getUserInfo(game_id):
         #user = User.get_by_key_name(user_id)
         user = retrieveCache(user_id, User)
         name_list.append(trimName(user.name, user.display_type))
-        pic_list.append(user.picture)
+        if user.display_type == 0:
+            pic_list.append("images/anonymous.jpg")
+        else:
+            pic_list.append(user.picture)
 
     return name_list, pic_list
 
@@ -388,7 +391,10 @@ def getProfilesAndAFKS(scoreList):
         user_id = entry['user_id']
         #user = User.get_by_key_name(user_id)
         user = retrieveCache(user_id, User)
-        profiles.append(user.picture)
+        if user.display_type == 0:
+            profiles.append('images/anonymous.jpg')
+        else:
+            profiles.append(user.picture)
 
     return profiles
 
