@@ -10,6 +10,7 @@ from UserHandler import User
 from cacheLib import retrieveCache, storeCache, deleteData
 from google.appengine.ext import db
 from django.utils import simplejson as json
+from random import shuffle
 
 #Removed for release
 #from achievementlib import applyAchievements, getAchievement
@@ -93,11 +94,26 @@ def changeToVotingPhase(game, request_handler = None):
     game.end_submission_time = None
     game.went_to_submission = False
     resetRecentScoreData(game)
+    game.next_parts, game.users_next_parts = shuffleSubmissions(game)
     game.end_vote_time = datetime.datetime.now() + datetime.timedelta(seconds=VOTE_TIME)
     game.put()
     #storeCache(game, str(game.game_id))
     if not request_handler == None:
         request_handler.response.headers.add_header('completed', "v")
+
+def shuffleSubmissions(game):
+    newNextParts = []
+    newUsersNextParts = []
+    
+    index_list = range(0, len(game.next_parts))
+    shuffle(index_list)
+
+    for i in range(0, len(game.next_parts)):
+        newNextParts.append(game.next_parts[index_list[i]])
+        newUsersNextParts.append(game.users_next_parts[index_list[i]])
+
+    return newNextParts, newUsersNextParts
+    
 
 def getLobbyGames():
     query = Game.gql("WHERE current_players <:1 AND started =:2 ORDER BY current_players DESC", MAX_PLAYERS, False)
