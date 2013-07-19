@@ -124,7 +124,11 @@ function statusCheck()
 	xmlHttp.send(JSON.stringify(info));
 	while(response == null) {}
 	if(num_phases != 0)
+    {
 		document.getElementById("story_title").innerHTML = "The Story So Far... Turn " + (num_phases) + " of " + (total_phases);
+        if(num_phases == total_phases)
+            document.getElementById("story_title").innerHTML += " <FONT COLOR=\"#FF0000\"> Final Round! </FONT>";
+    }
 	return;
 }
 
