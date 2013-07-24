@@ -187,15 +187,12 @@ def determineWinner(game):
     for user_id in game.users:
         scores[user_id] = other_data[user_id][0] if (user_id in game.users or len(game.next_parts) == 1) else 0
         bonuses[user_id] = 0
-
-    if tie:
-        bonuses[first_place[0]] += FIRST_PLACE_TIE_BONUS if not (scores[first_place[0]]  == 0) else 0
-        if second_place[0] != -1:
-            bonuses[second_place[0]] += FIRST_PLACE_TIE_BONUS if not (scores[second_place[0]] == 0) else 0
-    else:
-        bonuses[first_place[0]] += FIRST_PLACE_BONUS if not (scores[first_place[0]] == 0) else 0
-        if second_place[0] != -1:
-            bonuses[second_place[0]] += SECOND_PLACE_BONUS if not (scores[second_place[0]] == 0) else 0
+        if tie and (scores[user_id] == scores[first_place[0]]) and (scores[first_place[0]] > 0):
+            bonuses[user_id] += FIRST_PLACE_TIE_BONUS
+        elif (scores[user_id] == scores[first_place[0]]) and (scores[first_place[0]] > 0):
+            bonuses[user_id] += FIRST_PLACE_BONUS
+        if (scores[user_id] == scores[second_place[0]]) and (scores[second_place[0]] > 0):
+            bonuses[user_id] += SECOND_PLACE_BONUS
 
     game.winning_sentences.append(first_place[1])
     game.winning_users.append(first_place[0])
